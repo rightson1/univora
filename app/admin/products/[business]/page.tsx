@@ -124,12 +124,7 @@ const columns: ColumnDef<IProductTable>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center space-x-2" asChild>
-              <Link href={`/seller/products/${product.id}`}>
-                <BiEdit />
-                <span>Edit</span>
-              </Link>
-            </DropdownMenuItem>
+
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdUnpublished />
               <span>Unpublish</span>
@@ -176,14 +171,11 @@ export default function Products() {
   return (
     <div className="w-full p-4 md:p-8">
       <div className="flex items-center justify-between space-y-2 pb-5">
-        <h2 className="text-3xl font-bold tracking-tight">Products</h2>
-        <div className="flex items-center space-x-2">
-          <Link href="/seller/new-product">
-            <Button size={"sm"}>New Product</Button>
-          </Link>
-        </div>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Rightson Inventory
+        </h2>
       </div>
-      <div className="flex  gap-4 items-center py-4">
+      <div className="flex items-center py-4">
         <Input
           placeholder="Filter name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}

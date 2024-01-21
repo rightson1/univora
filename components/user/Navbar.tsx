@@ -56,7 +56,7 @@ const NavBar = () => {
           ))}
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
-          <Link href="/seller">
+          <Link href="/seller/products">
             <Button title="Seller" containerStyles="outlined"></Button>
           </Link>
 

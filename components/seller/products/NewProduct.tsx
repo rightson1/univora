@@ -11,9 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Editor } from "./Editor";
+import { Editor } from "../utils/Editor";
 import { WithOutContext as ReactTags } from "react-tag-input";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -23,12 +23,14 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageInputWithView } from "../utils/image-input";
 
 export const NewProductForm = () => {
   const [options, setOptions] = useState<TOption[]>([
     { title: "", variations: [] },
   ]);
-
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [media, setMedia] = useState<File[]>([]);
   return (
     <div className="w-full rounded-lg ">
       <div className="fb">
@@ -46,6 +48,8 @@ export const NewProductForm = () => {
             <GeneralInformation />
             <Description />
             <Organise />
+            <ThumbNail {...{ thumbnail, setThumbnail }} />
+            <Media {...{ media, setMedia }} />
           </div>
         </TabsContent>
         <TabsContent value="complex">
@@ -54,6 +58,8 @@ export const NewProductForm = () => {
             <Description />
             <Organise />
             {/* <Attributes /> */}
+            <ThumbNail {...{ thumbnail, setThumbnail }} />
+            <Media {...{ media, setMedia }} />
             <Options {...{ options, setOptions }} />
             <Variants {...{ options, setOptions }} />
           </div>
@@ -346,6 +352,47 @@ export const Description = () => {
       </CardHeader>
       <CardContent>
         <Editor />
+      </CardContent>
+    </Card>
+  );
+};
+const ThumbNail = ({
+  thumbnail,
+  setThumbnail,
+}: {
+  thumbnail: File | null;
+  setThumbnail: React.Dispatch<SetStateAction<File | null>>;
+}) => {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Thumbnail</CardTitle>
+        <CardDescription>
+          Used to represent your product during checkout, social sharing and
+          more.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ImageInputWithView file={thumbnail} setFile={setThumbnail} />
+      </CardContent>
+    </Card>
+  );
+};
+const Media = ({
+  media,
+  setMedia,
+}: {
+  media: File[];
+  setMedia: React.Dispatch<SetStateAction<File[]>>;
+}) => {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Media</CardTitle>
+        <CardDescription>Add images to your product.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ImageInputWithView files={media} setFiles={setMedia} multiple={true} />
       </CardContent>
     </Card>
   );

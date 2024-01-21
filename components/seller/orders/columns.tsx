@@ -2,15 +2,13 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-
-import { labels, priorities, statuses } from "./data/data";
-import { Task } from "./data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { orderStatus, paymentStatus } from "@/utils/data";
+import { IOrderTable } from "@/types/sellerTypes";
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<IOrderTable>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,38 +36,51 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Task" />
+      <DataTableColumnHeader column={column} title="Order" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">#{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
+
   {
-    accessorKey: "title",
+    accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label);
-
       return (
         <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
+            {row.getValue("date")}
           </span>
         </div>
       );
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "customer",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="Customer" />
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status")
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("customer")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "fulfillment",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fulfillment" />
+    ),
+    cell: ({ row }) => {
+      const status = orderStatus.find(
+        (status) => status.value === row.getValue("fulfillment")
       );
 
       if (!status) {
@@ -90,25 +101,25 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "priority",
+    accessorKey: "payment",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
+      <DataTableColumnHeader column={column} title="Payment" />
     ),
     cell: ({ row }) => {
-      const priority = priorities.find(
-        (priority) => priority.value === row.getValue("priority")
+      const status = paymentStatus.find(
+        (status) => status.value === row.getValue("payment")
       );
 
-      if (!priority) {
+      if (!status) {
         return null;
       }
 
       return (
-        <div className="flex items-center">
-          {priority.icon && (
-            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+        <div className="flex w-[100px] items-center">
+          {status.icon && (
+            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
           )}
-          <span>{priority.label}</span>
+          <span>{status.label}</span>
         </div>
       );
     },
@@ -116,6 +127,7 @@ export const columns: ColumnDef<Task>[] = [
       return value.includes(row.getValue(id));
     },
   },
+
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
