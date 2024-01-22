@@ -1,7 +1,13 @@
 import React from "react";
 
-const School = () => {
-  return <div>School</div>;
+const School = ({
+  params,
+}: {
+  params: {
+    school: string;
+  };
+}) => {
+  return <div>{params.school}</div>;
 };
 
 export default School;
