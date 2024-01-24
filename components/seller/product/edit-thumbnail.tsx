@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MdDeleteOutline, MdEdit, MdOutlineMoreHoriz } from "react-icons/md";
-import { CustomModal } from "../utils/CustomModal";
+import { CustomModal } from "../../shared/CustomModal";
 import { ImageInput } from "../utils/image-input";
 import Image from "next/image";
 

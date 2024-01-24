@@ -28,19 +28,19 @@ export const Sidebar = () => {
         <span className=" font-bold">Rightson Tole</span>
       </div>
       <div className="fx-c">
-        <Link href={"/super/"}>
+        <Link href={"/"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
             <span>Home</span>
           </Button>
         </Link>
-        <Link href={"/super/schools/"}>
+        <Link href={"/schools"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
             <span>Schools</span>
           </Button>
         </Link>
-        <Link href={"/school/super/"}>
+        <Link href={"/categories"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
             <span>Categories</span>

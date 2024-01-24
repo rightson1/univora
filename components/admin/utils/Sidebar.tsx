@@ -34,6 +34,12 @@ export const Sidebar = () => {
             <span>Businesses</span>
           </Button>
         </Link>
+        <Link href={"/admin/email"}>
+          <Button variant={"ghost"} className="font-semibold fc gap-3  ">
+            <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
+            <span>Send Email</span>
+          </Button>
+        </Link>
         {/* <Link href={"/seller/settings"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <IoIosSettings className="mr-2 h-4 w-4 font-bold" />

@@ -20,6 +20,12 @@ export default async function middleware(req: NextRequest) {
       new URL(`/admin${path === "/" ? "" : path}`, req.url)
     );
   }
+  if (hostname == `super.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    console.log(new URL(`/admin${path === "/" ? "" : path}`, req.url));
+    return NextResponse.rewrite(
+      new URL(`/super${path === "/" ? "" : path}`, req.url)
+    );
+  }
   let subdomain = hostname.split(".")[0];
   if (subdomain && subdomain !== process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
     console.log();

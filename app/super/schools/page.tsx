@@ -23,13 +23,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
-import { IProductTable } from "@/types/sellerTypes";
-import { productsTable as data } from "@/utils/data";
+
+import { productsTable as data, universitiesTable } from "@/utils/data";
 import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { CustomTable } from "@/app/shared/table";
-const columns: ColumnDef<IProductTable>[] = [
+import { ISchool } from "@/types";
+import { AddSchool } from "@/components/super/schools/add-school";
+import { EditSchool } from "@/components/super/schools/edit-school";
+const columns: ColumnDef<ISchool>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -53,46 +56,28 @@ const columns: ColumnDef<IProductTable>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "thumbnail",
-    header: "Thumbnail",
-    cell: ({ row }) => (
-      <div className="flex items-center">
-        <Image
-          src={row.getValue("thumbnail")}
-          alt=""
-          height={50}
-          width={50}
-          className="w-8 h-8 object-cover rounded"
-        />
-        {/* <div className="ml-2">{row.getValue("name")}</div> */}
-      </div>
-    ),
-  },
-  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("category")}</div>
-    ),
+    accessorKey: "admin",
+    header: "Admin",
+    cell: ({ row }) => <div>{row.getValue("admin")}</div>,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "subdomain",
+    header: "Subdomain",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("subdomain")}</div>
     ),
   },
 
   {
-    accessorKey: "inventory",
-    header: "Inventory",
+    accessorKey: "county",
+    header: "County",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("inventory")}</div>
+      <div className="capitalize">{row.getValue("county")}</div>
     ),
   },
   {
@@ -113,10 +98,7 @@ const columns: ColumnDef<IProductTable>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center space-x-2" asChild>
-              <Link href={`/seller/products/${product.id}`}>
-                <BiEdit />
-                <span>Edit</span>
-              </Link>
+              <EditSchool />
             </DropdownMenuItem>
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdUnpublished />
@@ -143,7 +125,7 @@ export default function Schools() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
-    data,
+    data: universitiesTable,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -164,11 +146,9 @@ export default function Schools() {
   return (
     <div className="w-full p-4 md:p-8">
       <div className="flex items-center justify-between space-y-2 pb-5">
-        <h2 className="text-3xl font-bold tracking-tight">Products</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Schools</h2>
         <div className="flex items-center space-x-2">
-          <Link href="/seller/new-product">
-            <Button size={"sm"}>New Product</Button>
-          </Link>
+          <AddSchool />
         </div>
       </div>
       <CustomTable table={table} columns={columns} />

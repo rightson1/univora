@@ -230,3 +230,20 @@ export interface PromotedTypes {
   name: string;
   _id: string;
 }
+export interface ISchool {
+  id: string;
+  name: string;
+  subdomain: string;
+  county: string;
+  admin: string;
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
+  description: string;
+  status: boolean;
+  parentCategoryId: string;
+  rank: number;
+  children: ICategory[];
+}

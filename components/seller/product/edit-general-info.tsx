@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 import { Textarea } from "@/components/ui/textarea";
 import { Editor } from "../utils/Editor";
-import { CustomModal } from "../utils/CustomModal";
+import { CustomModal } from "../../shared/CustomModal";
 export const EditGeneralInfo = () => {
   return (
     <CustomModal
