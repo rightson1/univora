@@ -1,16 +1,6 @@
 "use client";
 import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,17 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-
-import { productsTable as data, universitiesTable } from "@/utils/data";
-import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
-import { BiEdit } from "react-icons/bi";
-import { CustomTable } from "@/app/shared/table";
-import { ISchool } from "@/types";
-import { AddSchool } from "@/components/super/schools/add-school";
+import { ISchoolFetched } from "@/types";
 import { EditSchool } from "@/components/super/schools/edit-school";
-const columns: ColumnDef<ISchool>[] = [
+
+export const school_columns: ColumnDef<ISchoolFetched>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -60,11 +44,7 @@ const columns: ColumnDef<ISchool>[] = [
     header: "Name",
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
-  {
-    accessorKey: "admin",
-    header: "Admin",
-    cell: ({ row }) => <div>{row.getValue("admin")}</div>,
-  },
+
   {
     accessorKey: "subdomain",
     header: "Subdomain",
@@ -74,17 +54,10 @@ const columns: ColumnDef<ISchool>[] = [
   },
 
   {
-    accessorKey: "county",
-    header: "County",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("county")}</div>
-    ),
-  },
-  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const product = row.original;
+      const school = row.original;
 
       return (
         <DropdownMenu>
@@ -98,7 +71,7 @@ const columns: ColumnDef<ISchool>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center space-x-2" asChild>
-              <EditSchool />
+              <EditSchool school={school} />
             </DropdownMenuItem>
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdUnpublished />
@@ -115,43 +88,3 @@ const columns: ColumnDef<ISchool>[] = [
     },
   },
 ];
-
-export default function Schools() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const table = useReactTable({
-    data: universitiesTable,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
-  return (
-    <div className="w-full p-4 md:p-8">
-      <div className="flex items-center justify-between space-y-2 pb-5">
-        <h2 className="text-3xl font-bold tracking-tight">Schools</h2>
-        <div className="flex items-center space-x-2">
-          <AddSchool />
-        </div>
-      </div>
-      <CustomTable table={table} columns={columns} />
-    </div>
-  );
-}

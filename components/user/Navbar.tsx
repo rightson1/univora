@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { mobileLinks, navLinks } from "@/utils/data";
 
 import { BiArrowBack } from "react-icons/bi";
-import { useAuth } from "@/utils/AuthContext";
+import { useAuth } from "@/utils/SuperAuth";
 import useScreen from "@/utils/hooks/useScreen";
 import Button from "../utils/Button";
 const NavBar = () => {

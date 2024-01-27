@@ -41,7 +41,7 @@ import { productsTable as data } from "@/utils/data";
 import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
-import { CustomTable } from "@/app/shared/table";
+import { CustomTable } from "@/components/shared/table";
 const columns: ColumnDef<IProductTable>[] = [
   {
     id: "select",

@@ -36,13 +36,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { IProductTable } from "@/types/sellerTypes";
-import { productsTable as data } from "@/utils/data";
+import { businesses as data } from "@/utils/data";
 import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
-import { CustomTable } from "@/app/shared/table";
-const columns: ColumnDef<IProductTable>[] = [
+import { TBusiness } from "@/types/sellerTypes";
+import { CustomTable } from "@/components/shared/table";
+const columns: ColumnDef<TBusiness>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -66,12 +66,12 @@ const columns: ColumnDef<IProductTable>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "thumbnail",
-    header: "Thumbnail",
+    accessorKey: "profileImage",
+    header: "ProfileImage",
     cell: ({ row }) => (
       <div className="flex items-center">
         <Image
-          src={row.getValue("thumbnail")}
+          src={row.getValue("profileImage")}
           alt=""
           height={50}
           width={50}
@@ -87,25 +87,25 @@ const columns: ColumnDef<IProductTable>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "email",
+    header: "Email",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("category")}</div>
+      <div className="capitalize">{row.getValue("email")}</div>
     ),
   },
+  {
+    accessorKey: "visibility",
+    header: "Visibility",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("visibility")}</div>
+    ),
+  },
+
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "inventory",
-    header: "Inventory",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("inventory")}</div>
     ),
   },
   {
@@ -128,12 +128,14 @@ const columns: ColumnDef<IProductTable>[] = [
 
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdUnpublished />
-              <span>Unpublish</span>
+              <span>Hide Business</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center space-x-2">
-              <MdDeleteOutline />
-              <span>Delete</span>
+            <DropdownMenuItem className="flex items-center space-x-2" asChild>
+              <Link href={`/admin/products/${product.id}`}>
+                <BiEdit />
+                <span>View Products</span>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -142,7 +144,7 @@ const columns: ColumnDef<IProductTable>[] = [
   },
 ];
 
-export default function Products() {
+export default function Businesses() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -172,9 +174,7 @@ export default function Products() {
   return (
     <div className="w-full p-4 md:p-8">
       <div className="flex items-center justify-between space-y-2 pb-5">
-        <h2 className="text-3xl font-bold tracking-tight">
-          Rightson Inventory
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight">Select Recipients</h2>
       </div>
       <CustomTable table={table} columns={columns} />
     </div>

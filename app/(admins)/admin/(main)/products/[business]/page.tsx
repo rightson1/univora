@@ -36,13 +36,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { businesses as data } from "@/utils/data";
+import { IProductTable } from "@/types/sellerTypes";
+import { productsTable as data } from "@/utils/data";
 import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
-import { TBusiness } from "@/types/sellerTypes";
-import { CustomTable } from "@/app/shared/table";
-const columns: ColumnDef<TBusiness>[] = [
+import { CustomTable } from "@/components/shared/table";
+const columns: ColumnDef<IProductTable>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -66,12 +66,12 @@ const columns: ColumnDef<TBusiness>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "profileImage",
-    header: "ProfileImage",
+    accessorKey: "thumbnail",
+    header: "Thumbnail",
     cell: ({ row }) => (
       <div className="flex items-center">
         <Image
-          src={row.getValue("profileImage")}
+          src={row.getValue("thumbnail")}
           alt=""
           height={50}
           width={50}
@@ -87,25 +87,25 @@ const columns: ColumnDef<TBusiness>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "category",
+    header: "Category",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("email")}</div>
+      <div className="capitalize">{row.getValue("category")}</div>
     ),
   },
-  {
-    accessorKey: "visibility",
-    header: "Visibility",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("visibility")}</div>
-    ),
-  },
-
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
+    ),
+  },
+
+  {
+    accessorKey: "inventory",
+    header: "Inventory",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("inventory")}</div>
     ),
   },
   {
@@ -128,14 +128,12 @@ const columns: ColumnDef<TBusiness>[] = [
 
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdUnpublished />
-              <span>Hide Business</span>
+              <span>Unpublish</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center space-x-2" asChild>
-              <Link href={`/admin/products/${product.id}`}>
-                <BiEdit />
-                <span>View Products</span>
-              </Link>
+            <DropdownMenuItem className="flex items-center space-x-2">
+              <MdDeleteOutline />
+              <span>Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -144,7 +142,7 @@ const columns: ColumnDef<TBusiness>[] = [
   },
 ];
 
-export default function Businesses() {
+export default function Products() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -174,7 +172,9 @@ export default function Businesses() {
   return (
     <div className="w-full p-4 md:p-8">
       <div className="flex items-center justify-between space-y-2 pb-5">
-        <h2 className="text-3xl font-bold tracking-tight">Select Recipients</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Rightson Inventory
+        </h2>
       </div>
       <CustomTable table={table} columns={columns} />
     </div>

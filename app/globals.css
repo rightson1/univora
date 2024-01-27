@@ -298,3 +298,12 @@
 .ReactTags__activeSuggestion {
   @apply bg-blue-100;
 }
+.main-h {
+  @apply h-[calc(100vh-190px)] md:h-[calc(100vh-200px)];
+}
+.fx-col-c {
+  @apply flex flex-col items-center justify-center;
+}
+.pxs {
+  @apply px-8 mb:px-4;
+}

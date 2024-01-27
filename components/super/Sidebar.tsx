@@ -3,12 +3,17 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { IoCartOutline } from "react-icons/io5";
-import { IoIosSettings, IoMdMenu } from "react-icons/io";
-import { MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { IoMdMenu } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAdminAuth } from "@/utils/SuperAuth";
+import { CiHome } from "react-icons/ci";
+import { IoSchoolOutline } from "react-icons/io5";
+import { CiShoppingCart } from "react-icons/ci";
+import { AiOutlineLogout } from "react-icons/ai";
 export const Sidebar = () => {
+  const { user, logout } = useAdminAuth();
   const pathname = usePathname().split("/")[1];
 
   return (
@@ -20,35 +25,39 @@ export const Sidebar = () => {
     fx-c gap-5 "
     >
       <Avatar className="p-[2px] ring-1 ring-ring">
-        <AvatarImage />
+        <AvatarImage src={user?.photoURL} />
         <AvatarFallback className="">CN</AvatarFallback>
       </Avatar>
       <div className="fx-c">
-        <span className="tsm">Admin</span>
-        <span className=" font-bold">Rightson Tole</span>
+        <span className="tsm">{user.role}</span>
+        <span className=" font-bold">{user.displayName}</span>
       </div>
       <div className="fx-c">
         <Link href={"/"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-            <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
+            <CiHome className="mr-2 h-4 w-4 font-bold" />
             <span>Home</span>
           </Button>
         </Link>
         <Link href={"/schools"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-            <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
+            <IoSchoolOutline className="mr-2 h-4 w-4 font-bold" />
             <span>Schools</span>
           </Button>
         </Link>
         <Link href={"/categories"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-            <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
+            <CiShoppingCart className="mr-2 h-4 w-4 font-bold" />
             <span>Categories</span>
           </Button>
         </Link>
 
-        <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-          <IoCartOutline className="mr-2 h-4 w-4 font-bold" />
+        <Button
+          variant={"ghost"}
+          className="font-semibold fc gap-3  "
+          onClick={() => logout()}
+        >
+          <AiOutlineLogout className="mr-2 h-4 w-4 font-bold" />
           <span>
             <span>Logout</span>
           </span>

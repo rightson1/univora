@@ -8,9 +8,10 @@ import { IoIosAdd } from "react-icons/io";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ISchoolFetched, TSchoolStatus } from "@/types";
 
-export const EditSchool = () => {
-  const [files, setFiles] = useState<File[]>([]);
+export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
+  const [values, setValues] = useState<ISchoolFetched>(school);
   return (
     <CustomModal
       title="Edit Riara University"
@@ -25,37 +26,45 @@ export const EditSchool = () => {
         </Button>
       }
     >
-      <form>
-        <div className="grid md:grid-cols-1 w-full  gap-4">
-          <div className="flex flex-col space-y-1.5 ">
-            <Label htmlFor="name">Name *</Label>
-            <Textarea id="name" placeholder="Riara University" />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="subdomain">Subdomian</Label>
-            <Input id="subdomain" placeholder="Subdomain of your " />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="county">County</Label>
-            <Input id="county" placeholder="County of your " />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="visibility">Visibility</Label>
-            <select
-              className="w-full h-10 px-3 
+      <div className="grid md:grid-cols-1 w-full  gap-4 py-5">
+        <div className="flex flex-col space-y-1.5 ">
+          <Label htmlFor="name">Name *</Label>
+          <Input
+            id="name"
+            placeholder="Riara University"
+            value={values.name}
+            required
+          />
+        </div>
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="subdomain">Subdomian</Label>
+          <Input
+            id="subdomain"
+            placeholder="Subdomain of your "
+            value={values.subdomain}
+            name="subdomain"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="status">Status</Label>
+          <select
+            name="status"
+            className="w-full h-10 px-3 
             mb-3 border-border border-[1px] rounded-lg 
             bg-background
              focus:outline-none focus:shadow-outline"
-            >
-              {["Public", "Private"].map((item, index) => (
-                <option key={index} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
+            required
+          >
+            {(["active", "paused"] as TSchoolStatus[]).map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         </div>
-      </form>
+      </div>
     </CustomModal>
   );
 };

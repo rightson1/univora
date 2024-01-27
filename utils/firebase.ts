@@ -2,10 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCYUfWroJ5EdEadwLYsmLaRW8H-qdRhLms",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "hue-14696.firebaseapp.com",
   projectId: "hue-14696",
   storageBucket: "hue-14696.appspot.com",

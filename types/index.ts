@@ -230,14 +230,19 @@ export interface PromotedTypes {
   name: string;
   _id: string;
 }
-export interface ISchool {
+export interface ISchoolTable {
   id: string;
   name: string;
   subdomain: string;
   county: string;
   admin: string;
 }
-
+export interface IFetched {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export type TSchoolStatus = "active" | "paused";
 export interface ICategory {
   id: string;
   name: string;
@@ -247,3 +252,20 @@ export interface ICategory {
   rank: number;
   children: ICategory[];
 }
+export interface IAdmin {
+  uid: string;
+  displayName: string;
+  email: string;
+  phone?: string;
+  role: string;
+  createdAt: string;
+  photoURL: string;
+  updatedAt: string;
+}
+export interface ISchool {
+  name: string;
+  subdomain: string;
+  // location: string;
+  status: TSchoolStatus;
+}
+export interface ISchoolFetched extends IFetched, ISchool {}

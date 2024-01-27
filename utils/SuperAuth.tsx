@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast } from "react-hot-toast";
 import { auth } from "./firebase";
+import Cookies from "js-cookie";
 
 import {
   collection,
@@ -17,78 +18,89 @@ import {
 import { useState } from "react";
 import { db } from "@/utils/firebase";
 import { useRouter } from "next/navigation";
-import { UserProps } from "@/types";
+import { IAdmin } from "@/types";
 const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [admin, setAdmin] = useState<UserProps | {}>({});
-  const [user, setUser] = useState<UserProps | null>(null);
+export const AdminAuthProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [admin, setAdmin] = useState<IAdmin | {} | null>({});
+  const [user, setUser] = useState<IAdmin | null>(null);
   const router = useRouter();
-
+  const setCookies = (role: string) => {
+    Cookies.set("role", role);
+  };
+  const clearRoleCookie = () => {
+    Cookies.remove("role");
+  };
   const fetchUser = async (uid: string) => {
-    const q = query(collection(db, "users"), where("uid", "==", uid));
-    await getDocs(q).then((res) => {
-      const [fUser, ...rest] = res.docs?.map((doc) => {
-        return doc.data() as UserProps;
-      });
-      if (fUser) {
-        setUser(fUser);
-
-        localStorage.setItem("user", JSON.stringify(fUser));
-      } else {
-        setUser(null);
-      }
-    });
+    const docRef = doc(db, "administrators", uid);
+    const docSnap = await getDoc(docRef);
+    const fUser = docSnap.data() as IAdmin;
+    if (fUser) {
+      setUser(fUser);
+      localStorage.setItem("administrator", JSON.stringify(fUser));
+      setCookies(fUser.role);
+    } else {
+      setUser(null);
+      setAdmin(null);
+    }
   };
 
   useEffect(() => {
     const userString =
-      typeof localStorage !== "undefined" && localStorage.getItem("user");
-    const localUser: UserProps | null = userString
-      ? JSON.parse(userString)
-      : null;
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem("administrator");
+    const localUser: IAdmin | null = userString ? JSON.parse(userString) : null;
 
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAdmin({
           uid: user.uid,
           email: user.email,
-          displayNavme: user.displayName,
+          displayName: user.displayName,
           photoURL: user.photoURL,
         });
-        if (localUser) {
+        if (localUser?.uid === user.uid) {
+          setCookies(localUser.role);
           setUser(localUser);
         } else {
           fetchUser(user.uid);
         }
       } else {
-        setAdmin({});
+        setAdmin(null);
         setUser(null);
+        clearRoleCookie();
       }
     });
-    // setLoading(false);
     return () => {
       unsub();
     };
   }, []);
-  const handleSignIn = () => {
+  const handleSignInSuper = () => {
     const googleSignIn = async () => {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider)
         .then(async (result) => {
           const { displayName, email, photoURL, uid } = result.user;
-          const docRef = doc(db, "users", uid);
+          const docRef = doc(db, "administrators", uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             router.push("/");
             return;
           } else {
-            await setDoc(doc(db, "users", uid), {
-              displayName,
-              email,
+            await setDoc(doc(db, "administrators", uid), {
+              displayName: displayName!,
+              email: email!,
               photoURL,
               uid,
-            }).then(() => {
+              createdAt: new Date(),
+              role: "super_admin",
+              updatedAt: new Date(),
+              phone: process.env.NEXT_PUBLIC_PHONE,
+            } as unknown as IAdmin).then(() => {
               router.push("/");
             });
           }
@@ -106,17 +118,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
   const logout = async () => {
     await auth.signOut();
-    localStorage.removeItem("user");
-    router.push("/");
+    localStorage.removeItem("administrator");
+    clearRoleCookie();
+    router.push("/login");
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        handleSignIn,
+        handleSignInSuper,
         fetchUser,
         logout,
+        admin,
       }}
     >
       {children}
@@ -125,13 +139,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 interface AuthContextProps {
-  user: UserProps | null;
-  handleSignIn: () => void;
+  user: IAdmin;
+  admin: IAdmin | null;
+  handleSignInSuper: () => void;
   fetchUser: (uid: string) => void;
   logout: () => Promise<void>;
 }
 
-export const useAuth = (): AuthContextProps => {
+export const useAdminAuth = (): AuthContextProps => {
   const authContext = useContext(AuthContext) as AuthContextProps;
   return authContext;
 };

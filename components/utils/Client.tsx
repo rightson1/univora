@@ -1,5 +1,4 @@
 "use client";
-import { AuthProvider } from "@/utils/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ProgressBar from "next-nprogress-bar";
@@ -11,16 +10,15 @@ const Client = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster />
-      <AuthProvider>
-        <ProgressBar
-          height="6px"
-          color="000"
-          options={{ showSpinner: false }}
-          shallowRouting
-          appDirectory
-        />
-        {children}
-      </AuthProvider>
+
+      <ProgressBar
+        height="6px"
+        color="000"
+        options={{ showSpinner: false }}
+        shallowRouting
+        appDirectory
+      />
+      {children}
 
       <ReactQueryDevtools />
     </QueryClientProvider>

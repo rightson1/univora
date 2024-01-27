@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,14 +15,22 @@ export const CustomModal = ({
   children,
   trigger,
   onSubmit,
+  modalOpen,
+  setModalOpen,
 }: {
   title: string;
   children: React.ReactNode;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   trigger: React.ReactNode;
+  modalOpen?: boolean;
+  setModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const [open, setOpen] = React.useState(false);
+  useEffect(() => {
+    setOpen(modalOpen || false);
+  }, [modalOpen]);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent
@@ -45,12 +53,13 @@ export const CustomModal = ({
 
           <div className="overflow-y-auto flex-grow px-2">{children}</div>
           <DialogFooter className="border-t pt-4 mb:flex-row mb:justify-end">
-            <Button variant="outline" className="mr-2">
-              Cancel
-            </Button>
             <DialogClose>
-              <Button type="submit">Save</Button>
+              <Button variant="outline" type="button" className="mr-2">
+                Cancel
+              </Button>
             </DialogClose>
+
+            <Button type="submit">Save</Button>
           </DialogFooter>
         </form>
       </DialogContent>

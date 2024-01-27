@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-
+// ?!api/|
 export const config = {
-  matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
+  matcher: ["/((?!_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
 };
-
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   let hostname = req.headers
@@ -14,22 +13,37 @@ export default async function middleware(req: NextRequest) {
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
+
+  if (path.startsWith("/api")) {
+    const role = req.cookies.get("role")?.value || "";
+    NextResponse.rewrite(new URL(`${path}`, req.url));
+    if (path.startsWith("/api/s") && role !== "super_admin") {
+      return NextResponse.json({
+        message: "You are not authorized to access this route",
+      });
+    }
+    return NextResponse.next();
+  }
+
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    console.log(new URL(`/admin${path === "/" ? "" : path}`, req.url));
     return NextResponse.rewrite(
       new URL(`/admin${path === "/" ? "" : path}`, req.url)
     );
   }
   if (hostname == `super.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    console.log(new URL(`/admin${path === "/" ? "" : path}`, req.url));
     return NextResponse.rewrite(
       new URL(`/super${path === "/" ? "" : path}`, req.url)
     );
   }
+  if (hostname == `seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    return NextResponse.rewrite(
+      new URL(`/seller${path === "/" ? "" : path}`, req.url)
+    );
+  }
   let subdomain = hostname.split(".")[0];
   if (subdomain && subdomain !== process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
-    console.log();
     return NextResponse.rewrite(new URL(`/${subdomain}`, req.url));
   }
+
   return NextResponse.next();
 }

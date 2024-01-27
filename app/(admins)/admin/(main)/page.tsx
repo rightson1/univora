@@ -41,7 +41,7 @@ import Link from "next/link";
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { TBusiness } from "@/types/sellerTypes";
-import { CustomTable } from "../shared/table";
+import { CustomTable } from "@/components/shared/table";
 const columns: ColumnDef<TBusiness>[] = [
   {
     id: "select",

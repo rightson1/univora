@@ -28,13 +28,13 @@ export const Sidebar = () => {
         <span className=" font-bold">Rightsons Store</span>
       </div>
       <div className="fx-c">
-        <Link href={"/admin/"}>
+        <Link href={"/"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
             <span>Businesses</span>
           </Button>
         </Link>
-        <Link href={"/admin/email"}>
+        <Link href={"/"}>
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <MdOutlineProductionQuantityLimits className="mr-2 h-4 w-4 font-bold" />
             <span>Send Email</span>

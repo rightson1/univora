@@ -1,4 +1,4 @@
-import { ICategory, INavLinks, ISchool } from "@/types";
+import { ICategory, INavLinks, ISchoolTable } from "@/types";
 import { IOrderTable, IProductTable, TBusiness } from "@/types/sellerTypes";
 import {
   ArrowDownIcon,
@@ -381,7 +381,7 @@ export const paymentStatus = [
   },
 ];
 
-export const universitiesTable: ISchool[] = [
+export const universitiesTable: ISchoolTable[] = [
   {
     id: "1",
     name: "University of Nairobi",

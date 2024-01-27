@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./client.css";
 import { Questrial, Manrope } from "@next/font/google";
 import "yet-another-react-lightbox/styles.css";
 import Client from "@/components/utils/Client";
