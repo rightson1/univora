@@ -18,7 +18,7 @@ export default function Error({
   return (
     <div className="h-[calc(100vh-100px)]  flex flex-col items-center justify-center gap-3 pxs">
       <p className="text-xl  text-center">There was a problem</p>
-      <h1 className="text-xl text-red-500 tc">
+      <h1 className="text-xl text-red-500 text-center">
         {error.message || "Something went wrong"}
       </h1>
       <div className="flex gap-2">

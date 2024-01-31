@@ -6,12 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { mobileLinks, navLinks } from "@/utils/data";
 
 import { BiArrowBack } from "react-icons/bi";
-import { useAuth } from "@/utils/SuperAuth";
+
 import useScreen from "@/utils/hooks/useScreen";
 import Button from "../utils/Button";
 const NavBar = () => {
   const { scrolled } = useScreen();
-  const { user, logout } = useAuth();
+
   const pathname = usePathname();
   const router = useRouter();
   return (
@@ -56,19 +56,19 @@ const NavBar = () => {
           ))}
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
-          <Link href="/seller/products">
+          <Link href="/seller">
             <Button title="Seller" containerStyles="outlined"></Button>
           </Link>
 
-          {user ? (
-            <Link href="/profile">
-              <Button title="Profile" containerStyles="filled"></Button>
-            </Link>
-          ) : (
-            <Link href="/login">
-              <Button title="Login" containerStyles="filled"></Button>
-            </Link>
-          )}
+          {/* {user ? ( */}
+          <Link href="/profile">
+            <Button title="Profile" containerStyles="filled"></Button>
+          </Link>
+          {/* ) : ( */}
+          <Link href="/login">
+            <Button title="Login" containerStyles="filled"></Button>
+          </Link>
+          {/* )} */}
         </div>
 
         {/* <MobileMenu /> */}

@@ -9,12 +9,32 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ISchoolFetched, TSchoolStatus } from "@/types";
+import { useCustomToast } from "@/components/helpers/functions";
+import { useUpdateSchool } from "@/utils/hooks/useSchools";
 
 export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
   const [values, setValues] = useState<ISchoolFetched>(school);
+  const { loading, customToast, modalOpen, setModalOpen } = useCustomToast();
+  const { mutateAsync: updateSchoolFunc } = useUpdateSchool();
+  const edit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    customToast({
+      func: async () => updateSchoolFunc(values),
+      suc: "School updated successfully",
+    });
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <CustomModal
       title="Edit Riara University"
+      onSubmit={edit}
+      disableSubmit={loading}
+      modalOpen={modalOpen}
+      setModalOpen={setModalOpen}
       trigger={
         <Button
           variant={"ghost"}
@@ -33,6 +53,7 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
             id="name"
             placeholder="Riara University"
             value={values.name}
+            onChange={handleChange}
             required
           />
         </div>
@@ -43,6 +64,7 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
             placeholder="Subdomain of your "
             value={values.subdomain}
             name="subdomain"
+            onChange={handleChange}
             required
           />
         </div>
@@ -56,6 +78,12 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
             bg-background
              focus:outline-none focus:shadow-outline"
             required
+            onChange={(e) =>
+              setValues((prev) => ({
+                ...prev,
+                status: e.target.value as TSchoolStatus,
+              }))
+            }
           >
             {(["active", "paused"] as TSchoolStatus[]).map((item, index) => (
               <option key={index} value={item}>

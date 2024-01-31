@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ export const CustomModal = ({
   onSubmit,
   modalOpen,
   setModalOpen,
+  disableSubmit = false,
 }: {
   title: string;
   children: React.ReactNode;
@@ -24,6 +26,7 @@ export const CustomModal = ({
   trigger: React.ReactNode;
   modalOpen?: boolean;
   setModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  disableSubmit?: boolean;
 }) => {
   const [open, setOpen] = React.useState(false);
   useEffect(() => {
@@ -36,10 +39,13 @@ export const CustomModal = ({
       <DialogContent
         // asChild
         close={false}
-        className="mb:w-[85vw]  mb:max-h-[80vh] 
-    max-h-[90vh] rounded-md sm:max-w-[725px] p-4 flex flex-col"
+        className=""
       >
-        <form onSubmit={onSubmit}>
+        <form
+          onSubmit={onSubmit}
+          className="mb:w-[85vw]  mb:max-h-[80vh] 
+    max-h-[90vh] rounded-md sm:max-w-[725px] p-4 flex flex-col"
+        >
           <DialogHeader className="border-b pb-4">
             <div className="fb">
               <h4 className="h3">{title}</h4>
@@ -51,7 +57,7 @@ export const CustomModal = ({
             </div>
           </DialogHeader>
 
-          <div className="overflow-y-auto flex-grow px-2">{children}</div>
+          <div className="overflow-y-scroll flex-grow px-2">{children}</div>
           <DialogFooter className="border-t pt-4 mb:flex-row mb:justify-end">
             <DialogClose>
               <Button variant="outline" type="button" className="mr-2">
@@ -59,7 +65,9 @@ export const CustomModal = ({
               </Button>
             </DialogClose>
 
-            <Button type="submit">Save</Button>
+            <Button disabled={disableSubmit} type="submit">
+              Save
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

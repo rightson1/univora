@@ -18,16 +18,16 @@ import {
 import { useState } from "react";
 import { db } from "@/utils/firebase";
 import { useRouter } from "next/navigation";
-import { IAdmin } from "@/types";
+import { ISAdmin } from "@/types";
 const AuthContext = createContext({});
 
-export const AdminAuthProvider = ({
+export const SuperAdminAuthProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [admin, setAdmin] = useState<IAdmin | {} | null>({});
-  const [user, setUser] = useState<IAdmin | null>(null);
+  const [admin, setAdmin] = useState<ISAdmin | {} | null>({});
+  const [user, setUser] = useState<ISAdmin | null>(null);
   const router = useRouter();
   const setCookies = (role: string) => {
     Cookies.set("role", role);
@@ -38,7 +38,7 @@ export const AdminAuthProvider = ({
   const fetchUser = async (uid: string) => {
     const docRef = doc(db, "administrators", uid);
     const docSnap = await getDoc(docRef);
-    const fUser = docSnap.data() as IAdmin;
+    const fUser = docSnap.data() as ISAdmin;
     if (fUser) {
       setUser(fUser);
       localStorage.setItem("administrator", JSON.stringify(fUser));
@@ -53,7 +53,9 @@ export const AdminAuthProvider = ({
     const userString =
       typeof localStorage !== "undefined" &&
       localStorage.getItem("administrator");
-    const localUser: IAdmin | null = userString ? JSON.parse(userString) : null;
+    const localUser: ISAdmin | null = userString
+      ? JSON.parse(userString)
+      : null;
 
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -91,18 +93,19 @@ export const AdminAuthProvider = ({
             router.push("/");
             return;
           } else {
-            await setDoc(doc(db, "administrators", uid), {
-              displayName: displayName!,
-              email: email!,
-              photoURL,
-              uid,
-              createdAt: new Date(),
-              role: "super_admin",
-              updatedAt: new Date(),
-              phone: process.env.NEXT_PUBLIC_PHONE,
-            } as unknown as IAdmin).then(() => {
-              router.push("/");
-            });
+            // await setDoc(doc(db, "administrators", uid), {
+            //   displayName: displayName!,
+            //   email: email!,
+            //   photoURL,
+            //   uid,
+            //   createdAt: new Date(),
+            //   role: "super_admin",
+            //   updatedAt: new Date(),
+            //   phone: process.env.NEXT_PUBLIC_PHONE,
+            // } as unknown as ISAdmin).then(() => {
+            //   router.push("/");
+            // });
+            throw new Error("You are not authorized to access this page");
           }
         })
         .catch((error) => {
@@ -139,14 +142,14 @@ export const AdminAuthProvider = ({
 };
 
 interface AuthContextProps {
-  user: IAdmin;
-  admin: IAdmin | null;
+  user: ISAdmin;
+  admin: ISAdmin | null;
   handleSignInSuper: () => void;
   fetchUser: (uid: string) => void;
   logout: () => Promise<void>;
 }
 
-export const useAdminAuth = (): AuthContextProps => {
+export const useSuperAuth = (): AuthContextProps => {
   const authContext = useContext(AuthContext) as AuthContextProps;
   return authContext;
 };

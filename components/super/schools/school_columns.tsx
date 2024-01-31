@@ -73,10 +73,7 @@ export const school_columns: ColumnDef<ISchoolFetched>[] = [
             <DropdownMenuItem className="flex items-center space-x-2" asChild>
               <EditSchool school={school} />
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex items-center space-x-2">
-              <MdUnpublished />
-              <span>Unpublish</span>
-            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center space-x-2">
               <MdDeleteOutline />

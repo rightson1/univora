@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import NavBar from "@/components/user/Navbar";
-import { IChildren } from "@/types";
+
 import Footer from "@/components/user/Footer";
 import { SchoolSelect } from "@/components/user/SchoolSelect";
 import { useRouter } from "next/navigation";
 
-const Layout = ({ children }: IChildren) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   const [school, setSchool] = useState(true);
   const router = useRouter();
 

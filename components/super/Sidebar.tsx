@@ -7,13 +7,13 @@ import { IoMdMenu } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useAdminAuth } from "@/utils/SuperAuth";
+import { useSuperAuth } from "@/utils/SuperAuth";
 import { CiHome } from "react-icons/ci";
 import { IoSchoolOutline } from "react-icons/io5";
 import { CiShoppingCart } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
 export const Sidebar = () => {
-  const { user, logout } = useAdminAuth();
+  const { user, logout } = useSuperAuth();
   const pathname = usePathname().split("/")[1];
 
   return (

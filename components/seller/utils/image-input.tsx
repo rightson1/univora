@@ -143,3 +143,47 @@ export const ImageInputWithView = (props: ImageInputProps) => {
     </div>
   );
 };
+
+export const SingleImageInputWithView = ({
+  file,
+  setFile,
+  imageUrl,
+}: {
+  file: File | null;
+  setFile: React.Dispatch<SetStateAction<File | null>>;
+  imageUrl?: string;
+}) => {
+  return (
+    <div className="fx-c gap-5">
+      <ImageInput multiple={false} file={file} setFile={setFile} />
+      {file ? (
+        <div className="fb w-full">
+          <Image
+            src={URL.createObjectURL(file)}
+            width={200}
+            height={200}
+            alt="Image"
+            className="h-30 object-cover  rounded-lg"
+          />
+          <Button
+            variant="ghost"
+            size={"icon"}
+            onClick={() => {
+              setFile(null);
+            }}
+          >
+            <FaMinus className=" text-xl" />
+          </Button>
+        </div>
+      ) : imageUrl ? (
+        <Image
+          src={imageUrl}
+          width={200}
+          height={200}
+          alt="Image"
+          className="h-30 object-cover  rounded-lg"
+        />
+      ) : null}
+    </div>
+  );
+};

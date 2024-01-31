@@ -1,10 +1,28 @@
+"use client";
 import Navbar from "@/components/admin/utils/Navbar";
 import { Sidebar } from "@/components/admin/utils/Sidebar";
 import { IChildren } from "@/types";
 import { ThemeProvider } from "@/components/seller/utils/theme-provider";
-
-import React from "react";
+import React, { useEffect } from "react";
+import { useAdminAuth } from "@/utils/AdminAuth";
+import { useRouter } from "next/navigation";
+import { DashboardLoading } from "@/components/shared/dashboard_loading";
 const Layout = ({ children }: IChildren) => {
+  const { user, admin } = useAdminAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (!admin) {
+      router.push("/login");
+    }
+
+    if (user && user.role !== "admin") {
+      throw new Error("You are not authorized to view this page");
+    }
+  }, [admin, user, router]);
+
+  if (!user) {
+    return <DashboardLoading />;
+  }
   return (
     <ThemeProvider
       attribute="class"

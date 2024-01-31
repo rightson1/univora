@@ -1,4 +1,4 @@
-import { ICategory, INavLinks, ISchoolTable } from "@/types";
+import { ICategoryTable, INavLinks, ISchoolTable } from "@/types";
 import { IOrderTable, IProductTable, TBusiness } from "@/types/sellerTypes";
 import {
   ArrowDownIcon,
@@ -453,7 +453,7 @@ export const universitiesTable: ISchoolTable[] = [
     admin: "Admin10",
   },
 ];
-export const dummyCategories: ICategory[] = [
+export const dummyCategories: ICategoryTable[] = [
   {
     id: "1",
     name: "Electronics",

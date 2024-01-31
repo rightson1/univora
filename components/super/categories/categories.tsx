@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosAdd, IoIosMore } from "react-icons/io";
-import { ICategory } from "@/types";
+import { ICategory, ICategoryFetched, ICategoryTable } from "@/types";
 import { dummyCategories } from "@/utils/data";
 import {
   Card,
@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/card";
 import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 import { AddCategory } from "./add-category";
+import { Button } from "@/components/ui/button";
+import { useGetPopulatedCategories } from "@/utils/hooks/useCategories";
+import { EditCategory } from "./edit-category";
 
 export const CategoryTable = () => {
-  const [categories, setCategories] = useState<ICategory[]>(dummyCategories);
+  const { data: categories, isLoading } = useGetPopulatedCategories();
+  console.log(categories);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
 
   const toggleCategory = (id: string) => {
@@ -24,7 +28,7 @@ export const CategoryTable = () => {
     );
   };
 
-  const renderCategory = (category: ICategory, level = 0) => {
+  const renderCategory = (category: ICategoryFetched, level = 0) => {
     const pl = level * 30;
     return (
       <motion.div
@@ -40,9 +44,9 @@ export const CategoryTable = () => {
           {category.children?.length > 0 && (
             <button
               className="mr-2"
-              onClick={() => toggleCategory(category.id)}
+              onClick={() => toggleCategory(category._id)}
             >
-              {openCategories.includes(category.id) ? (
+              {openCategories.includes(category._id) ? (
                 <FaCaretDown />
               ) : (
                 <FaCaretRight />
@@ -52,33 +56,23 @@ export const CategoryTable = () => {
           <span>{category.name}</span>
         </div>
         <div className="flex">
-          <AddCategory
-            parentCategory={category}
-            setCategories={setCategories}
-            categories={categories}
-          />
-          <button
-            onClick={() => {
-              // Handle showing more options here
-            }}
-          >
-            <IoIosMore className="text-xl" />
-          </button>
+          <AddCategory parentCategory={category} />
+          <EditCategory category={category} />
         </div>
       </motion.div>
     );
   };
 
-  const renderCategories = (categories: ICategory[], level = 0) => {
+  const renderCategories = (categories: ICategoryFetched[], level = 0) => {
     if (level > 10) return null; // Limit to 10 levels of nesting
 
     return (
       <AnimatePresence>
         {categories.map((category) => (
-          <React.Fragment key={category.id}>
+          <React.Fragment key={category._id}>
             {renderCategory(category, level)}
             {category.children &&
-              openCategories.includes(category.id) &&
+              openCategories.includes(category._id) &&
               renderCategories(category.children, level + 1)}
           </React.Fragment>
         ))}
@@ -89,10 +83,21 @@ export const CategoryTable = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Categories</CardTitle>
+        <div className="fb w-full">
+          <CardTitle>Categories</CardTitle>
+          <AddCategory />
+        </div>
         <CardDescription>Product Categories.</CardDescription>
       </CardHeader>
-      <CardContent>{renderCategories(categories)}</CardContent>
+      <CardContent>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : categories ? (
+          renderCategories(categories)
+        ) : (
+          <div>No Categories</div>
+        )}
+      </CardContent>
     </Card>
   );
 };

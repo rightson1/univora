@@ -3,11 +3,11 @@ import { IChildren } from "@/types";
 import React, { use, useEffect } from "react";
 import { Sidebar } from "@/components/super/Sidebar";
 import Navbar from "@/components/super/Navbar";
-import { useAdminAuth } from "@/utils/SuperAuth";
+import { useSuperAuth } from "@/utils/SuperAuth";
 import { useRouter } from "next/navigation";
 import { DashboardLoading } from "@/components/shared/dashboard_loading";
 const Layout = ({ children }: IChildren) => {
-  const { user, admin } = useAdminAuth();
+  const { user, admin } = useSuperAuth();
   const router = useRouter();
   useEffect(() => {
     if (!admin) {

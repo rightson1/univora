@@ -126,7 +126,7 @@ const columns: ColumnDef<IProductTable>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center space-x-2" asChild>
-              <Link href={`/seller/products/${product.id}`}>
+              <Link href={`/products/${product.id}`}>
                 <BiEdit />
                 <span>Edit</span>
               </Link>
@@ -179,7 +179,7 @@ export default function Products() {
       <div className="flex items-center justify-between space-y-2 pb-5">
         <h2 className="text-3xl font-bold tracking-tight">Products</h2>
         <div className="flex items-center space-x-2">
-          <Link href="/seller/new-product">
+          <Link href="/new-product">
             <Button size={"sm"}>New Product</Button>
           </Link>
         </div>

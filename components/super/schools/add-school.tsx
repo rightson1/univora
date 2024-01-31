@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 
 import { ISchool, TSchoolStatus } from "@/types";
 import { useAddSchool } from "@/utils/hooks/useSchools";
-import { customToast } from "@/components/helpers/functions";
+import { useCustomToast } from "@/components/helpers/functions";
 
 export const AddSchool = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const { customToast, loading, modalOpen, setModalOpen } = useCustomToast();
+
   const { mutateAsync: addSchoolFunc } = useAddSchool();
   const addSchool = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,8 +25,6 @@ export const AddSchool = () => {
     customToast({
       func: async () => addSchoolFunc(school),
       suc: "School added successfully",
-      sfunc: () => setModalOpen(false),
-      efunc: () => setModalOpen(true),
     });
   };
 

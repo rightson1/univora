@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CustomButtonProps } from "@/types";
+// import { CustomButtonProps } from "@/types";
 const Button = ({
   isDisabled,
   btnType,
@@ -8,7 +8,15 @@ const Button = ({
   title,
   rightIcon,
   handleClick,
-}: CustomButtonProps) => (
+}: {
+  isDisabled?: boolean;
+  btnType?: "button" | "submit" | "reset";
+  containerStyles?: string;
+  textStyles?: string;
+  title: string;
+  rightIcon?: React.ReactNode;
+  handleClick?: () => void;
+}) => (
   <button
     disabled={isDisabled}
     type={btnType || "button"}

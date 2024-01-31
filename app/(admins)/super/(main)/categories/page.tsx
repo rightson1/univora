@@ -1,4 +1,4 @@
-import { CategoryTable } from "@/components/super/categories/table";
+import { CategoryTable } from "@/components/super/categories/categories";
 import React from "react";
 import { dummyCategories } from "@/utils/data";
 

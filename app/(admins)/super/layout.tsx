@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/seller/utils/theme-provider";
 import React from "react";
 import { Sidebar } from "@/components/super/Sidebar";
 import Navbar from "@/components/super/Navbar";
-import { AdminAuthProvider } from "@/utils/SuperAuth";
+import { SuperAdminAuthProvider } from "@/utils/SuperAuth";
 const Layout = ({ children }: IChildren) => {
   return (
     <ThemeProvider
@@ -13,7 +13,7 @@ const Layout = ({ children }: IChildren) => {
       enableSystem
       disableTransitionOnChange
     >
-      <AdminAuthProvider>{children}</AdminAuthProvider>
+      <SuperAdminAuthProvider>{children}</SuperAdminAuthProvider>
     </ThemeProvider>
   );
 };
