@@ -9,9 +9,10 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { IoIosHome } from "react-icons/io";
 import { useSellerAuth } from "@/utils/sellerAuth";
+import { LogOut, Settings } from "lucide-react";
 const Sidebar = () => {
   const pathname = usePathname().split("/")[1];
-  const { user } = useSellerAuth();
+  const { seller, logout } = useSellerAuth();
   return (
     <div
       className="w-[250px] border-color-border border-r 
@@ -23,12 +24,14 @@ const Sidebar = () => {
       <Avatar className="p-[2px] ring-1 ring-ring">
         <AvatarImage />
         <AvatarFallback className="">
-          <span className="font-bold text-2xl">{user?.name?.split("")[0]}</span>
+          <span className="font-bold text-2xl">
+            {seller?.name?.split("")[0]}
+          </span>
         </AvatarFallback>
       </Avatar>
       <div className="fx-c">
         <span className="tsm">Store</span>
-        <span className=" font-bold">{user?.name?.split(" ")[0]}s Store</span>
+        <span className=" font-bold">{seller?.name?.split(" ")[0]}s Store</span>
       </div>
       <div className="fx-c">
         <Link href={"/"}>
@@ -57,12 +60,16 @@ const Sidebar = () => {
           </Button>
         </Link>
 
-        {/* <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-          <IoCartOutline className="mr-2 h-4 w-4 font-bold" />
+        <Button
+          variant={"ghost"}
+          className="font-semibold fc gap-3  "
+          onClick={() => logout()}
+        >
+          <LogOut className="mr-2 h-4 w-4 font-bold" />
           <span>
             <span>Logout</span>
           </span>
-        </Button> */}
+        </Button>
       </div>
     </div>
   );

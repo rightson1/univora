@@ -15,6 +15,13 @@ const SellerSchema = new Schema(
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
+
     school: {
       type: Schema.Types.ObjectId,
       ref: "School",

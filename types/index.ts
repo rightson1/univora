@@ -1,5 +1,6 @@
-import { MouseEventHandler } from "react";
+import { ChangeEvent, MouseEventHandler } from "react";
 import { Dispatch, SetStateAction } from "react";
+import { TOption } from "./sellerTypes";
 export interface CustomButtonProps {
   isDisabled?: boolean;
   btnType?: "button" | "submit";
@@ -180,4 +181,35 @@ export interface IAuthUser {
   displayName?: string;
   photoURL?: string;
   uid: string;
+}
+
+export interface IVariant {
+  options: string;
+  price: number;
+  active: boolean;
+}
+export interface IProduct {
+  business: string;
+  name: string;
+  price: number;
+  description?: string;
+  longDescription?: string;
+  category: string;
+  stock: number;
+  tags: string[];
+  brand?: string;
+  thumbnail?: string;
+  media?: string[];
+  active: boolean;
+  options?: TOption[];
+  slug: string;
+  variants?: IVariant[];
+}
+export interface IProductValues {
+  values: Pick<
+    IProduct,
+    "category" | "name" | "price" | "description" | "stock" | "tags" | "brand"
+  >;
+  setValues: Dispatch<SetStateAction<IProductValues["values"]>>;
+  handleChange: (e: ChangeEvent<InputChangeEventTypes>) => void;
 }

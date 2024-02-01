@@ -20,8 +20,21 @@ const QuillWrapper = dynamic(
   }
 ) as typeof ReactQuill;
 
-export const Editor = () => {
-  return <QuillWrapper theme="snow" modules={modules} formats={formats} />;
+export const Editor = ({
+  setEditorContent,
+}: {
+  setEditorContent?: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  return (
+    <QuillWrapper
+      theme="snow"
+      onChange={(e) => {
+        setEditorContent && setEditorContent(e);
+      }}
+      modules={modules}
+      formats={formats}
+    />
+  );
 };
 const formats = [
   "header",

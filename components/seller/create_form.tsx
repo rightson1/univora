@@ -63,6 +63,9 @@ export const Create_Seller = () => {
       sfunc: () => {
         router.push("/");
       },
+      efunc: () => {
+        console.log("error");
+      },
     });
   };
   return (

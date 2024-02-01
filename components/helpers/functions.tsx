@@ -1,3 +1,4 @@
+import { ICategoryFetched } from "@/types";
 import { storage } from "@/utils/firebase";
 import {
   deleteObject,
@@ -24,7 +25,7 @@ export const useCustomToast = () => {
     loading?: string;
     suc?: string;
     err?: string;
-    efunc?: () => void | (() => Promise<any>);
+    efunc?: (() => Promise<void>) | (() => void);
   }) => {
     setModalOpen(true);
     setLoading(true);
@@ -87,4 +88,18 @@ export const deleteFile = async (url: string) => {
     console.log(err);
     return true;
   }
+};
+export const flattenCategories = (
+  categories: ICategoryFetched[]
+): ICategoryFetched[] => {
+  return categories.reduce(
+    (acc: ICategoryFetched[], category: ICategoryFetched) => {
+      if (category.children) {
+        return [...acc, category, ...flattenCategories(category.children)];
+      } else {
+        return [...acc, category];
+      }
+    },
+    []
+  );
 };

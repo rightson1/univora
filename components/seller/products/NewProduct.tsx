@@ -19,23 +19,116 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { MdDeleteOutline } from "react-icons/md";
 import { TOption } from "@/types/sellerTypes";
-import { useFieldArray, useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageInputWithView } from "../utils/image-input";
+import {
+  ICategory,
+  ICategoryFetched,
+  IProduct,
+  IProductValues,
+  IVariant,
+  InputChangeEventTypes,
+} from "@/types";
+import { useGetPopulatedCategories } from "@/utils/hooks/useCategories";
+import { CornerUpLeft } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  deleteFile,
+  flattenCategories,
+  uploadFile,
+  useCustomToast,
+} from "@/components/helpers/functions";
+import { useSellerAuth } from "@/utils/sellerAuth";
+import { useAddProduct } from "@/utils/hooks/useProduct";
+import toast from "react-hot-toast";
 
 export const NewProductForm = () => {
+  const { seller } = useSellerAuth();
+  const [values, setValues] = useState<IProductValues["values"]>({
+    name: "",
+    price: 0,
+    description: "",
+    category: "",
+    brand: "",
+    stock: 0,
+    tags: [],
+  });
   const [options, setOptions] = useState<TOption[]>([
     { title: "", variations: [] },
   ]);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const { customToast, loading } = useCustomToast();
   const [media, setMedia] = useState<File[]>([]);
+  const [longDescription, setLongDescription] = useState("");
+  const [variants, setVariants] = useState<IVariant[]>([]);
+  const { mutateAsync: addProduct } = useAddProduct();
+  const handleChange = (e: ChangeEvent<InputChangeEventTypes>) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  const publish = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!thumbnail) {
+      return toast.error("Please select a thumbnail");
+    }
+    const data = {
+      ...values,
+      longDescription: longDescription,
+      options,
+      variants,
+      active: true,
+      business: seller._id,
+      slug: values.name.toLowerCase().replace(/ /g, "-"),
+    };
+    console.log(data);
+    let thumbnailUrl = "";
+    let mediaUrls: string[] = [];
+    const publishProduct = async () => {
+      thumbnailUrl = await uploadFile(
+        thumbnail,
+        `products/${seller.name}/${values.name}/thumbnail`
+      );
+      if (media.length > 0) {
+        mediaUrls = await Promise.all(
+          media.map(
+            async (file) =>
+              await uploadFile(
+                file,
+                `products/${seller.name}/${values.name}/media`
+              )
+          )
+        );
+      }
+      const product: IProduct = {
+        ...data,
+        thumbnail: thumbnailUrl,
+        media: mediaUrls,
+      };
+      console.log(product);
+      await addProduct(product);
+    };
+    customToast({
+      func: publishProduct,
+      efunc: async () => {
+        //delete thumbnail and media
+        await deleteFile(thumbnailUrl);
+        await Promise.all(mediaUrls.map(async (url) => await deleteFile(url)));
+      },
+    });
+  };
+
   return (
-    <div className="w-full rounded-lg ">
+    <form className="w-full rounded-lg " onSubmit={publish}>
       <div className="fb">
         <h2 className="h3">New Product</h2>
-        <Button size={"sm"}>Publish Product</Button>
+        <Button size={"sm"} type="submit" disabled={loading}>
+          Publish Product
+        </Button>
       </div>
 
       <Tabs defaultValue="simple" className="w-full py-5">
@@ -45,30 +138,50 @@ export const NewProductForm = () => {
         </TabsList>
         <TabsContent value="simple">
           <div className="py-5 fx-c gap-5">
-            <GeneralInformation />
-            <Description />
-            <Organise />
+            <GeneralInformation
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
+
+            <Organise
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
           </div>
         </TabsContent>
         <TabsContent value="complex">
           <div className="py-5 fx-c gap-5">
-            <GeneralInformation />
-            <Description />
-            <Organise />
-            {/* <Attributes /> */}
+            <GeneralInformation
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
+            <Organise
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
+            <Description setDescription={setLongDescription} />
+
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
             <Options {...{ options, setOptions }} />
-            <Variants {...{ options, setOptions }} />
+            <Variants {...{ options, setOptions, variants, setVariants }} />
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </form>
   );
 };
-const GeneralInformation = () => {
+const GeneralInformation = ({
+  values,
+  setValues,
+  handleChange,
+}: IProductValues) => {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -78,35 +191,73 @@ const GeneralInformation = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
-            <div className="flex flex-col space-y-1.5 ">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your product" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Price</Label>
-              <Input
-                id="price"
-                placeholder="Price of your product"
-                type="number"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5 md:col-span-2">
-              <Label htmlFor="shortDescription">Short Description</Label>
-              <Textarea
-                id="shortDescription"
-                placeholder="
-                  A small description of your product"
-              />
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
+          <div className="flex flex-col space-y-1.5 ">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              placeholder="Name of your product"
+              name="name"
+              onChange={handleChange}
+              value={values.name}
+              required
+            />
           </div>
-        </form>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="name">Price</Label>
+            <Input
+              id="price"
+              placeholder="Price of your product"
+              type="number"
+              onChange={handleChange}
+              value={values.price}
+              name="price"
+              required
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5 md:col-span-2">
+            <Label htmlFor="shortDescription">Short Description</Label>
+            <Textarea
+              id="shortDescription"
+              placeholder="
+                  A small description of your product"
+              onChange={handleChange}
+              value={values.description}
+              name="description"
+              required
+            />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
 };
-const Organise = () => {
+const Organise = ({ values, setValues, handleChange }: IProductValues) => {
+  const { data: categories, isLoading } = useGetPopulatedCategories();
+  const [level, setLevel] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const [currentCategories, setCurrentCategories] = useState<
+    ICategoryFetched[]
+  >([]);
+  useEffect(() => {
+    if (categories) {
+      setCurrentCategories(categories);
+    }
+  }, [categories]);
+  const handleCategoryChange = (selectedCategory: ICategoryFetched) => {
+    setLevel(level + 1);
+    const newCategories = selectedCategory.children || [];
+    if (newCategories.length === 0) {
+      setValues({ ...values, category: selectedCategory._id });
+      setOpen(false);
+      return;
+    }
+    setValues({ ...values, category: selectedCategory._id });
+    setCurrentCategories(newCategories);
+  };
+  const ftCategories = flattenCategories(categories || []);
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -116,97 +267,174 @@ const Organise = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid md:grid-cols-2 w-full  gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="category">Category *</Label>
-              <Input
-                type="number"
-                id="category"
-                placeholder="Category of your product in Kg"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="brand">Brand</Label>
-              <Input
-                type="number"
-                id="brand"
-                placeholder="Brand of your product in Kg"
-              />
-            </div>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
-};
-const Attributes = () => {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Attributes</CardTitle>
-        <CardDescription>
-          Please Provide the attributes of your product.(Optional)
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid grid-cols-2 md:grid-cols-3 w-full  gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="brand">Brand</Label>
-              <Input
-                type="text"
-                id="brand"
-                placeholder="Brand of your product"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="material">Material</Label>
-              <Input
-                type="text"
-                id="material"
-                placeholder="Material of your product"
-              />
-            </div>
+        <div className="grid md:grid-cols-2 w-full  gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="categories">
+              {isLoading ? "Loading Categories" : "Categories"}
+            </Label>
 
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="weight">Weight</Label>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="justify-start">
+                  {ftCategories.find((c) => c._id === values.category)?.name ||
+                    " Select Category"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <Button
+                  variant={"ghost"}
+                  className="w-full cursor-pointer justify-start"
+                  onClick={() => {
+                    if (level > 0) {
+                      setLevel(level - 1);
+                      setCurrentCategories(categories || []);
+                    }
+                  }}
+                >
+                  {level === 0 ? (
+                    "Categories"
+                  ) : (
+                    <span className="fc gap-2">
+                      <CornerUpLeft className="text-[10px]" />
+                      Back
+                    </span>
+                  )}
+                </Button>
+                {currentCategories?.map((category) => (
+                  <Button
+                    variant={"ghost"}
+                    key={category._id}
+                    className="w-full justify-start  cursor-pointer"
+                    onClick={() => handleCategoryChange(category)}
+                  >
+                    {category.name}
+                  </Button>
+                ))}
+              </PopoverContent>
+            </Popover>
+            <div className="h-[.1px] w-[1px] overflow-hidden">
               <Input
-                type="number"
-                id="weight"
-                placeholder="Weight of your product in Kg"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="height">Height</Label>
-              <Input
-                type="number"
-                id="height"
-                placeholder="Height of your product in cm"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="width">Width</Label>
-              <Input
-                type="number"
-                id="width"
-                placeholder="Width of your product in cm"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="length">Length</Label>
-              <Input
-                type="number"
-                id="length"
-                placeholder="Length of your product in cm"
+                id="category"
+                placeholder="Category of your product"
+                name="category"
+                className="h-[1px] overflow-hidden opacity-0 "
+                value={values.category}
+                required
               />
             </div>
           </div>
-        </form>
+
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="brand">Brand</Label>
+            <Input
+              id="brand"
+              placeholder="Brand of your product"
+              name="brand"
+              onChange={handleChange}
+              value={values.brand}
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="stock">Stock*</Label>
+            <Input
+              type="number"
+              id="stock"
+              placeholder="Number of products in stock"
+              name="stock"
+              onChange={handleChange}
+              value={values.stock}
+              required
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="tags">
+              Tags | Keywords (Separate With Commas)*
+            </Label>
+            <Input
+              id="tags"
+              placeholder="
+             Tags or keywords that describe your product
+             "
+              name="tags"
+              required
+              value={values.tags.length > 0 ? values.tags.join(",") : ""}
+              onChange={(e) => {
+                setValues({ ...values, tags: e.target.value.split(",") });
+              }}
+            />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
 };
+// const Attributes = () => {
+//   return (
+//     <Card className="w-full">
+//       <CardHeader>
+//         <CardTitle>Attributes</CardTitle>
+//         <CardDescription>
+//           Please Provide the attributes of your product.(Optional)
+//         </CardDescription>
+//       </CardHeader>
+//       <CardContent>
+//         <form>
+//           <div className="grid grid-cols-2 md:grid-cols-3 w-full  gap-4">
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="brand">Brand</Label>
+//               <Input
+//                 type="text"
+//                 id="brand"
+//                 placeholder="Brand of your product"
+//               />
+//             </div>
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="material">Material</Label>
+//               <Input
+//                 type="text"
+//                 id="material"
+//                 placeholder="Material of your product"
+//               />
+//             </div>
+
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="weight">Weight</Label>
+//               <Input
+//                 type="number"
+//                 id="weight"
+//                 placeholder="Weight of your product in Kg"
+//               />
+//             </div>
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="height">Height</Label>
+//               <Input
+//                 type="number"
+//                 id="height"
+//                 placeholder="Height of your product in cm"
+//               />
+//             </div>
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="width">Width</Label>
+//               <Input
+//                 type="number"
+//                 id="width"
+//                 placeholder="Width of your product in cm"
+//               />
+//             </div>
+//             <div className="flex flex-col space-y-1.5">
+//               <Label htmlFor="length">Length</Label>
+//               <Input
+//                 type="number"
+//                 id="length"
+//                 placeholder="Length of your product in cm"
+//               />
+//             </div>
+//           </div>
+//         </form>
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 const Options = ({
   options,
@@ -304,6 +532,9 @@ const Options = ({
                   }
                   handleAddition={(tag) => handleAddition(optionIndex, tag)}
                   delimiters={delimiters}
+                  handleDrag={(tag, currPos, newPos) =>
+                    handleDrag(optionIndex, tag, currPos, newPos)
+                  }
                   inputFieldPosition="top"
                   placeholder="Add new variation"
                   classNames={{
@@ -341,7 +572,11 @@ const Options = ({
   );
 };
 
-export const Description = () => {
+export const Description = ({
+  setDescription,
+}: {
+  setDescription: React.Dispatch<SetStateAction<string>>;
+}) => {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -351,7 +586,7 @@ export const Description = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Editor />
+        <Editor setEditorContent={setDescription} />
       </CardContent>
     </Card>
   );
@@ -398,20 +633,17 @@ const Media = ({
   );
 };
 
-interface Variant {
-  name: string;
-  option: string;
-  price: number;
-}
-
 interface VariantsProps {
   options: TOption[];
+  variants: IVariant[];
+  setVariants: (variants: IVariant[]) => void;
 }
 
-const Variants: React.FC<VariantsProps> = ({ options }) => {
-  const [variants, setVariants] = useState<Variant[]>([
-    { name: "", option: "", price: 0 },
-  ]);
+const Variants: React.FC<VariantsProps> = ({
+  options,
+  setVariants,
+  variants,
+}) => {
   const [allOptions, setAllOptions] = useState<string[][]>([]);
 
   function getCombinations(options: TOption[]): string[][] {
@@ -439,7 +671,15 @@ const Variants: React.FC<VariantsProps> = ({ options }) => {
     );
     setAllOptions(allOptions);
   }, [options]);
-
+  useEffect(() => {
+    setVariants(
+      allOptions.map((option) => ({
+        options: option.join(", "),
+        price: 0,
+        active: false,
+      }))
+    );
+  }, [allOptions]);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -454,33 +694,54 @@ const Variants: React.FC<VariantsProps> = ({ options }) => {
           <table className="table-auto w-full">
             <thead>
               <tr>
-                <th className="px-4 py-2">Visible</th>
+                <th className="px-4 py-2">Visible(Check)</th>
                 <th className="px-4 py-2">Option</th>
                 <th className="px-4 py-2">Price</th>
               </tr>
             </thead>
             <tbody>
-              {allOptions.map((option, optionIndex) => {
-                if (option.length === 0) return null;
-                return (
-                  <tr key={optionIndex}>
-                    <td className="border px-4 py-2">
-                      <Checkbox id={`Visible-${optionIndex}`} />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Badge>{option.join(", ")}</Badge>
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        type="text"
-                        id={`Price-${optionIndex}`}
-                        placeholder="Price of your product"
-                        className="border-none outline-none"
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
+              {
+                // sort by option.active
+                variants.map((option, optionIndex) => {
+                  return (
+                    <tr key={optionIndex}>
+                      <td className="border px-4 py-2">
+                        <Checkbox
+                          checked={option.active}
+                          id={`Visible-${optionIndex}`}
+                          onCheckedChange={(e) => {
+                            const newVariants = [...variants];
+                            newVariants[optionIndex].active = e as boolean;
+                            // newVariants.sort((a, b) =>
+                            //   a.active === b.active ? 0 : a.active ? -1 : 1
+                            // );
+                            console.log(newVariants);
+                            setVariants(newVariants);
+                          }}
+                        />
+                      </td>
+                      <td className="border px-4 py-2">
+                        <Badge>{option.options}</Badge>
+                      </td>
+                      <td className="border px-4 py-2">
+                        <Input
+                          type="text"
+                          id={`Price-${optionIndex}`}
+                          placeholder="Price of your product"
+                          className="border-none outline-none"
+                          onChange={(e) => {
+                            const newVariants = [...variants];
+                            newVariants[optionIndex].price = Number(
+                              e.target.value
+                            );
+                            setVariants(newVariants);
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              }
             </tbody>
           </table>
         </div>
@@ -488,5 +749,3 @@ const Variants: React.FC<VariantsProps> = ({ options }) => {
     </Card>
   );
 };
-
-export default Variants;

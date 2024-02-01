@@ -18,7 +18,7 @@ export const SellerAuthProvider = ({
   children: React.ReactNode;
 }) => {
   const [admin, setAdmin] = useState<IAuthUser | {} | null>({});
-  const [user, setUser] = useState<ISeller | null>(null);
+  const [seller, setSeller] = useState<ISeller | null>(null);
   const router = useRouter();
   const setCookies = (role: string) => {
     Cookies.set("role", role);
@@ -36,11 +36,11 @@ export const SellerAuthProvider = ({
       });
     const fUser: ISeller = userRaw;
     if (fUser) {
-      setUser(fUser);
+      setSeller(fUser);
       localStorage.setItem("seller", JSON.stringify(fUser));
       setCookies("seller");
     } else {
-      setUser(null);
+      setSeller(null);
       setAdmin(null);
     }
   };
@@ -62,14 +62,14 @@ export const SellerAuthProvider = ({
             photoURL: user.photoURL,
           });
           setCookies("seller");
-          setUser(localUser);
+          setSeller(localUser);
         } else {
           console.log(user);
           fetchUser(user.uid);
         }
       } else {
         setAdmin(null);
-        setUser(null);
+        setSeller(null);
         clearRoleCookie();
       }
     });
@@ -105,7 +105,7 @@ export const SellerAuthProvider = ({
   return (
     <AuthContext.Provider
       value={{
-        user,
+        seller,
         signIn,
         fetchUser,
         logout,
@@ -118,7 +118,7 @@ export const SellerAuthProvider = ({
 };
 
 interface AuthContextProps {
-  user: ISeller | null;
+  seller: ISeller;
   admin: IAuthUser | {} | null;
   signIn: ({
     email,

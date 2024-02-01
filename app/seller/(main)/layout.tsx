@@ -9,7 +9,7 @@ import { DashboardLoading } from "@/components/shared/dashboard_loading";
 import { useSellerAuth } from "@/utils/sellerAuth";
 import { useRouter } from "next/navigation";
 const Layout = ({ children }: IChildren) => {
-  const { user, admin } = useSellerAuth();
+  const { seller, admin } = useSellerAuth();
   const router = useRouter();
   useEffect(() => {
     if (!admin) {
@@ -17,7 +17,7 @@ const Layout = ({ children }: IChildren) => {
     }
   }, [admin, router]);
 
-  if (!user) {
+  if (!seller) {
     return <DashboardLoading />;
   }
   return (
