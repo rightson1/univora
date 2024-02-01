@@ -188,13 +188,13 @@ export interface IVariant {
   price: number;
   active: boolean;
 }
-export interface IProduct {
+export interface IProductBase {
   business: string;
   name: string;
   price: number;
   description?: string;
   longDescription?: string;
-  category: string | ICategoryFetched;
+
   stock?: number;
   tags: string[];
   brand?: string;
@@ -205,6 +205,9 @@ export interface IProduct {
   options?: TOption[];
   slug: string;
   variants?: IVariant[];
+}
+export interface IProduct extends IProductBase {
+  category: string;
 }
 export type IProductType = "product" | "service";
 export interface IProductValues {
@@ -222,6 +225,6 @@ export interface IProductValues {
   setValues: Dispatch<SetStateAction<IProductValues["values"]>>;
   handleChange: (e: ChangeEvent<InputChangeEventTypes>) => void;
 }
-export interface IProductFetched extends IProduct, IFetched {
+export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
 }
