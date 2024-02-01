@@ -194,22 +194,34 @@ export interface IProduct {
   price: number;
   description?: string;
   longDescription?: string;
-  category: string;
-  stock: number;
+  category: string | ICategoryFetched;
+  stock?: number;
   tags: string[];
   brand?: string;
   thumbnail?: string;
   media?: string[];
   active: boolean;
+  productType: IProductType;
   options?: TOption[];
   slug: string;
   variants?: IVariant[];
 }
+export type IProductType = "product" | "service";
 export interface IProductValues {
   values: Pick<
     IProduct,
-    "category" | "name" | "price" | "description" | "stock" | "tags" | "brand"
+    | "category"
+    | "name"
+    | "price"
+    | "description"
+    | "stock"
+    | "tags"
+    | "brand"
+    | "productType"
   >;
   setValues: Dispatch<SetStateAction<IProductValues["values"]>>;
   handleChange: (e: ChangeEvent<InputChangeEventTypes>) => void;
+}
+export interface IProductFetched extends IProduct, IFetched {
+  category: ICategoryFetched;
 }

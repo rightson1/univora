@@ -103,3 +103,14 @@ export const flattenCategories = (
     []
   );
 };
+
+export const getStr = (pType?: string, str1?: string, str2?: string) => {
+  if (!pType) {
+    return str1 || str2 || "product";
+  }
+  if (pType === "product") {
+    return str1 || "product";
+  } else {
+    return str2 || "service";
+  }
+};

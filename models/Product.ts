@@ -35,12 +35,17 @@ const ProductSchema = new Schema(
     },
     stock: {
       type: Number,
-      required: true,
     },
     tags: [String],
     brand: String,
     thumbnail: String,
     media: [String],
+    // product or service
+    productType: {
+      type: String,
+      default: "product",
+      enum: ["product", "service"],
+    },
     active: {
       type: Boolean,
       default: true,

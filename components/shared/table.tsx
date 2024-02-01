@@ -44,7 +44,10 @@ interface DataTableToolbarProps<TData, TValue> {
 export function CustomTable<TData, TValue>({
   table,
   columns,
-}: DataTableToolbarProps<TData, TValue>) {
+  loading,
+}: DataTableToolbarProps<TData, TValue> & {
+  loading?: boolean;
+}) {
   return (
     <>
       <div className="flex  gap-4 items-center py-4">
@@ -126,7 +129,7 @@ export function CustomTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {loading ? `Loading...` : `No data found`}
                 </TableCell>
               </TableRow>
             )}

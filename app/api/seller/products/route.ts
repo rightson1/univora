@@ -1,3 +1,4 @@
+import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
@@ -26,6 +27,19 @@ export async function POST(req: NextRequest) {
     });
   }
 }
-export async function GET() {
+export async function GET(req: NextRequest) {
   await conn();
+  try {
+    const sellerId = req.nextUrl.searchParams.get("sellerId");
+    Category;
+    const products = await Product.find({
+      business: sellerId,
+    }).populate("category");
+    return NextResponse.json(products);
+  } catch (e) {
+    return NextResponse.json({
+      message: "Error fetching Products",
+      success: false,
+    });
+  }
 }

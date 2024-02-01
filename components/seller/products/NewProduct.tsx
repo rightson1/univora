@@ -27,6 +27,7 @@ import {
   ICategory,
   ICategoryFetched,
   IProduct,
+  IProductType,
   IProductValues,
   IVariant,
   InputChangeEventTypes,
@@ -41,6 +42,7 @@ import {
 import {
   deleteFile,
   flattenCategories,
+  getStr,
   uploadFile,
   useCustomToast,
 } from "@/components/helpers/functions";
@@ -58,6 +60,7 @@ export const NewProductForm = () => {
     brand: "",
     stock: 0,
     tags: [],
+    productType: "product",
   });
   const [options, setOptions] = useState<TOption[]>([
     { title: "", variations: [] },
@@ -85,7 +88,6 @@ export const NewProductForm = () => {
       business: seller._id,
       slug: values.name.toLowerCase().replace(/ /g, "-"),
     };
-    console.log(data);
     let thumbnailUrl = "";
     let mediaUrls: string[] = [];
     const publishProduct = async () => {
@@ -125,16 +127,26 @@ export const NewProductForm = () => {
   return (
     <form className="w-full rounded-lg " onSubmit={publish}>
       <div className="fb">
-        <h2 className="h3">New Product</h2>
+        <h2 className="h3">
+          {getStr(values.productType, "New Product", "New Service")}
+        </h2>
         <Button size={"sm"} type="submit" disabled={loading}>
-          Publish Product
+          {loading ? "Publishing..." : "Publish"}
         </Button>
       </div>
 
-      <Tabs defaultValue="simple" className="w-full py-5">
+      <Tabs
+        defaultValue="simple"
+        className="w-full py-5"
+        onValueChange={(value) => {
+          const productType = value === "service" ? "service" : "product";
+          setValues({ ...values, productType });
+        }}
+      >
         <TabsList className="  ">
           <TabsTrigger value="simple">Simple Product</TabsTrigger>
           <TabsTrigger value="complex">Complex Product</TabsTrigger>
+          <TabsTrigger value="service">Service</TabsTrigger>
         </TabsList>
         <TabsContent value="simple">
           <div className="py-5 fx-c gap-5">
@@ -173,6 +185,34 @@ export const NewProductForm = () => {
             <Variants {...{ options, setOptions, variants, setVariants }} />
           </div>
         </TabsContent>
+        <TabsContent value="service">
+          <div className="py-5 fx-c gap-5">
+            <GeneralInformation
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
+            <Organise
+              setValues={setValues}
+              values={values}
+              handleChange={handleChange}
+            />
+            <Description setDescription={setLongDescription} />
+
+            <ThumbNail {...{ thumbnail, setThumbnail }} />
+            <Media {...{ media, setMedia }} />
+            <Options {...{ options, setOptions, productType: "service" }} />
+            <Variants
+              {...{
+                options,
+                setOptions,
+                variants,
+                setVariants,
+                productType: "service",
+              }}
+            />
+          </div>
+        </TabsContent>
       </Tabs>
     </form>
   );
@@ -187,7 +227,8 @@ const GeneralInformation = ({
       <CardHeader>
         <CardTitle>General Information*</CardTitle>
         <CardDescription>
-          Please enter the general information about your product.
+          Please enter the general information about your{" "}
+          {values.productType === "product" ? "product" : "service"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -196,7 +237,11 @@ const GeneralInformation = ({
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
-              placeholder="Name of your product"
+              placeholder={
+                values.productType === "product"
+                  ? "Name of your product"
+                  : "Name of your service"
+              }
               name="name"
               onChange={handleChange}
               value={values.name}
@@ -219,8 +264,7 @@ const GeneralInformation = ({
             <Label htmlFor="shortDescription">Short Description</Label>
             <Textarea
               id="shortDescription"
-              placeholder="
-                  A small description of your product"
+              placeholder="A small description "
               onChange={handleChange}
               value={values.description}
               name="description"
@@ -263,7 +307,8 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
       <CardHeader>
         <CardTitle>Organise</CardTitle>
         <CardDescription>
-          Please provide the category and brand of your product.
+          Please provide the category and brand of your{" "}
+          {getStr(values.productType, "product", "service")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -324,37 +369,41 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
             </div>
           </div>
 
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="brand">Brand</Label>
-            <Input
-              id="brand"
-              placeholder="Brand of your product"
-              name="brand"
-              onChange={handleChange}
-              value={values.brand}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="stock">Stock*</Label>
-            <Input
-              type="number"
-              id="stock"
-              placeholder="Number of products in stock"
-              name="stock"
-              onChange={handleChange}
-              value={values.stock}
-              required
-            />
-          </div>
+          {values.productType === "product" && (
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="brand">Brand</Label>
+              <Input
+                id="brand"
+                placeholder="Brand of your product"
+                name="brand"
+                onChange={handleChange}
+                value={values.brand}
+              />
+            </div>
+          )}
+          {values.productType === "product" && (
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="stock">Stock*</Label>
+              <Input
+                type="number"
+                id="stock"
+                placeholder="Number of products in stock"
+                name="stock"
+                onChange={handleChange}
+                value={values.stock}
+                required
+              />
+            </div>
+          )}
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="tags">
               Tags | Keywords (Separate With Commas)*
             </Label>
             <Input
               id="tags"
-              placeholder="
-             Tags or keywords that describe your product
-             "
+              placeholder={`Tags or keywords that describe your product ${getStr(
+                values.productType
+              )}`}
               name="tags"
               required
               value={values.tags.length > 0 ? values.tags.join(",") : ""}
@@ -439,9 +488,11 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
 const Options = ({
   options,
   setOptions,
+  productType,
 }: {
   options: TOption[];
   setOptions: (options: TOption[]) => void;
+  productType?: IProductType;
 }) => {
   const handleDelete = (optionIndex: number, variationIndex: number) => {
     const newOptions = [...options];
@@ -497,8 +548,9 @@ const Options = ({
       <CardHeader>
         <CardTitle>Options</CardTitle>
         <CardDescription>
-          Options are used to define the color, size, etc. of the
-          product(Optional)
+          {productType === "service"
+            ? "Options are used to define the duration, etc. of the service(Optional)"
+            : `Options are used to define the color, size, etc. of the product(Optional) `}
         </CardDescription>
       </CardHeader>
       <CardContent className="fx-c gap-5 ">
@@ -512,14 +564,24 @@ const Options = ({
               <Input
                 type="text"
                 id={`option-${optionIndex}`}
-                placeholder="Size, Color, etc."
+                placeholder={
+                  productType === "service"
+                    ? `Duration, etc.
+                  `
+                    : "Color, Size, etc."
+                }
                 value={option.title}
                 onChange={(event) => handleTitleChange(optionIndex, event)}
               />
             </div>
             <div className="flex flex-col gap-1.5 w-full ">
               <Label htmlFor={`option-${optionIndex}`}>
-                Variation(Comma Separated)
+                <span className="hidden md:flex">
+                  Variation(Comma Separated)
+                </span>
+                <span className="flex md:hidden">
+                  Variation(Click Enter to add)
+                </span>
               </Label>
               <DndProvider backend={HTML5Backend}>
                 <ReactTags
@@ -580,10 +642,8 @@ export const Description = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Description</CardTitle>
-        <CardDescription>
-          Please enter the description of your product.
-        </CardDescription>
+        <CardTitle>Long Description</CardTitle>
+        <CardDescription>Please enter the description</CardDescription>
       </CardHeader>
       <CardContent>
         <Editor setEditorContent={setDescription} />
@@ -637,12 +697,14 @@ interface VariantsProps {
   options: TOption[];
   variants: IVariant[];
   setVariants: (variants: IVariant[]) => void;
+  productType?: IProductType;
 }
 
 const Variants: React.FC<VariantsProps> = ({
   options,
   setVariants,
   variants,
+  productType,
 }) => {
   const [allOptions, setAllOptions] = useState<string[][]>([]);
 
@@ -676,25 +738,27 @@ const Variants: React.FC<VariantsProps> = ({
       allOptions.map((option) => ({
         options: option.join(", "),
         price: 0,
-        active: false,
+        active: true,
       }))
     );
   }, [allOptions]);
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Product Variants</CardTitle>
+        <CardTitle>
+          {getStr(productType, "Product Variants", "Service Variants")}
+        </CardTitle>
         <CardDescription>
           You must add at least one product option before you can begin adding
           product variants.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="fx-c gap-5">
-          <table className="table-auto w-full">
+        <div className="fx-c gap-5 w-full overflow-x-auto">
+          <table className="table-auto w-full ">
             <thead>
               <tr>
-                <th className="px-4 py-2">Visible(Check)</th>
+                <th className="px-4 py-2">Visible?</th>
                 <th className="px-4 py-2">Option</th>
                 <th className="px-4 py-2">Price</th>
               </tr>
@@ -705,7 +769,7 @@ const Variants: React.FC<VariantsProps> = ({
                 variants.map((option, optionIndex) => {
                   return (
                     <tr key={optionIndex}>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 max-w-[20px]">
                         <Checkbox
                           checked={option.active}
                           id={`Visible-${optionIndex}`}
@@ -715,7 +779,7 @@ const Variants: React.FC<VariantsProps> = ({
                             // newVariants.sort((a, b) =>
                             //   a.active === b.active ? 0 : a.active ? -1 : 1
                             // );
-                            console.log(newVariants);
+
                             setVariants(newVariants);
                           }}
                         />
