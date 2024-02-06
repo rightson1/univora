@@ -198,8 +198,8 @@ export interface IProductBase {
   stock?: number;
   tags: string[];
   brand?: string;
-  thumbnail?: string;
-  media?: string[];
+  thumbnail: string;
+  media: string[];
   active: boolean;
   productType: IProductType;
   options?: TOption[];

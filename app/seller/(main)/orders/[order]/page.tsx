@@ -14,7 +14,7 @@ import { EditGeneralInfo } from "@/components/seller/product/edit-general-info";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import Image from "next/image";
-import { EditThumnnail } from "@/components/seller/product/edit-thumbnail";
+import { EditThumbnail } from "@/components/seller/product/edit-thumbnail";
 import { EditMedia } from "@/components/seller/product/edit-media";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,7 @@ const GeneralInfo = () => {
               <GoDotFill className="mr-2 text-indigo" />
               Pending
             </Button>
-            <EditGeneralInfo />
+            {/* <EditGeneralInfo /> */}
           </div>
         </div>
         <CardDescription>20th may 2023 12:00pm</CardDescription>

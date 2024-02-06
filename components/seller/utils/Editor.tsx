@@ -22,12 +22,15 @@ const QuillWrapper = dynamic(
 
 export const Editor = ({
   setEditorContent,
+  editorContent,
 }: {
   setEditorContent?: React.Dispatch<React.SetStateAction<string>>;
+  editorContent: string;
 }) => {
   return (
     <QuillWrapper
       theme="snow"
+      value={editorContent}
       onChange={(e) => {
         setEditorContent && setEditorContent(e);
       }}

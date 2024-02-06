@@ -1,5 +1,6 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
   Card,
@@ -14,48 +15,80 @@ import { EditGeneralInfo } from "@/components/seller/product/edit-general-info";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import Image from "next/image";
-import { EditThumnnail } from "@/components/seller/product/edit-thumbnail";
+import { EditThumbnail } from "@/components/seller/product/edit-thumbnail";
 import { EditMedia } from "@/components/seller/product/edit-media";
-const EditProduct = () => {
-  return (
-    <div className="p-4">
-      <button className="text-sm fc">
-        <FaArrowLeftLong className="mr-2" />
-        <span>Back To Products</span>
-      </button>
-      <div className="py-5 fx-c gap-5">
-        <div className="flex gap-5 flex-col md:flex-row w-full">
-          <div className="fx-c flex-[2] gap-5">
-            <GeneralInfo />
-            <Description />
-          </div>
-          <div className="fx-c flex-1 gap-5">
-            <Tumbnail />
-            <Media />
+import {
+  useGetSingleProduct,
+  useUpdateProduct,
+} from "@/utils/hooks/useProduct";
+import { IProductFetched, IVariant } from "@/types";
+import { DashboardLoading } from "@/components/shared/dashboard_loading";
+import { IProductEdit, TOption } from "@/types/sellerTypes";
+import { X } from "lucide-react";
+import { deleteFile, useCustomToast } from "@/components/helpers/functions";
+import { Product_Options } from "@/components/seller/product/product_options";
+import { Product_Variants } from "@/components/seller/product/product_variants";
+const EditProduct = ({
+  params,
+}: {
+  params: {
+    product: string;
+  };
+}) => {
+  const { data: product, isLoading } = useGetSingleProduct(params.product);
+  const [options, setOptions] = useState<TOption[]>([]);
+  useEffect(() => {
+    if (product) {
+      setOptions(product.options || []);
+    }
+  }, [product]);
+
+  if (isLoading) return <DashboardLoading />;
+  if (product) {
+    return (
+      <div className="p-4">
+        <button className="text-sm fc">
+          <FaArrowLeftLong className="mr-2" />
+          <span>Back To Products</span>
+        </button>
+        <div className="py-5 fx-c gap-5">
+          <div className="flex gap-5 flex-col md:flex-row w-full">
+            <div className="fx-c flex-[2] gap-5">
+              <GeneralInfo product={product} />
+              {product.longDescription && <Description product={product} />}
+              <Options
+                product={product}
+                options={options}
+                setOptions={setOptions}
+              />
+              <Variants product={product} options={options} />
+            </div>
+            <div className="fx-c flex-1 gap-5">
+              <Tumbnail product={product} />
+              <Media product={product} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
-const GeneralInfo = () => {
+const GeneralInfo = ({ product }: IProductEdit) => {
   return (
     <Card className="w-full ">
       <CardHeader className="mb:p-4">
         <div className="fb">
-          <h4 className="h3 text-foreground">Winter Jacket</h4>
+          <h4 className="h3 text-foreground">{product.name}</h4>
           <div className="fc">
             <Button variant="ghost" className="hidden md:flex">
               <GoDotFill className="mr-2 text-indigo" />
               Published
             </Button>
-            <EditGeneralInfo />
+            <EditGeneralInfo product={product} />
           </div>
         </div>
-        <CardDescription>
-          A nice winter jacket for the cold weather.
-        </CardDescription>
+        <CardDescription>{product.description}</CardDescription>
       </CardHeader>
       <CardContent className="fx-c gap-4 w-full ">
         <h4 className="h4">Details</h4>
@@ -63,60 +96,61 @@ const GeneralInfo = () => {
           <div className="fb w-full">
             <h5 className="p">Price:</h5>
             <span>
-              <span className="text-foreground">ksh</span> 5000
+              <span className="text-foreground">ksh</span> {product.price}
             </span>
           </div>
           <div className="fb w-full">
             <h5 className="p">Category:</h5>
-            <span>Winter Jacket</span>
+            <span>{product.category?.name}</span>
           </div>
-          <div className="fb w-full">
-            <h5 className="p">Brand:</h5>
-            <span>Winter Jacket</span>
-          </div>
+          {product.brand && (
+            <div className="fb w-full">
+              <h5 className="p">Brand:</h5>
+              <span>{product.brand}</span>
+            </div>
+          )}
+          {product.variants && (
+            <div className="fb w-full">
+              <h5 className="p">Variants:</h5>
+              <span>{product.variants.length}</span>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
   );
 };
-const Description = () => {
+const Description = ({ product }: IProductEdit) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Description</CardTitle>
+        <CardTitle>Long Description</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="w-full">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-            voluptatum, voluptate quidem, quas, dolorum quod voluptatem
-            doloremque quia eum quibusdam atque. Quisquam, voluptates. Quisquam
-            quibusdam, voluptatibus voluptas officiis, quod, voluptate
-            voluptatum quia quae magnam quos fugit. Quisquam, voluptates.
-            Quisquam quibusdam, voluptatibus voluptas officiis, quod, voluptate
-            voluptatum quia quae magnam quos fugit.
-          </p>
+          <div
+            dangerouslySetInnerHTML={{ __html: product.longDescription! }}
+            className="p-size prose"
+            style={{ width: "100%" }}
+          ></div>
         </div>
       </CardContent>
     </Card>
   );
 };
-const Tumbnail = () => {
+const Tumbnail = ({ product }: IProductEdit) => {
   return (
     <Card className="w-full">
       <CardHeader>
         <div className="fb">
           <CardTitle>Thumbnail</CardTitle>
           <div className="flex gap-1">
-            <EditThumnnail />
-            <Button variant="outline" size={"icon"} className="text-indigo">
-              <MdDeleteOutline className="text-destructive" />
-            </Button>
+            <EditThumbnail product={product} />
           </div>
         </div>
         <CardDescription className="pt-5">
           <Image
-            src="/imgs/3.png"
+            src={product.thumbnail}
             width={200}
             height={200}
             alt="Image"
@@ -127,31 +161,87 @@ const Tumbnail = () => {
     </Card>
   );
 };
-const Media = () => {
+const Media = ({ product }: IProductEdit) => {
+  const { mutateAsync } = useUpdateProduct();
+  const { customToast, loading } = useCustomToast();
+  const deleteMedia = (url: string) => async () => {
+    customToast({
+      func: async () => {
+        await deleteFile(url);
+        await mutateAsync({
+          _id: product._id,
+          media: product.media?.filter((item) => item !== url),
+        });
+      },
+    });
+  };
   return (
     <Card className="w-full">
       <CardHeader>
         <div className="fb">
           <CardTitle>Media</CardTitle>
           <div className="flex gap-1">
-            <EditMedia />
+            <EditMedia product={product} />
           </div>
         </div>
         <CardDescription className="flex flex-wrap pt-5  gap-2">
-          {[1, 2, 3].map((item) => (
-            <Image
-              src={`/imgs/${item}.png`}
-              key={item}
-              width={200}
-              height={200}
-              alt="Image"
-              className="w-16 object-cover  rounded-lg"
-            />
-          ))}
+          {product.media &&
+            product.media?.map((item) => (
+              <div className="relative" key={item}>
+                <div className="absolute top">
+                  <Button
+                    size={"icon"}
+                    variant={"destructive"}
+                    className="h-4 w-4"
+                    disabled={loading}
+                  >
+                    <X className="h-3" onClick={deleteMedia(item)} />
+                  </Button>
+                </div>
+                <Image
+                  src={item}
+                  width={200}
+                  height={200}
+                  alt="Image"
+                  className="w-16 object-cover  rounded-lg"
+                />
+              </div>
+            ))}
         </CardDescription>
       </CardHeader>
     </Card>
   );
 };
-
+const Options = ({
+  product,
+  setOptions,
+  options,
+}: IProductEdit & {
+  setOptions: React.Dispatch<React.SetStateAction<TOption[]>>;
+  options: TOption[];
+}) => {
+  return (
+    <Product_Options
+      options={options}
+      setOptions={setOptions}
+      productType={product.productType}
+    />
+  );
+};
+const Variants = ({
+  product,
+  options,
+}: IProductEdit & {
+  options: TOption[];
+}) => {
+  const [variants, setVariants] = useState<IVariant[]>(product.variants || []);
+  return (
+    <Product_Variants
+      options={options}
+      variants={variants}
+      setVariants={setVariants}
+      productType={product.productType}
+    />
+  );
+};
 export default EditProduct;

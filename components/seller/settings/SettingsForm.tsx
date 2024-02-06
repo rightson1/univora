@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { TOption } from "@/types/sellerTypes";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageInputWithView } from "../utils/image-input";
 import { Editor } from "../utils/Editor";
@@ -79,9 +78,7 @@ export const Description = () => {
           Please enter the description of your business.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Editor />
-      </CardContent>
+      <CardContent>{/* <Editor /> */}</CardContent>
     </Card>
   );
 };

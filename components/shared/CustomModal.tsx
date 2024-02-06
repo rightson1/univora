@@ -31,7 +31,10 @@ export const CustomModal = ({
   const [open, setOpen] = React.useState(false);
   useEffect(() => {
     setOpen(modalOpen || false);
-  }, [modalOpen]);
+    if (disableSubmit) {
+      setOpen(false);
+    }
+  }, [modalOpen, disableSubmit]);
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>

@@ -1,3 +1,5 @@
+import { IProductBase, IProductFetched } from ".";
+
 export type IProductTable = {
   id: string;
   name: string;
@@ -27,4 +29,10 @@ export interface IOrderTable {
   fulfillment: "fulfilled" | "unfulfilled" | "partial";
   payment: "paid" | "unpaid" | "partial";
   total: string;
+}
+export interface IProductEdit {
+  product: IProductFetched;
+}
+export interface IProductUpdate extends IProductBase {
+  _id: string;
 }

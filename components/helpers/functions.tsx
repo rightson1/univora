@@ -1,5 +1,6 @@
 import { ICategoryFetched } from "@/types";
 import { storage } from "@/utils/firebase";
+import { AxiosResponse } from "axios";
 import {
   deleteObject,
   getDownloadURL,
@@ -32,10 +33,8 @@ export const useCustomToast = () => {
     return toast.promise(
       func()
         .then((res) => {
-          console.log(res);
           const data = res?.data;
-
-          if (data && !data.success) {
+          if (data && data.success === false) {
             throw new Error(data.message);
           }
           setLoading(false);
@@ -113,4 +112,12 @@ export const getStr = (pType?: string, str1?: string, str2?: string) => {
   } else {
     return str2 || "service";
   }
+};
+
+export const eCheck = (res: AxiosResponse<any, any>) => {
+  const data = res.data;
+  if (data && data.success === false) {
+    throw new Error(data.message);
+  }
+  return data;
 };

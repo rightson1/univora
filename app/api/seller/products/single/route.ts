@@ -1,0 +1,42 @@
+import Category from "@/models/Categories";
+import Product from "@/models/Product";
+import { conn } from "@/models/mongo_db_connection";
+import { IProductUpdate } from "@/types/sellerTypes";
+import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+export async function GET(req: NextRequest) {
+  await conn();
+  try {
+    const _id = req.nextUrl.searchParams.get("_id");
+    Category;
+    const products = await Product.findById(_id).populate("category");
+    return NextResponse.json(products);
+  } catch (e) {
+    return NextResponse.json({
+      message: "Error fetching Products",
+      success: false,
+    });
+  }
+}
+//edit product
+export async function PUT(req: NextRequest) {
+  await conn();
+  try {
+    const productData: IProductUpdate = await req.json();
+
+    const product = await Product.findByIdAndUpdate(
+      productData._id,
+      productData,
+      {
+        new: true,
+      }
+    );
+    return NextResponse.json(product);
+  } catch (e) {
+    console.log(e);
+    return NextResponse.json({
+      message: "Error updating Product",
+      success: false,
+    });
+  }
+}

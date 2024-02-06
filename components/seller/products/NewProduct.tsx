@@ -93,7 +93,7 @@ export const NewProductForm = () => {
     const publishProduct = async () => {
       thumbnailUrl = await uploadFile(
         thumbnail,
-        `products/${seller.name}/${values.name}/thumbnail`
+        `/${seller._id}/products/${data.slug}/thumbnail/${thumbnail.name}`
       );
       if (media.length > 0) {
         mediaUrls = await Promise.all(
@@ -101,7 +101,7 @@ export const NewProductForm = () => {
             async (file) =>
               await uploadFile(
                 file,
-                `products/${seller.name}/${values.name}/media`
+                `/${seller._id}/products/${data.slug}/media/${file.name}`
               )
           )
         );
@@ -144,8 +144,8 @@ export const NewProductForm = () => {
         }}
       >
         <TabsList className="  ">
-          <TabsTrigger value="simple">Simple Product</TabsTrigger>
-          <TabsTrigger value="complex">Complex Product</TabsTrigger>
+          <TabsTrigger value="simple">Simple</TabsTrigger>
+          <TabsTrigger value="complex">Complex</TabsTrigger>
           <TabsTrigger value="service">Service</TabsTrigger>
         </TabsList>
         <TabsContent value="simple">
@@ -177,7 +177,10 @@ export const NewProductForm = () => {
               values={values}
               handleChange={handleChange}
             />
-            <Description setDescription={setLongDescription} />
+            <Description
+              setDescription={setLongDescription}
+              description={longDescription}
+            />
 
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
@@ -197,7 +200,10 @@ export const NewProductForm = () => {
               values={values}
               handleChange={handleChange}
             />
-            <Description setDescription={setLongDescription} />
+            <Description
+              setDescription={setLongDescription}
+              description={longDescription}
+            />
 
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
@@ -636,8 +642,10 @@ const Options = ({
 
 export const Description = ({
   setDescription,
+  description,
 }: {
   setDescription: React.Dispatch<SetStateAction<string>>;
+  description: string;
 }) => {
   return (
     <Card className="w-full">
@@ -646,7 +654,7 @@ export const Description = ({
         <CardDescription>Please enter the description</CardDescription>
       </CardHeader>
       <CardContent>
-        <Editor setEditorContent={setDescription} />
+        <Editor setEditorContent={setDescription} editorContent={description} />
       </CardContent>
     </Card>
   );

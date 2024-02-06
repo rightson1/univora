@@ -38,8 +38,14 @@ const ProductSchema = new Schema(
     },
     tags: [String],
     brand: String,
-    thumbnail: String,
-    media: [String],
+    thumbnail: {
+      type: String,
+      required: true,
+    },
+    media: {
+      type: [String],
+      default: [],
+    },
     // product or service
     productType: {
       type: String,
