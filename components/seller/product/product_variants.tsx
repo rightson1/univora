@@ -19,6 +19,7 @@ interface VariantsProps {
   variants: IVariant[];
   setVariants: (variants: IVariant[]) => void;
   productType?: IProductType;
+  edit?: boolean;
 }
 
 export const Product_Variants: React.FC<VariantsProps> = ({
@@ -26,6 +27,7 @@ export const Product_Variants: React.FC<VariantsProps> = ({
   setVariants,
   variants,
   productType,
+  edit = false,
 }) => {
   const [allOptions, setAllOptions] = useState<string[][]>([]);
 
@@ -64,7 +66,11 @@ export const Product_Variants: React.FC<VariantsProps> = ({
     );
   }, [allOptions]);
   return (
-    <Card className="w-full">
+    <Card
+      className={`
+    w-full ${edit && "border-none"}
+    `}
+    >
       <CardHeader>
         <CardTitle>
           {getStr(productType, "Product Variants", "Service Variants")}

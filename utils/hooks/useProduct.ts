@@ -6,7 +6,7 @@ import axios from "axios";
 export const useAddProduct = () => {
   return useMutation({
     mutationFn: async (productData: IProduct) => {
-      return await axios.post("/api/seller/products", productData);
+      return await axios.post("/api/seller/products", productData).then(eCheck);
     },
   });
 };
@@ -59,6 +59,26 @@ export const useUpdateProduct = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["product", data._id],
+      });
+    },
+  });
+};
+//delete product
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (productId: string) => {
+      return await axios
+        .delete("/api/seller/products/single", {
+          params: {
+            _id: productId,
+          },
+        })
+        .then(eCheck);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
       });
     },
   });

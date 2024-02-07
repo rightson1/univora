@@ -57,9 +57,6 @@ export const useCustomToast = () => {
           }, 3000);
           return e.message || err || "An error occurred";
         },
-      },
-      {
-        duration: 3000,
       }
     );
   };

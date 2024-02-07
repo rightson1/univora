@@ -60,8 +60,6 @@ const ProductSchema = new Schema(
       {
         title: {
           type: String,
-          required: true,
-          unique: true,
         },
         variations: [
           {
@@ -75,15 +73,12 @@ const ProductSchema = new Schema(
       {
         options: {
           type: String,
-          required: true,
         },
         price: {
           type: Number,
-          required: true,
         },
         active: {
           type: Boolean,
-          default: true,
         },
       },
     ],

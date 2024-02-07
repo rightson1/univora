@@ -1,13 +1,13 @@
 import Business from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
-import { ISellerBase } from "@/types";
+import { ISeller, ISellerBase } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   await conn();
   const { pathname, origin } = req.nextUrl;
   try {
-    const { name, phone, email, school, uid }: ISellerBase = await req.json();
+    const { name, phone, email, school, uid }: ISeller = await req.json();
     const newSeller = await Business.create({
       name: name,
       phone: phone,

@@ -27,6 +27,7 @@ import { auth } from "@/utils/firebase";
 import { useAddSeller } from "@/utils/hooks/useSeller";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const Create_Seller = () => {
   const { data: schools, isLoading } = useGetSchoolsOpen();
@@ -135,7 +136,13 @@ export const Create_Seller = () => {
             </Select>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end">
+        <CardFooter className="fb">
+          <p className="text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link className="underline" href="/login">
+              Login
+            </Link>
+          </p>
           <Button type="submit" disabled={loading}>
             Lets Go
           </Button>

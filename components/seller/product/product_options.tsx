@@ -23,10 +23,12 @@ export const Product_Options = ({
   options,
   setOptions,
   productType,
+  edit = false,
 }: {
   options: TOption[];
   setOptions: (options: TOption[]) => void;
   productType?: IProductType;
+  edit?: boolean;
 }) => {
   const handleDelete = (optionIndex: number, variationIndex: number) => {
     const newOptions = [...options];
@@ -77,8 +79,13 @@ export const Product_Options = ({
     newOptions[optionIndex].variations = newTags;
     setOptions(newOptions);
   };
+
   return (
-    <Card className="w-full">
+    <Card
+      className={`
+    w-full ${edit && "border-none"}
+    `}
+    >
       <CardHeader>
         <CardTitle>Options</CardTitle>
         <CardDescription>

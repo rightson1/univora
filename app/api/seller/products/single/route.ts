@@ -40,3 +40,20 @@ export async function PUT(req: NextRequest) {
     });
   }
 }
+export async function DELETE(req: NextRequest) {
+  await conn();
+  try {
+    const productId = req.nextUrl.searchParams.get("_id");
+    const product = await Product.findByIdAndDelete(productId);
+    return NextResponse.json({
+      message: "Product deleted successfully",
+      success: true,
+      data: product,
+    });
+  } catch (e) {
+    return NextResponse.json({
+      message: "Error deleting Product",
+      success: false,
+    });
+  }
+}

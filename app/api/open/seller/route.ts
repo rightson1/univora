@@ -1,3 +1,4 @@
+import School from "@/models/School";
 import Seller from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,17 +6,21 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   await conn();
   const admin = req.nextUrl.searchParams.get("uid");
-  if (!admin) {
+  const email = req.nextUrl.searchParams.get("email");
+
+  if (!admin && !email) {
     return NextResponse.json({
       message: "Who are you?",
       success: false,
     });
   }
   try {
-    const adminRaw = await Seller.findOne({ uid: admin });
+    const query = admin ? { uid: admin } : { email };
+    School;
+    const adminRaw = await Seller.findOne(query).populate("school");
     if (!adminRaw) {
       return NextResponse.json({
-        message: "Who are you?",
+        message: `Kwa sasa huna akaunti nduguyangu,unda alafu urudi tuuze hii simu`,
         success: false,
       });
     }

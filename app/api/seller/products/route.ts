@@ -2,12 +2,12 @@ import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
-
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   await conn();
+
   try {
     const productData = await req.json();
-    //count number of products with same slug, if more than one, add a number to the slug
     const slugCount = await Product.countDocuments({
       slug: productData.slug,
     });
@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
       data: product,
     });
   } catch (e) {
+    console.log(e);
     return NextResponse.json({
       message: "Error creating Product",
       success: false,

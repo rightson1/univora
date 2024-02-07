@@ -172,10 +172,15 @@ export interface ISellerBase {
   name: string;
   email: string;
   phone: string;
-  school: string;
+
   uid: string;
 }
-export interface ISeller extends ISellerBase, IFetched {}
+export interface ISeller extends ISellerBase {
+  school: string;
+}
+export interface ISellerFetched extends ISellerBase, IFetched {
+  school: ISchoolFetched;
+}
 export interface IAuthUser {
   email: string;
   displayName?: string;

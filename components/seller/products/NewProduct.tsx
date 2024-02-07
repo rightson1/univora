@@ -49,6 +49,8 @@ import {
 import { useSellerAuth } from "@/utils/sellerAuth";
 import { useAddProduct } from "@/utils/hooks/useProduct";
 import toast from "react-hot-toast";
+import { Product_Options } from "../product/product_options";
+import { Product_Variants } from "../product/product_variants";
 
 export const NewProductForm = () => {
   const { seller } = useSellerAuth();
@@ -184,8 +186,15 @@ export const NewProductForm = () => {
 
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
-            <Options {...{ options, setOptions }} />
-            <Variants {...{ options, setOptions, variants, setVariants }} />
+            {/* <Options {...{ options, setOptions }} />
+             */}
+            <Product_Options options={options} setOptions={setOptions} />
+
+            <Product_Variants
+              options={options}
+              variants={variants}
+              setVariants={setVariants}
+            />
           </div>
         </TabsContent>
         <TabsContent value="service">
@@ -207,15 +216,14 @@ export const NewProductForm = () => {
 
             <ThumbNail {...{ thumbnail, setThumbnail }} />
             <Media {...{ media, setMedia }} />
-            <Options {...{ options, setOptions, productType: "service" }} />
-            <Variants
-              {...{
-                options,
-                setOptions,
-                variants,
-                setVariants,
-                productType: "service",
-              }}
+            <Product_Options
+              {...{ options, setOptions, productType: "service" }}
+            />
+            <Product_Variants
+              options={options}
+              variants={variants}
+              setVariants={setVariants}
+              productType="service"
             />
           </div>
         </TabsContent>
@@ -423,222 +431,6 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
     </Card>
   );
 };
-// const Attributes = () => {
-//   return (
-//     <Card className="w-full">
-//       <CardHeader>
-//         <CardTitle>Attributes</CardTitle>
-//         <CardDescription>
-//           Please Provide the attributes of your product.(Optional)
-//         </CardDescription>
-//       </CardHeader>
-//       <CardContent>
-//         <form>
-//           <div className="grid grid-cols-2 md:grid-cols-3 w-full  gap-4">
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="brand">Brand</Label>
-//               <Input
-//                 type="text"
-//                 id="brand"
-//                 placeholder="Brand of your product"
-//               />
-//             </div>
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="material">Material</Label>
-//               <Input
-//                 type="text"
-//                 id="material"
-//                 placeholder="Material of your product"
-//               />
-//             </div>
-
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="weight">Weight</Label>
-//               <Input
-//                 type="number"
-//                 id="weight"
-//                 placeholder="Weight of your product in Kg"
-//               />
-//             </div>
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="height">Height</Label>
-//               <Input
-//                 type="number"
-//                 id="height"
-//                 placeholder="Height of your product in cm"
-//               />
-//             </div>
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="width">Width</Label>
-//               <Input
-//                 type="number"
-//                 id="width"
-//                 placeholder="Width of your product in cm"
-//               />
-//             </div>
-//             <div className="flex flex-col space-y-1.5">
-//               <Label htmlFor="length">Length</Label>
-//               <Input
-//                 type="number"
-//                 id="length"
-//                 placeholder="Length of your product in cm"
-//               />
-//             </div>
-//           </div>
-//         </form>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-const Options = ({
-  options,
-  setOptions,
-  productType,
-}: {
-  options: TOption[];
-  setOptions: (options: TOption[]) => void;
-  productType?: IProductType;
-}) => {
-  const handleDelete = (optionIndex: number, variationIndex: number) => {
-    const newOptions = [...options];
-    newOptions[optionIndex].variations.splice(variationIndex, 1);
-    setOptions(newOptions);
-  };
-
-  const handleAddition = (
-    optionIndex: number,
-    tag: { id: string; text: string }
-  ) => {
-    const newOptions = [...options];
-    newOptions[optionIndex].variations.push(tag);
-    setOptions(newOptions);
-  };
-
-  const handleTitleChange = (
-    optionIndex: number,
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    const newOptions = [...options];
-    newOptions[optionIndex].title = event.target.value;
-    setOptions(newOptions);
-  };
-
-  const addOption = () => {
-    setOptions([...options, { title: "", variations: [] }]);
-  };
-
-  const KeyCodes = {
-    comma: 188,
-    enter: 13,
-  };
-  const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-  const handleDrag = (
-    optionIndex: number,
-    tag: { id: string; text: string },
-    currPos: number,
-    newPos: number
-  ) => {
-    const newOptions = [...options];
-    const newTags = newOptions[optionIndex].variations.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
-    newOptions[optionIndex].variations = newTags;
-    setOptions(newOptions);
-  };
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Options</CardTitle>
-        <CardDescription>
-          {productType === "service"
-            ? "Options are used to define the duration, etc. of the service(Optional)"
-            : `Options are used to define the color, size, etc. of the product(Optional) `}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="fx-c gap-5 ">
-        {options.map((option, optionIndex) => (
-          <div
-            key={optionIndex}
-            className=" flex flex-col md:flex-row gap-5  items-start w-full"
-          >
-            <div className="flex flex-col gap-1.5 w-full h-full ">
-              <Label htmlFor={`option-${optionIndex}`}>Option Title</Label>
-              <Input
-                type="text"
-                id={`option-${optionIndex}`}
-                placeholder={
-                  productType === "service"
-                    ? `Duration, etc.
-                  `
-                    : "Color, Size, etc."
-                }
-                value={option.title}
-                onChange={(event) => handleTitleChange(optionIndex, event)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5 w-full ">
-              <Label htmlFor={`option-${optionIndex}`}>
-                <span className="hidden md:flex">
-                  Variation(Comma Separated)
-                </span>
-                <span className="flex md:hidden">
-                  Variation(Click Enter to add)
-                </span>
-              </Label>
-              <DndProvider backend={HTML5Backend}>
-                <ReactTags
-                  tags={option.variations.map((variation, index) => ({
-                    id: variation.id,
-                    text: variation.text,
-                  }))}
-                  handleDelete={(variationIndex) =>
-                    handleDelete(optionIndex, variationIndex)
-                  }
-                  handleAddition={(tag) => handleAddition(optionIndex, tag)}
-                  delimiters={delimiters}
-                  handleDrag={(tag, currPos, newPos) =>
-                    handleDrag(optionIndex, tag, currPos, newPos)
-                  }
-                  inputFieldPosition="top"
-                  placeholder="Add new variation"
-                  classNames={{
-                    tagInputField: "ReactTags__tagInputField",
-                    tag: "ReactTags__tag",
-                    remove: "ReactTags__remove",
-                    suggestions: "ReactTags__suggestions",
-                    activeSuggestion: "ReactTags__activeSuggestion",
-                  }}
-                />
-              </DndProvider>
-            </div>
-
-            <Button
-              className="flex-end md:self-center px-2"
-              type="button"
-              size={"icon"}
-              variant={"ghost"}
-              onClick={() => {
-                const newOptions = [...options];
-                newOptions.splice(optionIndex, 1);
-                setOptions(newOptions);
-              }}
-            >
-              <MdDeleteOutline className="text-xl text-destructive" />
-            </Button>
-          </div>
-        ))}
-        <Button onClick={addOption} type="button">
-          <BiPlus className="text-xl" />
-          Add Option
-        </Button>
-      </CardContent>
-    </Card>
-  );
-};
 
 export const Description = ({
   setDescription,
@@ -696,127 +488,6 @@ const Media = ({
       </CardHeader>
       <CardContent>
         <ImageInputWithView files={media} setFiles={setMedia} multiple={true} />
-      </CardContent>
-    </Card>
-  );
-};
-
-interface VariantsProps {
-  options: TOption[];
-  variants: IVariant[];
-  setVariants: (variants: IVariant[]) => void;
-  productType?: IProductType;
-}
-
-const Variants: React.FC<VariantsProps> = ({
-  options,
-  setVariants,
-  variants,
-  productType,
-}) => {
-  const [allOptions, setAllOptions] = useState<string[][]>([]);
-
-  function getCombinations(options: TOption[]): string[][] {
-    if (options.length === 0) return [[]];
-
-    const firstOption = options[0];
-    const restOptions = options.slice(1);
-
-    const restCombinations = getCombinations(restOptions);
-
-    let combinations: string[][] = [];
-    for (let variation of firstOption.variations) {
-      for (let restCombination of restCombinations) {
-        combinations.push([JSON.stringify(variation), ...restCombination]);
-      }
-    }
-
-    return combinations;
-  }
-
-  useEffect(() => {
-    const combinations = getCombinations(options);
-    const allOptions: string[][] = combinations.map((combination) =>
-      combination.map((variation) => JSON.parse(variation).text)
-    );
-    setAllOptions(allOptions);
-  }, [options]);
-  useEffect(() => {
-    setVariants(
-      allOptions.map((option) => ({
-        options: option.join(", "),
-        price: 0,
-        active: true,
-      }))
-    );
-  }, [allOptions]);
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>
-          {getStr(productType, "Product Variants", "Service Variants")}
-        </CardTitle>
-        <CardDescription>
-          You must add at least one product option before you can begin adding
-          product variants.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="fx-c gap-5 w-full overflow-x-auto">
-          <table className="table-auto w-full ">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Visible?</th>
-                <th className="px-4 py-2">Option</th>
-                <th className="px-4 py-2">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                // sort by option.active
-                variants.map((option, optionIndex) => {
-                  return (
-                    <tr key={optionIndex}>
-                      <td className="border px-4 py-2 max-w-[20px]">
-                        <Checkbox
-                          checked={option.active}
-                          id={`Visible-${optionIndex}`}
-                          onCheckedChange={(e) => {
-                            const newVariants = [...variants];
-                            newVariants[optionIndex].active = e as boolean;
-                            // newVariants.sort((a, b) =>
-                            //   a.active === b.active ? 0 : a.active ? -1 : 1
-                            // );
-
-                            setVariants(newVariants);
-                          }}
-                        />
-                      </td>
-                      <td className="border px-4 py-2">
-                        <Badge>{option.options}</Badge>
-                      </td>
-                      <td className="border px-4 py-2">
-                        <Input
-                          type="text"
-                          id={`Price-${optionIndex}`}
-                          placeholder="Price of your product"
-                          className="border-none outline-none"
-                          onChange={(e) => {
-                            const newVariants = [...variants];
-                            newVariants[optionIndex].price = Number(
-                              e.target.value
-                            );
-                            setVariants(newVariants);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })
-              }
-            </tbody>
-          </table>
-        </div>
       </CardContent>
     </Card>
   );

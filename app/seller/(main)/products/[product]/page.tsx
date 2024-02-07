@@ -28,6 +28,8 @@ import { X } from "lucide-react";
 import { deleteFile, useCustomToast } from "@/components/helpers/functions";
 import { Product_Options } from "@/components/seller/product/product_options";
 import { Product_Variants } from "@/components/seller/product/product_variants";
+import { useSellerAuth } from "@/utils/sellerAuth";
+import Link from "next/link";
 const EditProduct = ({
   params,
 }: {
@@ -47,10 +49,12 @@ const EditProduct = ({
   if (product) {
     return (
       <div className="p-4">
-        <button className="text-sm fc">
-          <FaArrowLeftLong className="mr-2" />
-          <span>Back To Products</span>
-        </button>
+        <div className="flex">
+          <Link href="/products" className="text-sm fc">
+            <FaArrowLeftLong className="mr-2" />
+            <span>Back To Products</span>
+          </Link>
+        </div>
         <div className="py-5 fx-c gap-5">
           <div className="flex gap-5 flex-col md:flex-row w-full">
             <div className="fx-c flex-[2] gap-5">
@@ -61,7 +65,7 @@ const EditProduct = ({
                 options={options}
                 setOptions={setOptions}
               />
-              <Variants product={product} options={options} />
+              {/* <Variants product={product} options={options} /> */}
             </div>
             <div className="fx-c flex-1 gap-5">
               <Tumbnail product={product} />
@@ -220,28 +224,47 @@ const Options = ({
   setOptions: React.Dispatch<React.SetStateAction<TOption[]>>;
   options: TOption[];
 }) => {
-  return (
-    <Product_Options
-      options={options}
-      setOptions={setOptions}
-      productType={product.productType}
-    />
-  );
-};
-const Variants = ({
-  product,
-  options,
-}: IProductEdit & {
-  options: TOption[];
-}) => {
   const [variants, setVariants] = useState<IVariant[]>(product.variants || []);
+  const { seller } = useSellerAuth();
+  const { mutateAsync } = useUpdateProduct();
+  const { customToast, loading } = useCustomToast();
+  const editVariants = async () => {
+    console.log(variants);
+
+    customToast({
+      func: async () => {
+        await mutateAsync({
+          _id: product._id,
+          variants,
+          options,
+        });
+      },
+    });
+  };
+
   return (
-    <Product_Variants
-      options={options}
-      variants={variants}
-      setVariants={setVariants}
-      productType={product.productType}
-    />
+    <div className="fx-c gap-5 border rounded-lg py-4 w-full">
+      <Product_Options
+        options={options}
+        setOptions={setOptions}
+        productType={product.productType}
+        edit={true}
+      />
+      <Product_Variants
+        options={options}
+        variants={variants}
+        setVariants={setVariants}
+        productType={product.productType}
+        edit={true}
+      />
+      <div className="w-full p-4 flex justify-end">
+        <Button onClick={editVariants} disabled={loading}>
+          <MdEdit className="mr-2" />
+          Save Variants
+        </Button>
+      </div>
+    </div>
   );
 };
+
 export default EditProduct;

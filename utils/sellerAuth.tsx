@@ -9,7 +9,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import axios from "axios";
-import { IAuthUser, ISeller } from "@/types";
+import { IAuthUser, ISeller, ISellerFetched } from "@/types";
+import { eCheck } from "@/components/helpers/functions";
 const AuthContext = createContext({});
 
 export const SellerAuthProvider = ({
@@ -18,7 +19,7 @@ export const SellerAuthProvider = ({
   children: React.ReactNode;
 }) => {
   const [admin, setAdmin] = useState<IAuthUser | {} | null>({});
-  const [seller, setSeller] = useState<ISeller | null>(null);
+  const [seller, setSeller] = useState<ISellerFetched | null>(null);
   const router = useRouter();
   const setCookies = (role: string) => {
     Cookies.set("role", role);
@@ -29,12 +30,12 @@ export const SellerAuthProvider = ({
   const fetchUser = async (uid: string) => {
     const userRaw = await axios
       .get(`/api/open/seller?uid=${uid}`)
-      .then((res) => res.data)
+      .then(eCheck)
       .catch((e) => {
         // toast.error(e.message);
         return null;
       });
-    const fUser: ISeller = userRaw;
+    const fUser: ISellerFetched = userRaw;
     if (fUser) {
       setSeller(fUser);
       localStorage.setItem("seller", JSON.stringify(fUser));
@@ -48,7 +49,7 @@ export const SellerAuthProvider = ({
   useEffect(() => {
     const userString =
       typeof localStorage !== "undefined" && localStorage.getItem("seller");
-    const localUser: ISeller | null = userString
+    const localUser: ISellerFetched | null = userString
       ? JSON.parse(userString)
       : null;
 
@@ -118,7 +119,7 @@ export const SellerAuthProvider = ({
 };
 
 interface AuthContextProps {
-  seller: ISeller;
+  seller: ISellerFetched;
   admin: IAuthUser | {} | null;
   signIn: ({
     email,
