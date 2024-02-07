@@ -30,7 +30,7 @@ const Sidebar = () => {
         </AvatarFallback>
       </Avatar>
       <div className="fx-c">
-        <span className="tsm">{seller.school?.name.slice(0, 20)}</span>
+        <span className="tsm">{seller?.school?.name?.slice(0, 20)}</span>
         <span className=" font-bold">{seller?.name?.split(" ")[0]}s Store</span>
       </div>
       <div className="fx-c">
