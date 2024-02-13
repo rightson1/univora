@@ -139,8 +139,8 @@ const GeneralInformation = () => {
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
-          <div className="flex flex-col space-y-1.5 ">
+        <div className="w-full  gap-4 grid grid-cols-1 md:grid-cols-2 ">
+          <div className="flex flex-col space-y-1.5 w-full ">
             <Label htmlFor="name">Name*</Label>
             <Input
               required
@@ -151,7 +151,7 @@ const GeneralInformation = () => {
               value={generalInfo.customerName}
             />
           </div>
-          <div className="flex flex-col space-y-1.5 ">
+          <div className="flex flex-col space-y-1.5 w-full  ">
             <Label htmlFor="phone">Phone</Label>
             <Input
               name="phone"
@@ -167,10 +167,11 @@ const GeneralInformation = () => {
             <Textarea
               name="message"
               placeholder="Order Message "
+              className="w-full"
               value={generalInfo.message}
             />
           </div>
-          <div className="flex w-full justify-end col-span-2">
+          <div className="flex w-full justify-end md:col-span-2">
             <Button
               type="button"
               onClick={() => {

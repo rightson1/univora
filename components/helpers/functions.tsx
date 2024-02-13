@@ -118,3 +118,7 @@ export const eCheck = (res: AxiosResponse<any, any>) => {
   }
   return data;
 };
+export const formatDate = (date: string) => {
+  const raw_date = new Date(date);
+  return raw_date.toLocaleDateString();
+};

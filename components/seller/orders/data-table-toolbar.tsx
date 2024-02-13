@@ -24,25 +24,25 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder="Customer Name..."
           value={
-            (table.getColumn("customer")?.getFilterValue() as string) ?? ""
+            (table.getColumn("customerName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("customer")?.setFilterValue(event.target.value)
+            table.getColumn("customerName")?.setFilterValue(event.target.value)
           }
           className="h-8 mb:w-3/4 w-[150px] lg:w-[250px]"
         />
         <div className="flex gap-2 w-full mb:hidden">
-          {table.getColumn("fulfillment") && (
+          {table.getColumn("fulfillmentStatus") && (
             <DataTableFacetedFilter
-              column={table.getColumn("fulfillment")}
+              column={table.getColumn("fulfillmentStatus")}
               title="Fulfillment"
               options={orderStatus}
             />
           )}
-          {table.getColumn("payment") && (
+          {table.getColumn("paymentStatus") && (
             <DataTableFacetedFilter
-              column={table.getColumn("payment")}
-              title="Paypayment"
+              column={table.getColumn("paymentStatus")}
+              title="Payment"
               options={paymentStatus}
             />
           )}

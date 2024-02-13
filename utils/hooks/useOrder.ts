@@ -10,7 +10,7 @@ export const useCreateOrder = () => {
     },
   });
 };
-export const useGetOrders = (sellerId?: string) => {
+export const useGetOrders = (sellerId: string) => {
   return useQuery<IOrderFetched[]>({
     queryKey: ["orders", sellerId],
     queryFn: async () => {

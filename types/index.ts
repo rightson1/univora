@@ -245,6 +245,8 @@ export interface IProductValues {
 export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
 }
+export type TOrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
+export type TPaymentStatus = "pending" | "paid" | "partial";
 export interface IOrder {
   customer?: string;
   seller: string | ISellerFetched;
@@ -254,8 +256,8 @@ export interface IOrder {
   quantity: number;
   totalAmount: number;
   productPrice: number;
-  fulfillmentStatus?: "pending" | "confirmed" | "completed";
-  paymentStatus?: "pending" | "paid";
+  fulfillmentStatus?: TOrderStatus;
+  paymentStatus?: TPaymentStatus;
   paymentMethod?: string;
   orderType?: "customer" | "seller";
   customerName?: string;

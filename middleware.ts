@@ -12,7 +12,7 @@ export default async function middleware(req: NextRequest) {
       `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     );
   hostname = hostname.replace("www.", "");
-  console.log(hostname);
+  // console.log(hostname);
   const searchParams = req.nextUrl.searchParams.toString();
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""

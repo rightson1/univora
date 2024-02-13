@@ -7,44 +7,12 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { orderStatus, paymentStatus } from "@/utils/data";
 import { IOrderTable } from "@/types/sellerTypes";
+import { IOrderFetched } from "@/types";
+import { formatDate } from "@/components/helpers/functions";
 
-export const columns: ColumnDef<IOrderTable>[] = [
+export const columns: ColumnDef<IOrderFetched>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Order" />
-    ),
-    cell: ({ row }) => <div className="w-[80px]">#{row.getValue("id")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-
-  {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
@@ -52,14 +20,14 @@ export const columns: ColumnDef<IOrderTable>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("date")}
+            {formatDate(row.original.createdAt)}
           </span>
         </div>
       );
     },
   },
   {
-    accessorKey: "customer",
+    accessorKey: "customerName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer" />
     ),
@@ -67,22 +35,22 @@ export const columns: ColumnDef<IOrderTable>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("customer")}
+            {row.getValue("customerName")}
           </span>
         </div>
       );
     },
   },
   {
-    accessorKey: "fulfillment",
+    accessorKey: "fulfillmentStatus",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fulfillment" />
     ),
     cell: ({ row }) => {
       const status = orderStatus.find(
-        (status) => status.value === row.getValue("fulfillment")
+        (status) => status.value === row.getValue("fulfillmentStatus")
       );
-
+      console.log(status);
       if (!status) {
         return null;
       }
@@ -101,13 +69,13 @@ export const columns: ColumnDef<IOrderTable>[] = [
     },
   },
   {
-    accessorKey: "payment",
+    accessorKey: "paymentStatus",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Payment" />
     ),
     cell: ({ row }) => {
       const status = paymentStatus.find(
-        (status) => status.value === row.getValue("payment")
+        (status) => status.value === row.getValue("paymentStatus")
       );
 
       if (!status) {

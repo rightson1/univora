@@ -1,37 +1,35 @@
 "use client";
 import { Input } from "@/components/ui/input";
-
+import { sendPasswordResetEmail } from "firebase/auth";
 import React from "react";
 import { eCheck, useCustomToast } from "@/components/helpers/functions";
 import { Button } from "@/components/ui/button";
 import { useSellerAuth } from "@/utils/sellerAuth";
 import axios from "axios";
 import Link from "next/link";
+import { auth } from "@/utils/firebase";
 
 const LOGIN = () => {
   const { customToast, loading } = useCustomToast();
-  const { signIn } = useSellerAuth();
   const addAdmin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.currentTarget.email.value.trim() as string;
-    const password = e.currentTarget.password.value.trim() as string;
     customToast({
       func: async () => {
-        await signIn({ email, password });
-        await axios.get(`/api/open/seller?email=${email}`).then(eCheck);
+        await sendPasswordResetEmail(auth, email);
       },
-      suc: "Karibu Bigman",
+      suc: "Check your email for a password reset link.",
     });
   };
   return (
     <div className="w-full h-screen fc bg-background pxs">
       <div className="flex   w-full h-full mb:max-w-64 md:w-96  flex-col items-center justify-center gap-5">
         <div className="flex flex-col items-center justify-center w-full ">
-          <h1 className="text-3xl font-bold text-primary">Login</h1>
+          <h1 className="text-3xl font-bold text-primary ">Forgot Password</h1>
           <p className="text-sm text-muted-foreground">
-            Welcome back. Dont have an account?{" "}
-            <Link href="/register" className="undeline l-text">
-              Register
+            Or you just remembered your password?{" "}
+            <Link href="/login" className="l-text">
+              Login
             </Link>
           </p>
         </div>
@@ -48,24 +46,8 @@ const LOGIN = () => {
               className="bg-muted border-border"
               required
             />
-            <Input
-              id="password"
-              name="password"
-              placeholder="Password "
-              className="bg-muted border-border"
-              required
-              // type="password"
-            />
-
             <Button disabled={loading}>Submit</Button>
           </div>
-          {/* forgot password */}
-          <p className="text-sm text-muted-foreground py-2">
-            Did someone forget their password?{" "}
-            <Link href="/forgot-password" className="undeline l-text ">
-              Reset
-            </Link>
-          </p>
         </form>
       </div>
     </div>

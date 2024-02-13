@@ -24,3 +24,16 @@ export async function POST(req: NextRequest) {
     });
   }
 }
+export async function GET(req: NextRequest) {
+  const seller_Id = req.nextUrl.searchParams.get("sellerId");
+  Product;
+  try {
+    const orders = await Order.find({ seller: seller_Id }).populate("product");
+    return NextResponse.json(orders);
+  } catch (error: any) {
+    return NextResponse.json({
+      message: error.message,
+      success: false,
+    });
+  }
+}

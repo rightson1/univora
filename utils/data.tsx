@@ -1,4 +1,10 @@
-import { ICategoryTable, INavLinks, ISchoolTable } from "@/types";
+import {
+  ICategoryTable,
+  INavLinks,
+  ISchoolTable,
+  TOrderStatus,
+  TPaymentStatus,
+} from "@/types";
 import { IOrderTable, IProductTable, TBusiness } from "@/types/sellerTypes";
 import {
   ArrowDownIcon,
@@ -345,25 +351,38 @@ export const orders: IOrderTable[] = [
     total: "1000.00",
   },
 ];
-export const orderStatus = [
+export const orderStatus: {
+  value: TOrderStatus;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
   {
-    value: "fulfilled",
+    value: "completed",
     label: "Completed",
     icon: CheckCircledIcon,
   },
   {
-    value: "partial",
+    value: "confirmed",
     label: "Partial",
     icon: CircleIcon,
   },
   {
-    value: "unfulfilled",
-    label: "Unfulfilled",
+    value: "pending",
+    label: "Pending",
     icon: StopwatchIcon,
+  },
+  {
+    value: "cancelled",
+    label: "Cancelled",
+    icon: CrossCircledIcon,
   },
 ];
 
-export const paymentStatus = [
+export const paymentStatus: {
+  value: TPaymentStatus;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
   {
     value: "paid",
     label: "Paid",
@@ -375,7 +394,7 @@ export const paymentStatus = [
     icon: CircleIcon,
   },
   {
-    value: "unpaid",
+    value: "pending",
     label: "Unpaid",
     icon: StopwatchIcon,
   },

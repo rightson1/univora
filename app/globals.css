@@ -307,3 +307,6 @@
 .pxs {
   @apply px-8 mb:px-4;
 }
+.l-text {
+  text-decoration: underline;
+}
