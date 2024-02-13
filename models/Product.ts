@@ -3,7 +3,7 @@ const ProductSchema = new Schema(
   {
     business: {
       type: Schema.Types.ObjectId,
-      ref: "Business",
+      ref: "Seller",
       required: true,
     },
     name: {
@@ -35,6 +35,11 @@ const ProductSchema = new Schema(
     },
     stock: {
       type: Number,
+    },
+    school: {
+      type: Types.ObjectId,
+      ref: "School",
+      required: true,
     },
     tags: [String],
     brand: String,
@@ -69,6 +74,7 @@ const ProductSchema = new Schema(
         ],
       },
     ],
+
     variants: [
       {
         options: {

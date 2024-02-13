@@ -16,27 +16,79 @@ import { TOption } from "@/types/sellerTypes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageInputWithView } from "../utils/image-input";
 import { Editor } from "../utils/Editor";
+import { ISellerFetched, ISocialLink, InputChangeEventTypes } from "@/types";
+import { useSellerAuth } from "@/utils/sellerAuth";
+import { useUpdateSeller } from "@/utils/hooks/useSeller";
+import {
+  deleteFile,
+  uploadFile,
+  useCustomToast,
+} from "@/components/helpers/functions";
 
 export const SettingsForm = () => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [media, setMedia] = useState<File[]>([]);
+  const { seller, fetchSeller } = useSellerAuth();
+  const [values, setValues] = useState<ISellerFetched>(seller);
+  const { mutateAsync: editSeller } = useUpdateSeller();
+  const { loading, customToast } = useCustomToast();
+
+  const handleChanges = (e: ChangeEvent<InputChangeEventTypes>) => {
+    setValues((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let url = "";
+    customToast({
+      func: async () => {
+        if (thumbnail) {
+          seller.profileImage && deleteFile(seller.profileImage);
+          url = await uploadFile(thumbnail, `sellers/${values.slug}/thumbnail`);
+          await editSeller({
+            ...values,
+            profileImage: url,
+          });
+        } else {
+          await editSeller(values);
+        }
+      },
+      sfunc: async () => {
+        await fetchSeller(seller.uid);
+      },
+      efunc: async () => {
+        url && deleteFile(url);
+      },
+    });
+  };
   return (
-    <div className="w-full rounded-lg ">
+    <form className="w-full rounded-lg " onSubmit={submit}>
       <div className="fb">
         <h2 className="h3">Settings</h2>
-        <Button size={"sm"}>Save Settings</Button>
+        <Button disabled={loading} type="submit" size={"sm"}>
+          Save Settings
+        </Button>
       </div>
 
       <div className="py-5 fx-c gap-5">
-        <GeneralInformation />
-        <Description />
-        <ContactInformation />
+        <GeneralInformation
+          values={values}
+          setValue={setValues}
+          handleChanges={handleChanges}
+        />
+        <ContactInformation values={values} setValue={setValues} />
         <ThumbNail {...{ thumbnail, setThumbnail }} />
       </div>
-    </div>
+    </form>
   );
 };
-const GeneralInformation = () => {
+const GeneralInformation = ({
+  values,
+  setValue,
+  handleChanges,
+}: {
+  values: ISellerFetched;
+  setValue: React.Dispatch<SetStateAction<ISellerFetched>>;
+  handleChanges: (e: ChangeEvent<InputChangeEventTypes>) => void;
+}) => {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -49,17 +101,43 @@ const GeneralInformation = () => {
         <form>
           <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
             <div className="flex flex-col space-y-1.5  md:col-span-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your business" />
+              <Label htmlFor="name">Business Profile Name</Label>
+              <Input
+                id="name"
+                value={values.name}
+                onChange={handleChanges}
+                placeholder="Name of your business"
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5  md:col-span-2">
+              <Label htmlFor="slug">
+                Business Name (no spaces\will form link to you business)
+              </Label>
+              <Input
+                value={values.slug}
+                onChange={handleChanges}
+                id="slug"
+                placeholder="Same as @username in twitter/ig"
+              />
             </div>
             <div className="flex flex-col space-y-1.5 md:col-span-2">
-              <Label htmlFor="shortDescription">
-                Products or Services Offered
-              </Label>
-              <Textarea
-                id="productsOrServicesOffered"
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                value={values.phone}
+                onChange={handleChanges}
                 placeholder="
-                  Please enter the products or services offered by your business."
+                Enter the phone number of your business  
+                "
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5 md:col-span-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={values.description}
+                onChange={handleChanges}
+                placeholder="Please enter the products or services offered by your business."
               />
             </div>
           </div>
@@ -69,19 +147,6 @@ const GeneralInformation = () => {
   );
 };
 
-export const Description = () => {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Description</CardTitle>
-        <CardDescription>
-          Please enter the description of your business.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>{/* <Editor /> */}</CardContent>
-    </Card>
-  );
-};
 const ThumbNail = ({
   thumbnail,
   setThumbnail,
@@ -92,10 +157,9 @@ const ThumbNail = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Thumbnail</CardTitle>
+        <CardTitle>Profile Image</CardTitle>
         <CardDescription>
-          Used to represent your product during checkout, social sharing and
-          more.
+          Please upload a profile image for your business.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -105,7 +169,34 @@ const ThumbNail = ({
   );
 };
 
-const ContactInformation = () => {
+const ContactInformation = ({
+  values,
+  setValue,
+}: {
+  values: ISellerFetched;
+  setValue: React.Dispatch<SetStateAction<ISellerFetched>>;
+}) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const platform = e.target.id as ISocialLink["platform"];
+    const updatedSocials = values.socials.map((social) => {
+      if (social.platform === platform) {
+        return { ...social, link: e.target.value };
+      }
+      return social;
+    });
+
+    if (!updatedSocials.some((social) => social.platform === platform)) {
+      updatedSocials.push({ platform, link: e.target.value });
+    }
+    setValue({
+      ...values,
+      socials: updatedSocials,
+    });
+  };
+
+  const getV = (site: ISocialLink["platform"]) => {
+    return values.socials.find((social) => social.platform == site)?.link;
+  };
   return (
     <Card className="w-full">
       <CardHeader>
@@ -119,23 +210,32 @@ const ContactInformation = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4">
             <div className="flex flex-col space-y-1.5 md:col-span-2">
               <Label htmlFor="whatsapp">WhatsApp Number</Label>
-              <Input id="whatsapp" placeholder="WhatsApp Number" />
+              <Input
+                value={getV("whatsapp")}
+                id="whatsapp"
+                onChange={handleChange}
+                placeholder="+254"
+              />
             </div>
+
             <div className="flex flex-col space-y-1.5 md:col-span-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" placeholder="Phone Number" />
-            </div>
-            <div className="flex flex-col space-y-1.5 md:col-span-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="Email" />
-            </div>
-            <div className="flex flex-col space-y-1.5 md:col-span-2">
-              <Label htmlFor="website">Website</Label>
-              <Input id="website" placeholder="Website" />
+              <Label htmlFor="tiktok">Tiktok</Label>
+              <Input
+                id="tiktok"
+                onChange={handleChange}
+                value={getV("tiktok")}
+                placeholder="Enter your TikTok username"
+              />
             </div>
             <div className="flex flex-col space-y-1.5 md:col-span-2">
               <Label htmlFor="instagram">Instagram</Label>
-              <Input id="instagram" placeholder="Instagram" />
+              <Input
+                id="instagram"
+                value={getV("instagram")}
+                onChange={handleChange}
+                placeholder="Enter your instagram name
+              "
+              />
             </div>
           </div>
         </form>

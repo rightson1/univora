@@ -1,21 +1,21 @@
 import { eCheck } from "@/components/helpers/functions";
-import { IProduct, IProductFetched } from "@/types";
+import { IOrder, IOrderFetched } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useAddProduct = () => {
+export const useCreateOrder = () => {
   return useMutation({
-    mutationFn: async (productData: IProduct) => {
-      return await axios.post("/api/seller/products", productData).then(eCheck);
+    mutationFn: async (orderData: IOrder) => {
+      return await axios.post("/api/seller/orders", orderData).then(eCheck);
     },
   });
 };
-export const useGetProducts = (sellerId: string) => {
-  return useQuery<IProductFetched[]>({
-    queryKey: ["products", sellerId],
+export const useGetOrders = (sellerId?: string) => {
+  return useQuery<IOrderFetched[]>({
+    queryKey: ["orders", sellerId],
     queryFn: async () => {
       return await axios
-        .get("/api/seller/products", {
+        .get("/api/seller/orders", {
           params: {
             sellerId,
           },
@@ -24,13 +24,13 @@ export const useGetProducts = (sellerId: string) => {
     },
   });
 };
-//get single product
-export const useGetSingleProduct = (_id: string) => {
-  return useQuery<IProductFetched>({
-    queryKey: ["product", _id],
+//get single order
+export const useGetSingleOrder = (_id: string) => {
+  return useQuery<IOrderFetched>({
+    queryKey: ["order", _id],
     queryFn: async () => {
       return await axios
-        .get("/api/seller/products/single", {
+        .get("/api/seller/orders/single", {
           params: {
             _id,
           },
@@ -39,46 +39,46 @@ export const useGetSingleProduct = (_id: string) => {
     },
   });
 };
-//update product
-export const useUpdateProduct = () => {
+//update order
+export const useUpdateOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (
-      productData: Partial<IProduct> & {
+      orderData: Partial<IOrder> & {
         _id: string;
       }
-    ): Promise<IProductFetched> => {
+    ): Promise<IOrderFetched> => {
       return await axios
-        .put("/api/seller/products/single", productData)
+        .put("/api/seller/orders/single", orderData)
         .then(eCheck);
     },
     onSuccess: (data) => {
       console.log(data);
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["orders"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["product", data._id],
+        queryKey: ["order", data._id],
       });
     },
   });
 };
-//delete product
-export const useDeleteProduct = () => {
+//delete order
+export const useDeleteOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (productId: string) => {
+    mutationFn: async (orderId: string) => {
       return await axios
-        .delete("/api/seller/products/single", {
+        .delete("/api/seller/orders/single", {
           params: {
-            _id: productId,
+            _id: orderId,
           },
         })
         .then(eCheck);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["orders"],
       });
     },
   });

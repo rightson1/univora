@@ -12,12 +12,15 @@ import { IProductFetched, InputChangeEventTypes } from "@/types";
 import { Product_Category } from "./product_category";
 import { useUpdateProduct } from "@/utils/hooks/useProduct";
 import { useCustomToast } from "@/components/helpers/functions";
+import { useSellerAuth } from "@/utils/sellerAuth";
 export const EditGeneralInfo = ({ product }: IProductEdit) => {
+  const { seller } = useSellerAuth();
   const [values, setValues] = useState<Partial<IProductFetched>>({
     name: product.name,
     price: product.price,
     description: product.description,
     brand: product.brand,
+    stock: product.stock,
   });
   const [longDescription, setLongDescription] = useState<string>(
     product.longDescription || ""
@@ -37,6 +40,7 @@ export const EditGeneralInfo = ({ product }: IProductEdit) => {
           ...values,
           longDescription,
           category,
+          school: seller.school._id,
         });
       },
     });
@@ -52,63 +56,72 @@ export const EditGeneralInfo = ({ product }: IProductEdit) => {
         </Button>
       }
     >
-      <form>
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
-          <div className="flex flex-col space-y-1.5 ">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Name of your product"
-              onChange={handleChange}
-              value={values.name}
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="name">Price</Label>
-            <Input
-              id="price"
-              placeholder="Price of your product"
-              type="number"
-              value={values.price}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 md:col-span-2">
-            <Label htmlFor="shortDescription">Short Description</Label>
-            <Textarea
-              id="description"
-              value={values.description}
-              onChange={handleChange}
-              placeholder="
-                  A small description of your product"
-            />
-          </div>
-
-          <Product_Category
-            category={category}
-            setCategory={setCategory}
-            product={product}
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4 ">
+        <div className="flex flex-col space-y-1.5 col-span-2 ">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            placeholder="Name of your product"
+            onChange={handleChange}
+            value={values.name}
           />
-
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="brand">Brand</Label>
-            <Input
-              value={values.brand}
-              onChange={handleChange}
-              id="brand"
-              placeholder="Brand of your product in Kg"
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 md:col-span-2">
-            <Label htmlFor="shortDescription">Description</Label>
-            <Editor
-              setEditorContent={setLongDescription}
-              editorContent={longDescription}
-            />
-          </div>
         </div>
-      </form>
+
+        <div className="flex flex-col space-y-1.5 ">
+          <Label htmlFor="price">Price</Label>
+          <Input
+            id="price"
+            placeholder="Price of your product"
+            type="number"
+            value={values.price}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="stock">Stock</Label>
+          <Input
+            id="stock"
+            placeholder="Stock of your product"
+            type="number"
+            value={values.stock}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex flex-col space-y-1.5 md:col-span-2">
+          <Label htmlFor="shortDescription">Short Description</Label>
+          <Textarea
+            id="description"
+            value={values.description}
+            onChange={handleChange}
+            placeholder="
+                  A small description of your product"
+          />
+        </div>
+
+        <Product_Category
+          category={category}
+          setCategory={setCategory}
+          product={product}
+        />
+
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="brand">Brand</Label>
+          <Input
+            value={values.brand}
+            onChange={handleChange}
+            id="brand"
+            placeholder="Brand of your product in Kg"
+          />
+        </div>
+        <div className="flex flex-col space-y-1.5 md:col-span-2">
+          <Label htmlFor="shortDescription">Description</Label>
+          <Editor
+            setEditorContent={setLongDescription}
+            editorContent={longDescription}
+          />
+        </div>
+      </div>
     </CustomModal>
   );
 };

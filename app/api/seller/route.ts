@@ -1,32 +1,41 @@
 import Business from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
-import { ISeller, ISellerBase } from "@/types";
+import { ISeller, ISellerBase, ISellerFetched } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function GET() {
   await conn();
-  const { pathname, origin } = req.nextUrl;
+}
+//edit seller
+export async function PUT(req: NextRequest) {
+  await conn();
   try {
-    const { name, phone, email, school, uid }: ISeller = await req.json();
-    const newSeller = await Business.create({
-      name: name,
-      phone: phone,
-      email: email,
-      uid: uid,
-      school: school,
-    });
+    const seller: ISellerFetched = await req.json();
+    const no_of_slugs = await Business.countDocuments({ slug: seller.slug });
+    if (no_of_slugs > 1) {
+      return NextResponse.json({
+        message: `There exists a seller with name ${seller.slug}`,
+        success: false,
+      });
+    }
+
+    const updatedSeller = await Business.findOneAndUpdate(
+      {
+        _id: seller._id,
+      },
+      seller,
+      { new: true }
+    );
     return NextResponse.json({
-      message: "Seller created successfully",
+      message: "Seller updated successfully",
       success: true,
-      data: newSeller,
+      data: updatedSeller,
     });
-  } catch (e) {
+  } catch (e: any) {
+    console.log(e.message);
     return NextResponse.json({
-      message: "Error creating seller",
+      message: e.message,
       success: false,
     });
   }
-}
-export async function GET() {
-  await conn();
 }

@@ -21,6 +21,11 @@ const SellerSchema = new Schema(
       trim: true,
       unique: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     school: {
       type: Schema.Types.ObjectId,
@@ -34,15 +39,40 @@ const SellerSchema = new Schema(
     profileImage: {
       type: String,
     },
-
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    status: {
+      type: String,
+      enum: ["paused", "active", "suspended"],
+      default: "active",
+    },
+    visibility: {
+      type: String,
+      enum: ["public", "private"],
+      default: "public",
+    },
     deliveryOptions: [
       {
         type: String,
         enum: ["Pickup", "Delivery"],
+        default: "Pickup",
       },
     ],
-    socialMediaLinks: {
-      type: Object,
+    socials: {
+      type: [
+        {
+          platform: {
+            type: String,
+            enum: ["instagram", "tiktok", "whatsapp"],
+          },
+          link: {
+            type: String,
+          },
+        },
+      ],
+      default: [],
     },
   },
   {

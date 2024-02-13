@@ -60,7 +60,7 @@ export const CustomModal = ({
             </div>
           </DialogHeader>
 
-          <div className="overflow-y-scroll flex-grow px-2">{children}</div>
+          <div className="overflow-y-auto flex-grow px-2 py-5">{children}</div>
           <DialogFooter className="border-t pt-4 mb:flex-row mb:justify-end">
             <DialogClose>
               <Button variant="outline" type="button" className="mr-2">

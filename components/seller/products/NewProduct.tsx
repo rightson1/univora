@@ -14,10 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Editor } from "../utils/Editor";
 import { WithOutContext as ReactTags } from "react-tag-input";
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
-import { BiPlus } from "react-icons/bi";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { MdDeleteOutline } from "react-icons/md";
+
 import { TOption } from "@/types/sellerTypes";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +83,7 @@ export const NewProductForm = () => {
       longDescription: longDescription,
       options,
       variants,
+      tags: values.tags.map((tag) => tag.trim()),
       active: true,
       business: seller._id,
       slug: values.name.toLowerCase().replace(/ /g, "-"),
@@ -112,6 +110,7 @@ export const NewProductForm = () => {
         ...data,
         thumbnail: thumbnailUrl,
         media: mediaUrls,
+        school: seller.school._id,
       };
       console.log(product);
       await addProduct(product);

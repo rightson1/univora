@@ -135,14 +135,21 @@ export default function Products() {
     },
 
     {
-      accessorKey: "category",
-      header: "Category",
+      accessorKey: "stock",
+      header: "Stock",
       cell: ({ row }) => (
-        <div className="capitalize">
-          {(row.getValue("category") as { name: string }).name}
-        </div>
+        <div className="capitalize">{row.getValue("stock")}</div>
       ),
     },
+    // {
+    //   accessorKey: "category",
+    //   header: "Category",
+    //   cell: ({ row }) => (
+    //     <div className="capitalize">
+    //       {(row.getValue("category") as { name: string }).name}
+    //     </div>
+    //   ),
+    // },
     {
       id: "actions",
       enableHiding: false,
@@ -160,7 +167,10 @@ export default function Products() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center space-x-2" asChild>
+              <DropdownMenuItem
+                className="flex  items-center space-x-2"
+                asChild
+              >
                 <Link href={`/products/${product._id}`}>
                   <BiEdit />
                   <span>Edit</span>

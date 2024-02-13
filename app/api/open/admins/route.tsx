@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const count = await Admin.countDocuments({ schoolId: adminRaw.schoolId });
+    const count = await Admin.countDocuments({ schoolId: adminRaw.school });
     if (count >= 2) {
       return NextResponse.json({
         message: "Too many admins",

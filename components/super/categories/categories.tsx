@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosAdd, IoIosMore } from "react-icons/io";
 import { ICategory, ICategoryFetched, ICategoryTable } from "@/types";
-import { dummyCategories } from "@/utils/data";
 import {
   Card,
   CardContent,

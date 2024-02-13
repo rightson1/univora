@@ -130,10 +130,13 @@ export interface ISAdmin extends IAdminBase {
   updatedAt: string;
 }
 export interface IAdmin extends IAdminBase {
-  schoolId: string;
+  school: string | ISchoolFetched;
   pass?: string;
 }
-export interface IAdminFetched extends IAdmin, IFetched {}
+export interface IAdminFetched extends IAdmin, IFetched {
+  status: "active" | "suspended";
+  school: ISchoolFetched;
+}
 export interface ISchool {
   name: string;
   subdomain: string;
@@ -172,14 +175,23 @@ export interface ISellerBase {
   name: string;
   email: string;
   phone: string;
-
+  slug: string;
   uid: string;
 }
 export interface ISeller extends ISellerBase {
   school: string;
 }
+
+export interface ISocialLink {
+  platform: "instagram" | "tiktok" | "whatsapp";
+  link: string;
+}
+
 export interface ISellerFetched extends ISellerBase, IFetched {
   school: ISchoolFetched;
+  description: string;
+  profileImage?: string;
+  socials: ISocialLink[];
 }
 export interface IAuthUser {
   email: string;
@@ -199,7 +211,7 @@ export interface IProductBase {
   price: number;
   description?: string;
   longDescription?: string;
-
+  school: string;
   stock?: number;
   tags: string[];
   brand?: string;
@@ -232,4 +244,31 @@ export interface IProductValues {
 }
 export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
+}
+export interface IOrder {
+  customer?: string;
+  seller: string | ISellerFetched;
+  school: string | ISchoolFetched;
+  variant?: IVariant;
+  product: string | IProductFetched;
+  quantity: number;
+  totalAmount: number;
+  productPrice: number;
+  fulfillmentStatus?: "pending" | "confirmed" | "completed";
+  paymentStatus?: "pending" | "paid";
+  paymentMethod?: string;
+  orderType?: "customer" | "seller";
+  customerName?: string;
+  customerPhone: string;
+  paidAmount?: number;
+  message?: string;
+  otherPayments: {
+    name: string;
+    amount: number;
+  }[];
+}
+export interface IOrderFetched extends IOrder, IFetched {
+  seller: ISellerFetched;
+  school: ISchoolFetched;
+  product: IProductFetched;
 }

@@ -45,7 +45,7 @@ const New_ADMIN = () => {
       await add({
         displayName: name,
         email: email,
-        schoolId: school,
+        school: school,
         role: "admin",
         uid,
         pass,

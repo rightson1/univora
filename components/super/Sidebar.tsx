@@ -12,6 +12,7 @@ import { CiHome } from "react-icons/ci";
 import { IoSchoolOutline } from "react-icons/io5";
 import { CiShoppingCart } from "react-icons/ci";
 import { AiOutlineLogout } from "react-icons/ai";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 export const Sidebar = () => {
   const { user, logout } = useSuperAuth();
   const pathname = usePathname().split("/")[1];
@@ -49,6 +50,12 @@ export const Sidebar = () => {
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <CiShoppingCart className="mr-2 h-4 w-4 font-bold" />
             <span>Categories</span>
+          </Button>
+        </Link>
+        <Link href={"/admins"}>
+          <Button variant={"ghost"} className="font-semibold fc gap-3  ">
+            <MdOutlineAdminPanelSettings className="mr-2 h-4 w-4 font-bold" />
+            <span>Admins</span>
           </Button>
         </Link>
 

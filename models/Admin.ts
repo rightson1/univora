@@ -22,9 +22,19 @@ const AdminSchema = new Schema(
       type: String,
       required: true,
     },
+    school: {
+      type: Schema.Types.ObjectId,
+      ref: "School",
+    },
     photoURL: {
       type: String,
       required: false,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ["active", "suspended"],
+      default: "active",
     },
   },
   {

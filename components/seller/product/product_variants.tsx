@@ -58,11 +58,13 @@ export const Product_Variants: React.FC<VariantsProps> = ({
   }, [options]);
   useEffect(() => {
     setVariants(
-      allOptions.map((option) => ({
-        options: option.join(", "),
-        price: 0,
-        active: true,
-      }))
+      allOptions
+        .filter((option) => option.length > 0)
+        .map((option) => ({
+          options: option.join(", "),
+          price: 0,
+          active: true,
+        }))
     );
   }, [allOptions]);
   return (

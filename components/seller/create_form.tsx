@@ -57,7 +57,11 @@ export const Create_Seller = () => {
           const errorMessage = error.message;
           throw new Error(errorMessage);
         });
-      await add_seller({ uid: id, ...data });
+      await add_seller({
+        uid: id,
+        ...data,
+        slug: name.toLowerCase().replace(/\s/g, "-"),
+      });
     };
     customToast({
       func: createAdmin,

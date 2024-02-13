@@ -1,14 +1,25 @@
-import { ISeller, ISellerBase } from "@/types";
+import { eCheck } from "@/components/helpers/functions";
+import { ISeller, ISellerBase, ISellerFetched } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useAddSeller = () => {
   return useMutation({
     mutationFn: async (data: ISeller) =>
-      await axios.post("/api/seller", data).then((res) => {
+      await axios.post("/api/open/seller", data).then((res) => {
         if (!res.data.success) {
           throw new Error(res.data.message);
         }
       }),
+  });
+};
+//update seller
+export const useUpdateSeller = () => {
+  return useMutation({
+    mutationFn: async (
+      data: Partial<ISellerFetched> & {
+        _id: string;
+      }
+    ) => await axios.put("/api/seller", data).then(eCheck),
   });
 };

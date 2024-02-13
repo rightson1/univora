@@ -27,7 +27,7 @@ export const SellerAuthProvider = ({
   const clearRoleCookie = () => {
     Cookies.remove("role");
   };
-  const fetchUser = async (uid: string) => {
+  const fetchSeller = async (uid: string) => {
     const userRaw = await axios
       .get(`/api/open/seller?uid=${uid}`)
       .then(eCheck)
@@ -66,7 +66,7 @@ export const SellerAuthProvider = ({
           setSeller(localUser);
         } else {
           console.log(user);
-          fetchUser(user.uid);
+          fetchSeller(user.uid);
         }
       } else {
         setAdmin(null);
@@ -108,7 +108,7 @@ export const SellerAuthProvider = ({
       value={{
         seller,
         signIn,
-        fetchUser,
+        fetchSeller,
         logout,
         admin,
       }}
@@ -128,7 +128,7 @@ interface AuthContextProps {
     email: string;
     password: string;
   }) => Promise<void>;
-  fetchUser: (uid: string) => void;
+  fetchSeller: (uid: string) => void;
   logout: () => Promise<void>;
 }
 

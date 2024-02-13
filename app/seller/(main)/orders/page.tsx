@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { DataTable } from "@/components/seller/orders/data-table";
 import { columns } from "@/components/seller/orders/columns";
 import { orders } from "@/utils/data";
+import { Button } from "@/components/ui/button";
+import { Create_Custom_Order } from "@/components/seller/orders/create_custom_order";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Orders",
@@ -19,6 +22,9 @@ export default async function TaskPage() {
               Here&apos;s a list of your tasks for this month!
             </p>
           </div>
+          <Button>
+            <Link href="/orders/create">Create Order</Link>
+          </Button>
         </div>
         <DataTable data={orders} columns={columns} />
       </div>

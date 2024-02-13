@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+import { useGetAdmins } from "@/utils/hooks/useAdmin";
+import React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,22 +13,20 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { CustomTable } from "@/components/shared/table";
-import { AddSchool } from "@/components/super/schools/add-school";
-import { useGetSchools } from "@/utils/hooks/useSchools";
-import { school_columns } from "@/components/super/schools/school_columns";
+import { admin_columns } from "./admin_colums";
 
-export default function Schools() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const { data: schools } = useGetSchools();
+const Admins_Home = () => {
+  const { data: admins } = useGetAdmins();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
-    data: schools || [],
-    columns: school_columns,
+    data: admins || [],
+    columns: admin_columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -48,11 +47,10 @@ export default function Schools() {
     <div className="w-full p-4 md:p-8">
       <div className="flex items-center justify-between space-y-2 pb-5">
         <h2 className="text-3xl font-bold tracking-tight">Schools</h2>
-        <div className="flex items-center space-x-2">
-          <AddSchool />
-        </div>
       </div>
-      <CustomTable table={table} columns={school_columns} />
+      <CustomTable table={table} columns={admin_columns} />
     </div>
   );
-}
+};
+
+export default Admins_Home;

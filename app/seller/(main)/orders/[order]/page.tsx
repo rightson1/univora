@@ -18,13 +18,16 @@ import { EditThumbnail } from "@/components/seller/product/edit-thumbnail";
 import { EditMedia } from "@/components/seller/product/edit-media";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 const Order = () => {
   return (
     <div className="p-4">
-      <button className="text-sm fc">
-        <FaArrowLeftLong className="mr-2" />
-        <span>Back To Orders</span>
-      </button>
+      <div className="w-full flex items-start">
+        <Link href="/orders" className="text-sm fc ">
+          <FaArrowLeftLong className="mr-2" />
+          <span>Back To Orders</span>
+        </Link>
+      </div>
       <div className="py-5 fx-c gap-5">
         <div className="flex gap-5 flex-col md:flex-row w-full">
           <div className="fx-c flex-[2] gap-5">

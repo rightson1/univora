@@ -107,12 +107,17 @@ const GeneralInfo = ({ product }: IProductEdit) => {
             <h5 className="p">Category:</h5>
             <span>{product.category?.name}</span>
           </div>
+          <div className="fb w-full">
+            <h5 className="p">Stock:</h5>
+            <span>{product.stock}</span>
+          </div>
           {product.brand && (
             <div className="fb w-full">
               <h5 className="p">Brand:</h5>
               <span>{product.brand}</span>
             </div>
           )}
+
           {product.variants && (
             <div className="fb w-full">
               <h5 className="p">Variants:</h5>
