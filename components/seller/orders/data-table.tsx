@@ -102,8 +102,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
-                console.log(row);
-                const id = (row.original as { id: string }).id;
+                const id = (row.original as { _id: string })._id;
                 return (
                   <TableRow
                     className="cursor-pointer"

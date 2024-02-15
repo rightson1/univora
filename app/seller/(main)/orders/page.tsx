@@ -8,11 +8,18 @@ import { Create_Custom_Order } from "@/components/seller/orders/create_custom_or
 import Link from "next/link";
 import { useGetOrders } from "@/utils/hooks/useOrder";
 import { useSellerAuth } from "@/utils/sellerAuth";
+import { useEffect, useState } from "react";
+import { IOrderFetched } from "@/types";
 
 export default function TaskPage() {
   const { seller } = useSellerAuth();
   const { data } = useGetOrders(seller?._id);
-  const orders = data || [];
+  const [orders, setOrders] = useState<IOrderFetched[]>([]);
+  useEffect(() => {
+    if (data) {
+      setOrders(data);
+    }
+  }, [data]);
 
   return (
     <>

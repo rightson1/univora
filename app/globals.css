@@ -310,3 +310,6 @@
 .l-text {
   text-decoration: underline;
 }
+.capitalise {
+  text-transform: capitalize;
+}

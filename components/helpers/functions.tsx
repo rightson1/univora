@@ -122,3 +122,13 @@ export const formatDate = (date: string) => {
   const raw_date = new Date(date);
   return raw_date.toLocaleDateString();
 };
+export function fDate(dateString: string): string {
+  return new Date(dateString).toLocaleString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+}

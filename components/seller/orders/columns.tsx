@@ -95,9 +95,23 @@ export const columns: ColumnDef<IOrderFetched>[] = [
       return value.includes(row.getValue(id));
     },
   },
-
   {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    accessorKey: "totalAmount",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total Amount" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            ksh. {row.getValue("totalAmount")}
+          </span>
+        </div>
+      );
+    },
   },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -13,51 +14,126 @@ import { GoDotFill } from "react-icons/go";
 import { EditGeneralInfo } from "@/components/seller/product/edit-general-info";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
+import { IoIosMore } from "react-icons/io";
 import Image from "next/image";
 import { EditThumbnail } from "@/components/seller/product/edit-thumbnail";
 import { EditMedia } from "@/components/seller/product/edit-media";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-const Order = () => {
-  return (
-    <div className="p-4">
-      <div className="w-full flex items-start">
-        <Link href="/orders" className="text-sm fc ">
-          <FaArrowLeftLong className="mr-2" />
-          <span>Back To Orders</span>
-        </Link>
-      </div>
-      <div className="py-5 fx-c gap-5">
-        <div className="flex gap-5 flex-col md:flex-row w-full">
-          <div className="fx-c flex-[2] gap-5">
-            <GeneralInfo />
-            <Summary />
-          </div>
-          <div className="fx-c flex-1 gap-5">
-            <Notes />
+import { useGetSingleOrder, useUpdateOrder } from "@/utils/hooks/useOrder";
+import { IOrderFetched, TOrderStatus } from "@/types";
+import { DashboardLoading } from "@/components/shared/dashboard_loading";
+import Item_not_found from "@/components/shared/item_not_found";
+import { fDate, useCustomToast } from "@/components/helpers/functions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+const Order = ({
+  params: { order: _id },
+}: {
+  params: {
+    order: string;
+  };
+}) => {
+  const { data: order, isPending } = useGetSingleOrder(_id);
+  if (isPending) return <DashboardLoading />;
+  if (order) {
+    return (
+      <div className="p-4">
+        <div className="w-full flex items-start">
+          <Link href="/orders" className="text-sm fc ">
+            <FaArrowLeftLong className="mr-2" />
+            <span>Back To Orders</span>
+          </Link>
+        </div>
+        <div className="py-5 fx-c gap-5">
+          <div className="flex gap-5 flex-col md:flex-row w-full">
+            <div className="fx-c flex-[2] gap-5">
+              <GeneralInfo order={order} />
+              <Summary />
+            </div>
+            <div className="fx-c flex-1 gap-5">
+              <Notes />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <Item_not_found
+        link="/orders"
+        btxt="Back To Orders"
+        ptxt="This order does not exist or has been deleted."
+      />
+    );
+  }
 };
-
-const GeneralInfo = () => {
+const GeneralInfo = ({ order }: { order: IOrderFetched }) => {
+  const status = order.fulfillmentStatus;
+  const { mutateAsync } = useUpdateOrder();
+  const { loading, customToast } = useCustomToast();
+  const handleUpdate = async (order_status: TOrderStatus) => {
+    if (order_status === "completed") {
+      const confirm = window.confirm(
+        "Are you sure you want to complete this order?"
+      );
+      if (!confirm) return;
+    }
+    if (order_status === "cancelled") {
+      const confirm = window.confirm(
+        "Are you sure you want to cancel this order?"
+      );
+      if (!confirm) return;
+    }
+    customToast({
+      func: async () =>
+        mutateAsync({ fulfillmentStatus: order_status, _id: order._id }),
+    });
+  };
   return (
     <Card className="w-full h-auto ">
       <CardHeader className="mb:p-4">
         <div className="fb">
-          <h4 className="h3 text-foreground">#2</h4>
+          <h4 className="h3 text-foreground">Ksh {order.totalAmount}</h4>
           <div className="fc">
             <Button variant="ghost" className="hidden md:flex">
-              <GoDotFill className="mr-2 text-indigo" />
-              Pending
+              <GoDotFill className="mr-2 text-indigo capitalize" />
+              {status}
             </Button>
-            {/* <EditGeneralInfo /> */}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="ghost" size={"icon"}>
+                  <IoIosMore />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {(status === "pending" || status === "confirmed") && (
+                  <DropdownMenuItem onClick={() => handleUpdate("cancelled")}>
+                    Cancel Order
+                  </DropdownMenuItem>
+                )}
+                {status !== "completed" && (
+                  <DropdownMenuItem onClick={() => handleUpdate("completed")}>
+                    Complete Order
+                  </DropdownMenuItem>
+                )}
+                {status === "pending" && (
+                  <DropdownMenuItem onClick={() => handleUpdate("confirmed")}>
+                    Confirm Order
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
-        <CardDescription>20th may 2023 12:00pm</CardDescription>
+        <CardDescription>{fDate(order.createdAt)}</CardDescription>
       </CardHeader>
       <CardContent className="fx-c gap-4 w-full h-auto ">
         <h4 className="h4">Details</h4>
@@ -68,7 +144,7 @@ const GeneralInfo = () => {
               <h5>
                 <span className="text-foreground">
                   <a href="mailto:chari.rightson@gmail.com">
-                    chari.rightson@gmail.com
+                    {order.customerName}
                   </a>
                 </span>
               </h5>
@@ -83,7 +159,9 @@ const GeneralInfo = () => {
               <p>Phone</p>
               <h5>
                 <span className="text-foreground">
-                  <a href="tel: 0791568168">0791568168</a>
+                  <a href={`tel:${order.customerPhone}`}>
+                    {order.customerPhone}
+                  </a>
                 </span>
               </h5>
             </div>
@@ -96,7 +174,7 @@ const GeneralInfo = () => {
           <div>
             <p>Payment</p>
             <h5>
-              <span className="text-foreground">System</span>
+              <span className="text-foreground">{order.paymentMethod}</span>
             </h5>
           </div>
         </div>
