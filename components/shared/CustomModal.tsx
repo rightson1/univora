@@ -42,12 +42,14 @@ export const CustomModal = ({
       <DialogContent
         // asChild
         close={false}
-        className=""
+        className="
+        mb:w-[90vw] sm:max-w-[600px]
+        "
       >
         <form
           onSubmit={onSubmit}
-          className="mb:w-[85vw]  mb:max-h-[80vh] 
-    max-h-[90vh] rounded-md sm:max-w-[725px] p-4 flex flex-col"
+          className=" mb:max-h-[80vh] 
+    max-h-[90vh] rounded-md md:p-4 flex flex-col"
         >
           <DialogHeader className="border-b pb-4">
             <div className="fb">

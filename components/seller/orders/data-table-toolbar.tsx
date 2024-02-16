@@ -20,7 +20,10 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex items-center justify-between  ">
-      <div className="mb:flex-col mb:items-start  gap-2 flex flex-1 items-center space-x-2">
+      <div
+        className="mb:flex-col mb:items-start  
+      gap-2 flex flex-1 items-center space-x-2"
+      >
         <Input
           placeholder="Customer Name..."
           value={
@@ -31,8 +34,8 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 mb:w-full w-[150px] lg:w-[250px]"
         />
-        <div className="flex gap-2 w-full mb:flex-col overflow-hidden">
-          <div className="mb:w-3/4 flex gap-4">
+        <div className="flex gap-2 w-full mb:flex-col  ">
+          <div className="mb:w-3/4 flex gap-4 mb:-ml-2">
             {" "}
             {table.getColumn("fulfillmentStatus") && (
               <DataTableFacetedFilter

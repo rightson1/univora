@@ -50,7 +50,7 @@ export const columns: ColumnDef<IOrderFetched>[] = [
       const status = orderStatus.find(
         (status) => status.value === row.getValue("fulfillmentStatus")
       );
-      console.log(status);
+
       if (!status) {
         return null;
       }
@@ -60,7 +60,7 @@ export const columns: ColumnDef<IOrderFetched>[] = [
           {status.icon && (
             <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
           )}
-          <span>{status.label}</span>
+          <span>{row.original.fulfillmentStatus}</span>
         </div>
       );
     },

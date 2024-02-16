@@ -76,6 +76,7 @@ export const Payment_Status = ({
             </Button>
             {submit && (
               <Button
+                type="button"
                 onClick={() => {
                   submit && submit();
                 }}

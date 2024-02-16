@@ -262,7 +262,7 @@ export interface IOrder {
   orderType?: "customer" | "seller";
   customerName?: string;
   customerPhone: string;
-  paidAmount?: number;
+  paidAmount: number;
   message?: string;
   otherPayments: {
     name: string;

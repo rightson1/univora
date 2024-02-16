@@ -57,7 +57,7 @@ export const EditGeneralInfo = ({ product }: IProductEdit) => {
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4 ">
-        <div className="flex flex-col space-y-1.5 col-span-2 ">
+        <div className="flex flex-col space-y-1.5 md:col-span-2  ">
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"

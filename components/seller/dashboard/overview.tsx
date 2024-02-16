@@ -28,7 +28,7 @@ export function Overview() {
 
       return {
         name: day.slice(0, 3),
-        total: ordersThatDay.reduce((acc, order) => acc + order.totalAmount, 0),
+        total: ordersThatDay.reduce((acc, order) => acc + order.paidAmount, 0),
       };
     });
   }, [data]);

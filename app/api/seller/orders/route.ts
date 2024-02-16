@@ -30,7 +30,9 @@ export async function GET(req: NextRequest) {
   const seller_Id = req.nextUrl.searchParams.get("sellerId");
   Product;
   try {
-    const orders = await Order.find({ seller: seller_Id }).populate("product");
+    const orders = await Order.find({ seller: seller_Id })
+      .populate("product")
+      .sort({ createdAt: -1 });
     return NextResponse.json(orders);
   } catch (error: any) {
     return NextResponse.json({

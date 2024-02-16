@@ -112,7 +112,7 @@ const GeneralInfo = ({ order }: { order: IOrderFetched }) => {
         <div className="fb">
           <h4 className="h3 text-foreground">Ksh {order.totalAmount}</h4>
           <div className="fc">
-            <Button variant="ghost" className="hidden md:flex">
+            <Button variant="ghost" className="flex">
               <GoDotFill className="mr-2 text-indigo capitalize" />
               {status}
             </Button>
@@ -200,7 +200,7 @@ const Summary = ({ order }: { order: IOrderFetched }) => {
         <div className="fb">
           <h4 className="h3 text-foreground">Summary</h4>
           <div className="fc">
-            <Button variant="ghost" className="hidden md:flex">
+            <Button variant="ghost" className="flex">
               <GoDotFill className="mr-2 text-indigo" />
               {status}
             </Button>
@@ -270,10 +270,10 @@ const Payments = ({ order }: { order: IOrderFetched }) => {
   const [paidAmount, setPaidAmount] = useState(order.paidAmount || 0);
   const { mutateAsync } = useUpdateOrder();
   useEffect(() => {
-    let total = order.productPrice;
+    let total = order.productPrice * order.quantity;
 
     if (order.variant?.price) {
-      total = order.variant.price;
+      total = order.variant.price * order.quantity;
     }
     if (otherPayments.length > 0) {
       const total_other_payments = otherPayments.reduce(

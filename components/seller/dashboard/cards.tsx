@@ -21,20 +21,19 @@ import { CiShoppingCart } from "react-icons/ci";
 const Cards = () => {
   const { seller } = useSellerAuth();
   const { data } = useGetOrders(seller._id);
-  const [orders, setOrder] = useState<IOrderFetched[]>([]);
+  const [orders, setOrders] = useState<IOrderFetched[]>([]);
   const { data: products } = useGetProducts(seller._id);
   useEffect(() => {
-    //data should only for this month , use created at
     if (data) {
-      const orders_data = orders.filter((order) => {
+      const orders_data = data.filter((order) => {
         const orderDate = new Date(order.createdAt);
+
         const currentDate = new Date();
         return orderDate.getMonth() === currentDate.getMonth();
       });
-      setOrder(orders_data);
+      setOrders(orders_data);
     }
   }, [data]);
-
   const { completed_orders, pending_orders, totalRevenueTotal } =
     useMemo(() => {
       const totalRevenueTotal = orders

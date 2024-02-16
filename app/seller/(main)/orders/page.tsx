@@ -10,10 +10,11 @@ import { useGetOrders } from "@/utils/hooks/useOrder";
 import { useSellerAuth } from "@/utils/sellerAuth";
 import { useEffect, useState } from "react";
 import { IOrderFetched } from "@/types";
+import { FaPlus } from "react-icons/fa";
 
 export default function TaskPage() {
   const { seller } = useSellerAuth();
-  const { data } = useGetOrders(seller?._id);
+  const { data, isPending } = useGetOrders(seller?._id);
   const [orders, setOrders] = useState<IOrderFetched[]>([]);
   useEffect(() => {
     if (data) {
@@ -31,11 +32,14 @@ export default function TaskPage() {
               Scroll table right see more details
             </p>
           </div>
-          <Button>
-            <Link href="/orders/create">Create Order</Link>
+          <Button asChild>
+            <Link href="/orders/create" className="flex gap-2">
+              <FaPlus className="text-sm" />
+              Order
+            </Link>
           </Button>
         </div>
-        <DataTable data={orders} columns={columns} />
+        <DataTable data={orders} columns={columns} loading={isPending} />
       </div>
     </>
   );

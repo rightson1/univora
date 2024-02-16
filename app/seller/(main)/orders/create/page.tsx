@@ -38,6 +38,7 @@ const Create_Custom_Order = () => {
 
   const [selectedProduct, setSelectedProduct] =
     useState<IProductFetched | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const [otherPayments, setOtherPayments] = useState([
     {
       name: "",
@@ -48,7 +49,10 @@ const Create_Custom_Order = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [paidAmount, setPaidAmount] = useState(0);
   useEffect(() => {
-    let total = selectedProduct?.price || 0;
+    if (!selectedProduct) {
+      return;
+    }
+    let total = selectedProduct?.price;
     if (selectedVariant?.price) {
       total = selectedVariant.price;
     }
@@ -57,11 +61,11 @@ const Create_Custom_Order = () => {
       total += payment.amount;
     });
     setTotalAmount(total);
-  }, [selectedProduct, selectedVariant, otherPayments]);
+  }, [selectedProduct, selectedVariant, otherPayments, quantity]);
 
   const { mutateAsync } = useCreateOrder();
   const { customToast, loading } = useCustomToast();
-  const [quantity, setQuantity] = useState(1);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selectedProduct?.stock && quantity > selectedProduct?.stock) {
@@ -186,7 +190,7 @@ const GeneralInformation = () => {
               type="button"
               onClick={() => {
                 setGeneralInfo({
-                  customerName: "Custom Order Customer",
+                  customerName: "Custom",
                   phone: seller.phone,
                   message:
                     "This is a custom order. Please confirm the order before delivery.",
@@ -259,33 +263,31 @@ const Product = ({
             </Select>
           </div>
 
-          {selectedProduct &&
-            (!selectedVariant ||
-              !(selectedProduct.productType == "service")) && (
-              <div className="flex flex-col space-y-1.5 ">
-                <Label htmlFor="quantity">Quantity</Label>
-                <Input
-                  name="quantity"
-                  placeholder="Customer Quantity"
-                  className="w-full"
-                  type="number"
-                  required
-                  value={quantity}
-                  onChange={(e) => {
-                    let stock = selectedProduct?.stock || 1;
+          {selectedProduct && !(selectedProduct.productType == "service") && (
+            <div className="flex flex-col space-y-1.5 ">
+              <Label htmlFor="quantity">Quantity</Label>
+              <Input
+                name="quantity"
+                placeholder="Customer Quantity"
+                className="w-full"
+                type="number"
+                required
+                value={quantity}
+                onChange={(e) => {
+                  let stock = selectedProduct?.stock || 1;
 
-                    if (parseInt(e.target.value) > stock) {
-                      toast.error(
-                        `There are only ${stock} ${selectedProduct.name} in stock.`
-                      );
-                      setQuantity(stock);
-                    } else {
-                      setQuantity(parseInt(e.target.value));
-                    }
-                  }}
-                />
-              </div>
-            )}
+                  if (parseInt(e.target.value) > stock) {
+                    toast.error(
+                      `There are only ${stock} ${selectedProduct.name} in stock.`
+                    );
+                    setQuantity(stock);
+                  } else {
+                    setQuantity(parseInt(e.target.value));
+                  }
+                }}
+              />
+            </div>
+          )}
           {!selectedVariant ||
             (!selectedVariant.price && (
               <div className="flex flex-col space-y-1.5 ">
