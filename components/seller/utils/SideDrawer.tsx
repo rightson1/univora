@@ -1,21 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { FiShoppingCart } from "react-icons/fi";
-import { IoIosClose } from "react-icons/io";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { IoMdMenu } from "react-icons/io";
 import Sidebar from "../Sidebar";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 export const SideDrawer = () => {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)}>
       <SheetTrigger>
         <IoMdMenu className="text-2xl text-foreground" />
       </SheetTrigger>

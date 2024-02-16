@@ -1,62 +1,41 @@
 "use client";
 
+import { useGetOrders } from "@/utils/hooks/useOrder";
+import { useSellerAuth } from "@/utils/sellerAuth";
+import { useMemo, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-];
+import { format } from "date-fns";
 
 export function Overview() {
+  const { seller } = useSellerAuth();
+  const { data } = useGetOrders(seller._id);
+  //avarate for each day for the past  7 days
+  const order_data = useMemo(() => {
+    // Get the last 7 days
+    if (!data) return [];
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return format(d, "EEEE");
+    }).reverse();
+
+    // Calculate the average orders for each day
+    return days.map((day) => {
+      const ordersThatDay = data.filter((order) => {
+        const orderDate = new Date(order.createdAt);
+        return format(orderDate, "EEEE") === day;
+      });
+
+      return {
+        name: day.slice(0, 3),
+        total: ordersThatDay.reduce((acc, order) => acc + order.totalAmount, 0),
+      };
+    });
+  }, [data]);
+
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <BarChart data={order_data}>
         <XAxis
           dataKey="name"
           stroke="#888888"
