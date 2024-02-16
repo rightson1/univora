@@ -28,6 +28,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useGetProducts } from "@/utils/hooks/useProduct";
 import { IOrder, IProductFetched, IVariant } from "@/types";
 import toast from "react-hot-toast";
+import {
+  Other_Payments,
+  Payment_Status,
+} from "@/components/seller/orders/payment";
 const Create_Custom_Order = () => {
   const [selectedVariant, setSelectedVariant] = useState<IVariant | null>(null);
   const { seller } = useSellerAuth();
@@ -85,6 +89,12 @@ const Create_Custom_Order = () => {
       quantity,
       totalAmount,
       productPrice: selectedProduct?.price || 0,
+      paymentStatus:
+        paidAmount === totalAmount
+          ? "paid"
+          : paidAmount === 0
+          ? "pending"
+          : "partial",
     };
     customToast({
       func: async () => {
@@ -330,135 +340,5 @@ const Product = ({
     </Card>
   );
 };
-const Other_Payments = ({
-  otherPayments,
-  setOtherPayments,
-}: {
-  otherPayments: IOrder["otherPayments"];
-  setOtherPayments: React.Dispatch<
-    React.SetStateAction<IOrder["otherPayments"]>
-  >;
-}) => {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Other Payments </CardTitle>
-        <CardDescription>Other Payments (Optional)</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="fx-c w-full  gap-4">
-          {otherPayments.map((payment, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4"
-            >
-              <div className="flex flex-col space-y-1.5 ">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  placeholder="e.g delivery fee"
-                  className="w-full"
-                  onChange={
-                    (e) => {
-                      setOtherPayments(
-                        otherPayments.map((p, i) =>
-                          i === index ? { ...p, name: e.target.value } : p
-                        )
-                      );
-                    }
-                    // setOtherPayments([...otherPayments, { name: e.target.value }]);
-                  }
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5 " key={index}>
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  placeholder="Amount"
-                  className="w-full"
-                  onChange={(e) => {
-                    setOtherPayments(
-                      otherPayments.map((p, i) =>
-                        i === index
-                          ? { ...p, amount: parseInt(e.target.value) }
-                          : p
-                      )
-                    );
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-          <Button
-            onClick={() => {
-              setOtherPayments([...otherPayments, { name: "", amount: 0 }]);
-            }}
-          >
-            Add Other Payment
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-const Payment_Status = ({
-  totalAmount,
-  setPaidAmount,
-  paidAmount,
-}: {
-  totalAmount: number;
-  setPaidAmount: React.Dispatch<React.SetStateAction<number>>;
-  paidAmount: number;
-}) => {
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Order Status</CardTitle>
-        <CardDescription>
-          The Order Total Amount is {totalAmount}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="fx-c w-full  gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
-            <div className="flex flex-col space-y-1.5 ">
-              <Label htmlFor="paidAmount">Paid Amount</Label>
-              <Input
-                id="paidAmount"
-                placeholder="Paid Amount "
-                className="w-full"
-                type="number"
-                name="paidAmount"
-                required
-                value={paidAmount}
-                onChange={(e) => setPaidAmount(parseInt(e.target.value))}
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5 ">
-              <Label htmlFor="balance">Balance</Label>
-              <Input
-                id="balance"
-                placeholder="Customer Balance"
-                className="w-full"
-                readOnly
-                value={(totalAmount - paidAmount).toString()}
-              />
-            </div>
-          </div>
-          <div className="flex w-full justify-end col-span-2">
-            <Button
-              type="button"
-              onClick={() => {
-                setPaidAmount(totalAmount);
-              }}
-            >
-              Auto Fill
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+
 export default Create_Custom_Order;

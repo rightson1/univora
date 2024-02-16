@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
   Card,
@@ -22,7 +22,12 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useGetSingleOrder, useUpdateOrder } from "@/utils/hooks/useOrder";
-import { IOrderFetched, TOrderStatus } from "@/types";
+import {
+  IOrderFetched,
+  IProductFetched,
+  IVariant,
+  TOrderStatus,
+} from "@/types";
 import { DashboardLoading } from "@/components/shared/dashboard_loading";
 import Item_not_found from "@/components/shared/item_not_found";
 import { fDate, useCustomToast } from "@/components/helpers/functions";
@@ -34,6 +39,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Other_Payments,
+  Payment_Status,
+} from "@/components/seller/orders/payment";
 const Order = ({
   params: { order: _id },
 }: {
@@ -54,12 +63,12 @@ const Order = ({
         </div>
         <div className="py-5 fx-c gap-5">
           <div className="flex gap-5 flex-col md:flex-row w-full">
-            <div className="fx-c flex-[2] gap-5">
+            <div className="fx-c flex-[3] gap-5">
               <GeneralInfo order={order} />
-              <Summary />
+              <Summary order={order} />
             </div>
-            <div className="fx-c flex-1 gap-5">
-              <Notes />
+            <div className="fx-c flex-[2] gap-5">
+              <Payments order={order} />
             </div>
           </div>
         </div>
@@ -140,7 +149,7 @@ const GeneralInfo = ({ order }: { order: IOrderFetched }) => {
         <div className="flex mb:gap-5 flex-wrap md:flex-row  items-center md:space-x-4 text-sm">
           <div className="flex gap-5">
             <div className="fx-c">
-              <p>Email</p>
+              <p>Name</p>
               <h5>
                 <span className="text-foreground">
                   <a href="mailto:chari.rightson@gmail.com">
@@ -182,7 +191,9 @@ const GeneralInfo = ({ order }: { order: IOrderFetched }) => {
     </Card>
   );
 };
-const Summary = () => {
+const Summary = ({ order }: { order: IOrderFetched }) => {
+  const status = order.paymentStatus;
+  const product = order.product;
   return (
     <Card className="w-full h-auto ">
       <CardHeader className="mb:p-4">
@@ -191,7 +202,7 @@ const Summary = () => {
           <div className="fc">
             <Button variant="ghost" className="hidden md:flex">
               <GoDotFill className="mr-2 text-indigo" />
-              Paid
+              {status}
             </Button>
           </div>
         </div>
@@ -207,27 +218,43 @@ const Summary = () => {
               className="w-16 object-cover  rounded-lg"
             />
             <div className="fx-c gap-2">
-              <p className="p">Black Jeans</p>
-              <Badge>Size 32, Black</Badge>
+              <p className="p">{product.name}</p>
+              <Badge>
+                {order.variant
+                  ? `${order.variant?.options}-ksh. ${order.variant.price}`
+                  : "No Variant"}
+              </Badge>
             </div>
           </div>
           <p>
-            <span className="text-foreground">Ksh 500</span>
+            <span className="text-foreground">Ksh {order.productPrice}</span>
           </p>
         </div>
 
-        <div className="flex gap-5 w-full fb">
-          <div className="fx-c gap-2">
-            <p className="p">Subtotal</p>
-            <p className="p">Total</p>
-          </div>
-          <div className="fx-c gap-2">
-            <p className="p">
-              <span className="text-foreground">Ksh 500</span>
-            </p>
+        <div className="fx-c  gap-5 w-full">
+          <div className="w-full">
+            {order.otherPayments.length > 0 && (
+              <div className="w-full">
+                <h3 className="h3">Other Payments</h3>
+                {order.otherPayments.map((payment, i) => (
+                  <div className="fb w-full" key={i}>
+                    <p className="p">{payment.name}</p>
 
+                    <p className="p ">
+                      <span className="text-foreground">
+                        Ksh {payment.amount}
+                      </span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="fb w-full">
+            <p className="p">Total</p>
             <p className="p">
-              <span className="text-foreground">Ksh 600</span>
+              <span className="text-foreground">Ksh {order.totalAmount}</span>
             </p>
           </div>
         </div>
@@ -235,16 +262,64 @@ const Summary = () => {
     </Card>
   );
 };
-const Notes = () => {
+const Payments = ({ order }: { order: IOrderFetched }) => {
+  const { customToast } = useCustomToast();
+  const [otherPayments, setOtherPayments] = useState(order.otherPayments);
+
+  const [totalAmount, setTotalAmount] = useState(order.totalAmount);
+  const [paidAmount, setPaidAmount] = useState(order.paidAmount || 0);
+  const { mutateAsync } = useUpdateOrder();
+  useEffect(() => {
+    let total = order.productPrice;
+
+    if (order.variant?.price) {
+      total = order.variant.price;
+    }
+    if (otherPayments.length > 0) {
+      const total_other_payments = otherPayments.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+      );
+      total = total + total_other_payments;
+    }
+    setTotalAmount(total);
+  }, [otherPayments]);
+  const submit = async () => {
+    customToast({
+      func: async () => {
+        await mutateAsync({
+          _id: order._id,
+          paymentStatus:
+            paidAmount === totalAmount
+              ? "paid"
+              : paidAmount === 0
+              ? "pending"
+              : "partial",
+          otherPayments: otherPayments,
+          paidAmount: paidAmount,
+          totalAmount: totalAmount,
+          fulfillmentStatus:
+            order.totalAmount !== totalAmount
+              ? "confirmed"
+              : order.fulfillmentStatus,
+        });
+      },
+    });
+  };
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <div className="fb">
-          <CardTitle>Timeline</CardTitle>
-        </div>
-        <CardDescription className="pt-5"></CardDescription>
-      </CardHeader>
-    </Card>
+    <div className="fx-c gap-4 w-full">
+      <Other_Payments
+        otherPayments={otherPayments}
+        setOtherPayments={setOtherPayments}
+        submit={submit}
+      />
+      <Payment_Status
+        totalAmount={totalAmount}
+        setPaidAmount={setPaidAmount}
+        paidAmount={paidAmount}
+        submit={submit}
+      />
+    </div>
   );
 };
 

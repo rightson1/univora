@@ -273,4 +273,5 @@ export interface IOrderFetched extends IOrder, IFetched {
   seller: ISellerFetched;
   school: ISchoolFetched;
   product: IProductFetched;
+  fulfillmentStatus: TOrderStatus;
 }
