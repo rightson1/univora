@@ -78,7 +78,7 @@ const ProductSchema = new Schema(
     variants: [
       {
         options: {
-          type: String,
+          type: Object,
         },
         price: {
           type: Number,

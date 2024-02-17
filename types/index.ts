@@ -201,13 +201,16 @@ export interface IAuthUser {
 }
 
 export interface IVariant {
-  options: string;
+  options: {
+    [key: string]: string;
+  };
   price: number;
   active: boolean;
   stock: number;
 }
+export interface IVariantFetched extends IVariant, IFetched {}
 export interface IProductBase {
-  business: string;
+  business: string | ISellerFetched;
   name: string;
   price: number;
   description?: string;
@@ -222,7 +225,7 @@ export interface IProductBase {
   productType: IProductType;
   options?: TOption[];
   slug: string;
-  variants?: IVariant[];
+  variants?: IVariant[] | IVariantFetched[];
 }
 export interface IProduct extends IProductBase {
   category: string;
@@ -245,6 +248,8 @@ export interface IProductValues {
 }
 export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
+  business: ISellerFetched;
+  variants: IVariantFetched[];
 }
 export type TOrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 export type TPaymentStatus = "pending" | "paid" | "partial";
@@ -252,7 +257,7 @@ export interface IOrder {
   customer?: string;
   seller: string | ISellerFetched;
   school: string | ISchoolFetched;
-  variant?: IVariant;
+  variant?: IVariantFetched;
   product: string | IProductFetched;
   quantity: number;
   totalAmount: number;

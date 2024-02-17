@@ -47,7 +47,7 @@ import { useSellerAuth } from "@/utils/sellerAuth";
 import { useAddProduct } from "@/utils/hooks/useProduct";
 import toast from "react-hot-toast";
 import { Product_Options } from "../product/product_options";
-import { Product_Variants } from "../product/product_variants";
+import { Product_Variants_Trial } from "../product/product_variant_trial";
 
 export const NewProductForm = () => {
   const { seller } = useSellerAuth();
@@ -124,7 +124,17 @@ export const NewProductForm = () => {
       },
     });
   };
-
+  useEffect(() => {
+    if (variants.length > 0) {
+      const totalStock = variants.reduce((acc, curr) => acc + curr.stock, 0);
+      const lowestPrice = Math.min(...variants.map((v) => v.price));
+      setValues({
+        ...values,
+        stock: totalStock,
+        price: lowestPrice > 0 ? lowestPrice : values.price,
+      });
+    }
+  }, [variants]);
   return (
     <form className="w-full rounded-lg " onSubmit={publish}>
       <div className="fb">
@@ -189,7 +199,7 @@ export const NewProductForm = () => {
              */}
             <Product_Options options={options} setOptions={setOptions} />
 
-            <Product_Variants
+            <Product_Variants_Trial
               options={options}
               variants={variants}
               setVariants={setVariants}
@@ -219,7 +229,7 @@ export const NewProductForm = () => {
             <Product_Options
               {...{ options, setOptions, productType: "service" }}
             />
-            <Product_Variants
+            <Product_Variants_Trial
               options={options}
               variants={variants}
               setVariants={setVariants}

@@ -24,7 +24,7 @@ const OrderSchema = new Schema(
     //product
     variant: {
       type: {
-        options: String,
+        options: Object,
         price: Number,
         active: Boolean,
       },

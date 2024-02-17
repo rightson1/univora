@@ -209,9 +209,9 @@ const Summary = ({ order }: { order: IOrderFetched }) => {
       </CardHeader>
       <CardContent className="fx-c gap-5 w-full h-auto ">
         <div className="fb w-full">
-          <div className="flex gap-5">
+          <div className="flex gap-5 w-full mb:justify-between">
             <Image
-              src="/imgs/3.png"
+              src={order.product.thumbnail}
               width={200}
               height={200}
               alt="Image"
@@ -221,12 +221,14 @@ const Summary = ({ order }: { order: IOrderFetched }) => {
               <p className="p">{product.name}</p>
               <Badge>
                 {order.variant
-                  ? `${order.variant?.options}-ksh. ${order.variant.price}`
+                  ? `${Object.values(order.variant.options).join(", ")}-ksh. ${
+                      order.variant.price
+                    }`
                   : "No Variant"}
               </Badge>
             </div>
           </div>
-          <p>
+          <p className="hidden md:flex">
             <span className="text-foreground">Ksh {order.productPrice}</span>
           </p>
         </div>

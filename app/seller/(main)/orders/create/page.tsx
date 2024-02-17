@@ -26,14 +26,15 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { useGetProducts } from "@/utils/hooks/useProduct";
-import { IOrder, IProductFetched, IVariant } from "@/types";
+import { IOrder, IProductFetched, IVariant, IVariantFetched } from "@/types";
 import toast from "react-hot-toast";
 import {
   Other_Payments,
   Payment_Status,
 } from "@/components/seller/orders/payment";
 const Create_Custom_Order = () => {
-  const [selectedVariant, setSelectedVariant] = useState<IVariant | null>(null);
+  const [selectedVariant, setSelectedVariant] =
+    useState<IVariantFetched | null>(null);
   const { seller } = useSellerAuth();
 
   const [selectedProduct, setSelectedProduct] =
@@ -214,8 +215,10 @@ const Product = ({
   setQuantity,
   quantity,
 }: {
-  selectedVariant: IVariant | null;
-  setSelectedVariant: React.Dispatch<React.SetStateAction<IVariant | null>>;
+  selectedVariant: IVariantFetched | null;
+  setSelectedVariant: React.Dispatch<
+    React.SetStateAction<IVariantFetched | null>
+  >;
   selectedProduct: IProductFetched | null;
   setSelectedProduct: React.Dispatch<
     React.SetStateAction<IProductFetched | null>
@@ -313,7 +316,7 @@ const Product = ({
                   onValueChange={(value) => {
                     setSelectedVariant(
                       selectedProduct.variants?.find(
-                        (variant) => variant.options === value
+                        (variant) => variant._id === value
                       ) || null
                     );
                   }}
@@ -325,12 +328,11 @@ const Product = ({
                     <SelectGroup>
                       <SelectLabel>Variants</SelectLabel>
 
-                      {selectedProduct.variants?.map((product) => (
-                        <SelectItem
-                          key={product.options}
-                          value={product.options}
-                        >
-                          {product.options}-{product.price}
+                      {selectedProduct.variants?.map((variant) => (
+                        <SelectItem key={variant._id} value={variant._id}>
+                          {Object.values(variant.options)
+                            .join(" ")
+                            .replace(/_/g, " ")}
                         </SelectItem>
                       ))}
                     </SelectGroup>

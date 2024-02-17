@@ -20,37 +20,22 @@ interface VariantsProps {
   setVariants: (variants: IVariant[]) => void;
   productType?: IProductType;
   edit?: boolean;
+  initialVariants?: IVariant[];
 }
 
-export const Product_Variants: React.FC<VariantsProps> = ({
+export const Product_Variants_Trial: React.FC<VariantsProps> = ({
   options,
   setVariants,
   variants,
   productType,
-  edit = false,
+  initialVariants,
+  edit,
 }) => {
-  const [allOptions, setAllOptions] = useState<string[][]>([]);
-
-  function getCombinations(options: TOption[]): string[][] {
-    if (options.length === 0) return [[]];
-
-    const firstOption = options[0];
-    const restOptions = options.slice(1);
-
-    const restCombinations = getCombinations(restOptions);
-
-    let combinations: string[][] = [];
-    for (let variation of firstOption.variations) {
-      for (let restCombination of restCombinations) {
-        combinations.push([JSON.stringify(variation), ...restCombination]);
-      }
-    }
-
-    return combinations;
-  }
-
   type TVariants = {
-    [key: string]: string;
+    id: string;
+    variants: {
+      [key: string]: string;
+    };
   };
   function generateProductVariants(options: TOption[]): TVariants[] {
     const variants: TVariants[] = [];
@@ -58,10 +43,13 @@ export const Product_Variants: React.FC<VariantsProps> = ({
 
     function generateVariantsRecursive(
       optionIndex: number,
-      currentVariant: TVariants
+      currentVariant: { [key: string]: string }
     ) {
       if (optionIndex === options.length) {
-        variants.push({ id: (idCounter++).toString(), ...currentVariant });
+        variants.push({
+          id: (idCounter++).toString(),
+          variants: currentVariant,
+        });
         return;
       }
 
@@ -79,41 +67,44 @@ export const Product_Variants: React.FC<VariantsProps> = ({
 
     return variants;
   }
+
   useEffect(() => {
-    const combinations = getCombinations(options);
-    const allOptions: string[][] = combinations.map((combination) =>
-      combination.map((variation) => JSON.parse(variation).text)
-    );
-    setAllOptions(allOptions);
-  }, [options]);
-  useEffect(() => {
-    if (edit) {
-      const v = allOptions
-        .filter((option) => option.length > 0)
-        .map((option) => ({
-          options: option.join(", "),
-          price:
-            variants.find((v) => v.options === option.join(", "))?.price || 0,
-          active:
-            variants.find((v) => v.options === option.join(", "))?.active ||
-            true,
-          stock:
-            variants.find((v) => v.options === option.join(", "))?.stock || 1,
-        }));
-      setVariants(v);
-    } else {
-      setVariants(
-        allOptions
-          .filter((option) => option.length > 0)
-          .map((option) => ({
-            options: option.join(", "),
+    const allOptions = generateProductVariants(options);
+    if (initialVariants && initialVariants.length > 0) {
+      const combinations = allOptions
+        .filter((option) => Object.keys(option.variants).length > 0)
+        .map((option) => {
+          const found = initialVariants.find((v) => {
+            const keys = Object.keys(v.options);
+
+            return keys.every((key) => {
+              return v.options[key] === option.variants[key];
+            });
+          });
+
+          if (found) {
+            return found;
+          }
+          return {
+            options: option.variants,
             price: 0,
             active: true,
             stock: 1,
-          }))
-      );
+          };
+        });
+      setVariants(combinations);
+    } else {
+      const combinations = allOptions
+        .filter((option) => Object.keys(option.variants).length > 0)
+        .map((option) => ({
+          options: option.variants,
+          price: 0,
+          active: true,
+          stock: 1,
+        }));
+      setVariants(combinations);
     }
-  }, [allOptions]);
+  }, [options]);
   return (
     <Card
       className={`
@@ -126,7 +117,8 @@ export const Product_Variants: React.FC<VariantsProps> = ({
         </CardTitle>
         <CardDescription>
           You must add at least one product option before you can begin adding
-          product variants.
+          product variants. They will override the default price and stock of
+          the product.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -167,11 +159,13 @@ export const Product_Variants: React.FC<VariantsProps> = ({
                         />
                       </td>
                       <td className="border px-4 py-2">
-                        <Badge>{option.options}</Badge>
+                        <Badge>
+                          {Object.values(option.options).join(", ")}
+                        </Badge>
                       </td>
                       <td className="border px-4 py-2">
                         <Input
-                          type="text"
+                          type="number"
                           id={`Price-${optionIndex}`}
                           placeholder="Price of your product"
                           className="border-none outline-none"

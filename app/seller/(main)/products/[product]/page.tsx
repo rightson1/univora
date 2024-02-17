@@ -27,10 +27,11 @@ import { IProductEdit, TOption } from "@/types/sellerTypes";
 import { X } from "lucide-react";
 import { deleteFile, useCustomToast } from "@/components/helpers/functions";
 import { Product_Options } from "@/components/seller/product/product_options";
-import { Product_Variants } from "@/components/seller/product/product_variants";
+
 import { useSellerAuth } from "@/utils/sellerAuth";
 import Link from "next/link";
 import Item_not_found from "@/components/shared/item_not_found";
+import { Product_Variants_Trial } from "@/components/seller/product/product_variant_trial";
 const EditProduct = ({
   params,
 }: {
@@ -243,12 +244,16 @@ const Options = ({
   const { customToast, loading } = useCustomToast();
 
   const editVariants = async () => {
+    const minPrice = Math.min(...variants.map((item) => item.price));
+    const stock = variants.reduce((acc, curr) => acc + curr.stock, 0);
     customToast({
       func: async () => {
         await mutateAsync({
           _id: product._id,
           variants,
           options,
+          price: minPrice,
+          stock,
         });
       },
     });
@@ -262,11 +267,12 @@ const Options = ({
         productType={product.productType}
         edit={true}
       />
-      <Product_Variants
+      <Product_Variants_Trial
         options={options}
         variants={variants}
         setVariants={setVariants}
         productType={product.productType}
+        initialVariants={product.variants}
         edit={true}
       />
       <div className="w-full p-4 flex justify-end">
