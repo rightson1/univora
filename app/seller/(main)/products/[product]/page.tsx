@@ -30,6 +30,7 @@ import { Product_Options } from "@/components/seller/product/product_options";
 import { Product_Variants } from "@/components/seller/product/product_variants";
 import { useSellerAuth } from "@/utils/sellerAuth";
 import Link from "next/link";
+import Item_not_found from "@/components/shared/item_not_found";
 const EditProduct = ({
   params,
 }: {
@@ -74,6 +75,14 @@ const EditProduct = ({
           </div>
         </div>
       </div>
+    );
+  } else {
+    return (
+      <Item_not_found
+        link="/products"
+        btxt="Back To Products"
+        ptxt="This product does not exist or has been deleted."
+      />
     );
   }
 };
@@ -230,12 +239,10 @@ const Options = ({
   options: TOption[];
 }) => {
   const [variants, setVariants] = useState<IVariant[]>(product.variants || []);
-  const { seller } = useSellerAuth();
   const { mutateAsync } = useUpdateProduct();
   const { customToast, loading } = useCustomToast();
-  const editVariants = async () => {
-    console.log(variants);
 
+  const editVariants = async () => {
     customToast({
       func: async () => {
         await mutateAsync({

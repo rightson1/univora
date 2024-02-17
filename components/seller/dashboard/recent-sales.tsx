@@ -8,13 +8,14 @@ export function RecentSales() {
   const { data, isPending } = useGetOrders(seller._id);
   const [orders, setOrder] = useState<IOrderFetched[]>([]);
   useEffect(() => {
-    //data should only for this month , use created at
     if (data) {
-      const orders_data = data.filter((order) => {
-        const orderDate = new Date(order.createdAt);
-        const currentDate = new Date();
-        return orderDate.getMonth() === currentDate.getMonth();
-      });
+      const orders_data = data
+        .filter((order) => order.fulfillmentStatus === "completed")
+        .filter((order) => {
+          const orderDate = new Date(order.createdAt);
+          const currentDate = new Date();
+          return orderDate.getMonth() === currentDate.getMonth();
+        });
       setOrder(orders_data);
     }
   }, [data]);
@@ -33,7 +34,7 @@ export function RecentSales() {
           </div>
           <div className="ml-auto font-medium">Loading</div>
         </div>
-      ) : data ? (
+      ) : data && orders.length > 0 ? (
         orders.map((order, i) => (
           <div className="flex items-center gap-5" key={i}>
             <Avatar className="mb:hidden h-9 w-9">

@@ -204,6 +204,7 @@ export interface IVariant {
   options: string;
   price: number;
   active: boolean;
+  stock: number;
 }
 export interface IProductBase {
   business: string;
@@ -259,7 +260,7 @@ export interface IOrder {
   fulfillmentStatus?: TOrderStatus;
   paymentStatus?: TPaymentStatus;
   paymentMethod?: string;
-  orderType?: "customer" | "seller";
+  orderType: "customer" | "seller";
   customerName?: string;
   customerPhone: string;
   paidAmount: number;

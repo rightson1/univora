@@ -93,6 +93,7 @@ const Create_Custom_Order = () => {
       quantity,
       totalAmount,
       productPrice: selectedProduct?.price || 0,
+      orderType: "seller",
       paymentStatus:
         paidAmount === totalAmount
           ? "paid"

@@ -17,6 +17,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { useDeleteOrder } from "@/utils/hooks/useOrder";
+import { useCustomToast } from "@/components/helpers/functions";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -25,6 +28,8 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+  const { mutateAsync } = useDeleteOrder();
+  const { customToast, loading } = useCustomToast();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,17 +41,27 @@ export function DataTableRowActions<TData>({
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+      <DropdownMenuContent
+        align="end"
+        className="w-[160px]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <DropdownMenuItem asChild>
+          <Link href={`/orders/${(row.original as { _id: string })._id}`}>
+            Edit
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent></DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => {
+            const { _id } = row.original as { _id: string };
+            customToast({
+              func: async () => {
+                await mutateAsync(_id);
+              },
+            });
+          }}
+        >
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

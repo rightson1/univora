@@ -33,7 +33,7 @@ export default function DashboardPage() {
             </Card>
             <Card className="mb:col-span-4 col-span-3">
               <CardHeader>
-                <CardTitle>Recent Sales</CardTitle>
+                <CardTitle>Recent sales</CardTitle>
                 <CardDescription>
                   Lets see how your sales are doing
                 </CardDescription>

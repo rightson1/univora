@@ -40,3 +40,18 @@ export async function PUT(req: NextRequest) {
     });
   }
 }
+//delete order
+export async function DELETE(req: NextRequest) {
+  await conn();
+  const _id = req.nextUrl.searchParams.get("_id");
+  try {
+    const order = await Order.findOneAndDelete({ _id });
+    return NextResponse.json(order);
+  } catch (error: any) {
+    console.log(error);
+    return NextResponse.json({
+      message: error.message,
+      success: false,
+    });
+  }
+}

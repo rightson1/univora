@@ -55,7 +55,14 @@ const Cards = () => {
         totalRevenueTotal,
       };
     }, [orders]);
-
+  const { active_products, all_products } = useMemo(() => {
+    const active_products =
+      products?.filter((product) => product.active === true) || [];
+    return {
+      active_products,
+      all_products: products || [],
+    };
+  }, [products]);
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -95,7 +102,7 @@ const Cards = () => {
           <p className="text-xs text-muted-foreground">
             {completed_orders.length > 0
               ? `You have ${completed_orders.length} completed orders`
-              : "Look at you ,Failure! 0 completed orders"}
+              : "Look at you ,0 completed orders, shame!"}
           </p>
         </CardContent>
       </Card>
@@ -125,16 +132,16 @@ const Cards = () => {
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold">
-            {products?.length ?? 0}{" "}
+            {active_products?.length}{" "}
             <span className="text-xs text-muted-foreground">
-              / {products?.length ?? 0}
+              / {all_products.length}
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
             {!products
               ? "Loading products..."
-              : products?.length > 0
-              ? `You have ${products?.length} products`
+              : active_products.length > 0
+              ? `You have ${active_products?.length} published products`
               : "You have no products"}
           </p>
         </CardContent>

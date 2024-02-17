@@ -35,7 +35,7 @@ export const useGetSingleProduct = (_id: string) => {
             _id,
           },
         })
-        .then((res) => res.data);
+        .then(eCheck);
     },
   });
 };

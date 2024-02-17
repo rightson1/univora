@@ -193,6 +193,7 @@ export const NewProductForm = () => {
               options={options}
               variants={variants}
               setVariants={setVariants}
+              productType="product"
             />
           </div>
         </TabsContent>

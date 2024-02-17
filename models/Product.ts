@@ -86,6 +86,10 @@ const ProductSchema = new Schema(
         active: {
           type: Boolean,
         },
+        stock: {
+          type: Number,
+          default: 1,
+        },
       },
     ],
   },

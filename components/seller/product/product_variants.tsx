@@ -49,6 +49,36 @@ export const Product_Variants: React.FC<VariantsProps> = ({
     return combinations;
   }
 
+  type TVariants = {
+    [key: string]: string;
+  };
+  function generateProductVariants(options: TOption[]): TVariants[] {
+    const variants: TVariants[] = [];
+    let idCounter = 1;
+
+    function generateVariantsRecursive(
+      optionIndex: number,
+      currentVariant: TVariants
+    ) {
+      if (optionIndex === options.length) {
+        variants.push({ id: (idCounter++).toString(), ...currentVariant });
+        return;
+      }
+
+      const currentOption = options[optionIndex];
+      for (const variation of currentOption.variations) {
+        const newVariant = {
+          ...currentVariant,
+          [currentOption.title]: variation.text,
+        };
+        generateVariantsRecursive(optionIndex + 1, newVariant);
+      }
+    }
+
+    generateVariantsRecursive(0, {});
+
+    return variants;
+  }
   useEffect(() => {
     const combinations = getCombinations(options);
     const allOptions: string[][] = combinations.map((combination) =>
@@ -57,15 +87,32 @@ export const Product_Variants: React.FC<VariantsProps> = ({
     setAllOptions(allOptions);
   }, [options]);
   useEffect(() => {
-    setVariants(
-      allOptions
+    if (edit) {
+      const v = allOptions
         .filter((option) => option.length > 0)
         .map((option) => ({
           options: option.join(", "),
-          price: 0,
-          active: true,
-        }))
-    );
+          price:
+            variants.find((v) => v.options === option.join(", "))?.price || 0,
+          active:
+            variants.find((v) => v.options === option.join(", "))?.active ||
+            true,
+          stock:
+            variants.find((v) => v.options === option.join(", "))?.stock || 1,
+        }));
+      setVariants(v);
+    } else {
+      setVariants(
+        allOptions
+          .filter((option) => option.length > 0)
+          .map((option) => ({
+            options: option.join(", "),
+            price: 0,
+            active: true,
+            stock: 1,
+          }))
+      );
+    }
   }, [allOptions]);
   return (
     <Card
@@ -90,6 +137,12 @@ export const Product_Variants: React.FC<VariantsProps> = ({
                 <th className="px-4 py-2">Visible?</th>
                 <th className="px-4 py-2">Option</th>
                 <th className="px-4 py-2">Price</th>
+                {
+                  // if product type is product
+                  productType === "product" && (
+                    <th className="px-4 py-2">Stock</th>
+                  )
+                }
               </tr>
             </thead>
             <tbody>
@@ -122,6 +175,7 @@ export const Product_Variants: React.FC<VariantsProps> = ({
                           id={`Price-${optionIndex}`}
                           placeholder="Price of your product"
                           className="border-none outline-none"
+                          value={option.price}
                           onChange={(e) => {
                             const newVariants = [...variants];
                             newVariants[optionIndex].price = Number(
@@ -131,6 +185,27 @@ export const Product_Variants: React.FC<VariantsProps> = ({
                           }}
                         />
                       </td>
+                      {
+                        // if product type is product
+                        productType === "product" && (
+                          <td className="border px-4 py-2">
+                            <Input
+                              type="number"
+                              id={`Stock-${optionIndex}`}
+                              placeholder="Stock of your product"
+                              className="border-none outline-none"
+                              value={option.stock}
+                              onChange={(e) => {
+                                const newVariants = [...variants];
+                                newVariants[optionIndex].stock = Number(
+                                  e.target.value
+                                );
+                                setVariants(newVariants);
+                              }}
+                            />
+                          </td>
+                        )
+                      }
                     </tr>
                   );
                 })
