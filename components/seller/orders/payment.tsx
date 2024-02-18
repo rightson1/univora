@@ -25,7 +25,6 @@ export const Payment_Status = ({
   edit?: boolean;
   submit?: () => Promise<void>;
 }) => {
-  console.log(totalAmount);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -110,7 +109,6 @@ export const Other_Payments = ({
       <CardContent>
         <div className="fx-c w-full  gap-4">
           {otherPayments.map((payment, index) => {
-            console.log(payment);
             return (
               <div
                 key={index}

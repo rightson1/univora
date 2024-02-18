@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,13 @@ import { Product_Category } from "./product_category";
 import { useUpdateProduct } from "@/utils/hooks/useProduct";
 import { useCustomToast } from "@/components/helpers/functions";
 import { useSellerAuth } from "@/utils/sellerAuth";
-export const EditGeneralInfo = ({ product }: IProductEdit) => {
+import toast from "react-hot-toast";
+export const EditGeneralInfo = ({ product: p }: IProductEdit) => {
+  const [product, setProduct] = useState<IProductFetched>(p);
+  useEffect(() => {
+    setProduct(p);
+  }, [p]);
+
   const { seller } = useSellerAuth();
   const [values, setValues] = useState<Partial<IProductFetched>>({
     name: product.name,
@@ -85,7 +91,15 @@ export const EditGeneralInfo = ({ product }: IProductEdit) => {
             placeholder="Stock of your product"
             type="number"
             value={values.stock}
-            onChange={handleChange}
+            onChange={(e) => {
+              if (product.variants.length > 0) {
+                toast.error(
+                  "You can't change the stock of a product with variants"
+                );
+                return;
+              }
+              handleChange(e);
+            }}
           />
         </div>
         <div className="flex flex-col space-y-1.5 md:col-span-2">

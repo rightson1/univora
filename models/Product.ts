@@ -35,6 +35,7 @@ const ProductSchema = new Schema(
     },
     stock: {
       type: Number,
+      default: 1,
     },
     school: {
       type: Types.ObjectId,
@@ -75,23 +76,26 @@ const ProductSchema = new Schema(
       },
     ],
 
-    variants: [
-      {
-        options: {
-          type: Object,
+    variants: {
+      type: [
+        {
+          options: {
+            type: Object,
+          },
+          price: {
+            type: Number,
+          },
+          active: {
+            type: Boolean,
+          },
+          stock: {
+            type: Number,
+            default: 1,
+          },
         },
-        price: {
-          type: Number,
-        },
-        active: {
-          type: Boolean,
-        },
-        stock: {
-          type: Number,
-          default: 1,
-        },
-      },
-    ],
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true,

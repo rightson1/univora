@@ -28,9 +28,6 @@ export default function TaskPage() {
         <div className="flex items-center justify-between   space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
-            <p className="text-muted-foreground">
-              Scroll table right see more details
-            </p>
           </div>
           <Button asChild>
             <Link href="/orders/create" className="flex gap-2">

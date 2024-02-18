@@ -4,9 +4,22 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (orderData: IOrder) => {
       return await axios.post("/api/seller/orders", orderData).then(eCheck);
+    },
+    onSuccess: (order) => {
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+      });
+      //invalidate [product, _id] [products]
+      queryClient.invalidateQueries({
+        queryKey: ["product", order.product],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
 };

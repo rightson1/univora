@@ -69,9 +69,17 @@ const Create_Custom_Order = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (selectedProduct?.stock && quantity > selectedProduct?.stock) {
-      return toast.error(`${selectedProduct.name} are out of stock.`);
+    // if (selectedProduct?.stock && quantity > selectedProduct?.stock) {
+    //   return toast.error(`${selectedProduct.name} are out of stock.`);
+    // }
+    if (selectedProduct?.productType === "product") {
+      const stock = selectedVariant?.stock || selectedProduct?.stock || 0;
+
+      if (quantity > stock) {
+        return toast.error(`${selectedProduct.name} are out of stock.`);
+      }
     }
+
     const formData = new FormData(e.currentTarget);
     const customerName = formData.get("customerName") as string;
     const phone = formData.get("phone") as string;
@@ -228,7 +236,6 @@ const Product = ({
 }) => {
   const { seller } = useSellerAuth();
   const { data: products, isLoading } = useGetProducts(seller._id);
-  console.log(selectedProduct);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -243,6 +250,7 @@ const Product = ({
               name="product"
               required
               onValueChange={(value) => {
+                setSelectedVariant(null);
                 setSelectedProduct(
                   products?.find((product) => product._id === value) || null
                 );
@@ -276,13 +284,25 @@ const Product = ({
                 className="w-full"
                 type="number"
                 required
+                min={1}
                 value={quantity}
                 onChange={(e) => {
-                  let stock = selectedProduct?.stock || 1;
-
+                  let stock =
+                    selectedVariant?.stock || selectedProduct.stock || 0;
+                  console.log(stock);
                   if (parseInt(e.target.value) > stock) {
                     toast.error(
-                      `There are only ${stock} ${selectedProduct.name} in stock.`
+                      `There is  only ${stock}
+                       ${
+                         selectedVariant
+                           ? Object.entries(selectedVariant?.options || {}).map(
+                               ([key, value]) =>
+                                 `${
+                                   key.charAt(0).toUpperCase() + key.slice(1)
+                                 }: ${value.replace(/_/g, " ")}` || ""
+                             )
+                           : selectedProduct.name
+                       } in stock.`
                     );
                     setQuantity(stock);
                   } else {
@@ -314,6 +334,7 @@ const Product = ({
                   name="variant"
                   required
                   onValueChange={(value) => {
+                    setQuantity(1);
                     setSelectedVariant(
                       selectedProduct.variants?.find(
                         (variant) => variant._id === value
