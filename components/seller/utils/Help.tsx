@@ -23,12 +23,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSellerAuth } from "@/utils/sellerAuth";
+import { useCustomToast } from "@/components/helpers/functions";
+import axios from "axios";
 
 const formSchema = z.object({
   subject: z.string().min(2, { message: "Subject is required" }),
   message: z.string().min(2, { message: "Message is required" }),
 });
 export const Help = () => {
+  const { seller } = useSellerAuth();
+  const { customToast, loading } = useCustomToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,7 +43,15 @@ export const Help = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    customToast({
+      func: async () => {
+        await axios.post("/api/seller/help", {
+          ...values,
+          email: seller?.email,
+          sellerName: seller?.name,
+        });
+      },
+    });
   }
 
   return (
@@ -99,7 +112,9 @@ export const Help = () => {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={loading}>
+              Submit
+            </Button>
           </form>
         </Form>
       </SheetContent>

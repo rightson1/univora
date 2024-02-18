@@ -26,18 +26,19 @@ export async function POST(req: NextRequest) {
       }
       if (orderProduct.variants && orderProduct.variants?.length > 0) {
         const orderVariant = order.variant;
-        const _id = orderVariant?._id;
+        const variantId = orderVariant?._id;
 
-        await Product.findByIdAndUpdate(
-          body.product,
+        const p = await Product.findOneAndUpdate(
+          { _id: body.product, "variants._id": variantId },
           {
             $inc: {
               stock: -body.quantity,
-              [`variants.${_id}.stock`]: -body.quantity,
+              "variants.$.stock": -body.quantity,
             },
           },
           { new: true }
         );
+        console.log(p);
       } else {
         await Product.findByIdAndUpdate(
           body.product,
