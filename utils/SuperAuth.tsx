@@ -29,11 +29,11 @@ export const SuperAdminAuthProvider = ({
   const [admin, setAdmin] = useState<ISAdmin | {} | null>({});
   const [user, setUser] = useState<ISAdmin | null>(null);
   const router = useRouter();
-  const setCookies = (role: string) => {
-    Cookies.set("role", role);
+  const setCookies = (token: string) => {
+    Cookies.set("token", token);
   };
-  const clearRoleCookie = () => {
-    Cookies.remove("role");
+  const clearCookie = () => {
+    Cookies.remove("token");
   };
   const fetchUser = async (uid: string) => {
     const docRef = doc(db, "administrators", uid);
@@ -42,7 +42,6 @@ export const SuperAdminAuthProvider = ({
     if (fUser) {
       setUser(fUser);
       localStorage.setItem("administrator", JSON.stringify(fUser));
-      setCookies(fUser.role);
     } else {
       setUser(null);
       setAdmin(null);
@@ -57,8 +56,11 @@ export const SuperAdminAuthProvider = ({
       ? JSON.parse(userString)
       : null;
 
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const token = await user.getIdToken();
+        console.log(token);
+        setCookies(token);
         setAdmin({
           uid: user.uid,
           email: user.email,
@@ -66,7 +68,6 @@ export const SuperAdminAuthProvider = ({
           photoURL: user.photoURL,
         });
         if (localUser?.uid === user.uid) {
-          setCookies(localUser.role);
           setUser(localUser);
         } else {
           fetchUser(user.uid);
@@ -74,7 +75,7 @@ export const SuperAdminAuthProvider = ({
       } else {
         setAdmin(null);
         setUser(null);
-        clearRoleCookie();
+        clearCookie();
       }
     });
     return () => {
@@ -122,7 +123,7 @@ export const SuperAdminAuthProvider = ({
   const logout = async () => {
     await auth.signOut();
     localStorage.removeItem("administrator");
-    clearRoleCookie();
+    clearCookie();
     router.push("/login");
   };
 

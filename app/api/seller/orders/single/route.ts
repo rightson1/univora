@@ -3,9 +3,11 @@ import Product from "@/models/Product";
 import { NextRequest, NextResponse } from "next/server";
 import { conn } from "@/models/mongo_db_connection";
 import { IOrderFetched } from "@/types";
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   const _id = req.nextUrl.searchParams.get("_id");
   Product;
   try {
@@ -22,6 +24,7 @@ export async function GET(req: NextRequest) {
 //edit
 export async function PUT(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   const orderData: IOrderFetched = await req.json();
   const _id = orderData._id;
   console.log(orderData);
@@ -42,6 +45,7 @@ export async function PUT(req: NextRequest) {
 }
 //delete order
 export async function DELETE(req: NextRequest) {
+  await verifyIdToken(req);
   await conn();
   const _id = req.nextUrl.searchParams.get("_id");
   try {

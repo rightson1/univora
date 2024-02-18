@@ -21,11 +21,11 @@ export const SellerAuthProvider = ({
   const [admin, setAdmin] = useState<IAuthUser | {} | null>({});
   const [seller, setSeller] = useState<ISellerFetched | null>(null);
   const router = useRouter();
-  const setCookies = (role: string) => {
-    Cookies.set("role", role);
+  const setCookie = (token: string) => {
+    Cookies.set("token", token);
   };
-  const clearRoleCookie = () => {
-    Cookies.remove("role");
+  const clearCookie = () => {
+    Cookies.remove("token");
   };
   const fetchSeller = async (uid: string) => {
     const userRaw = await axios
@@ -39,7 +39,6 @@ export const SellerAuthProvider = ({
     if (fUser) {
       setSeller(fUser);
       localStorage.setItem("seller", JSON.stringify(fUser));
-      setCookies("seller");
     } else {
       setSeller(null);
       setAdmin(null);
@@ -53,8 +52,10 @@ export const SellerAuthProvider = ({
       ? JSON.parse(userString)
       : null;
 
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const token = await user.getIdToken();
+        setCookie(token);
         if (localUser?.uid === user.uid) {
           setAdmin({
             uid: user.uid,
@@ -62,7 +63,7 @@ export const SellerAuthProvider = ({
             displayName: user.displayName,
             photoURL: user.photoURL,
           });
-          setCookies("seller");
+
           setSeller(localUser);
         } else {
           console.log(user);
@@ -71,7 +72,7 @@ export const SellerAuthProvider = ({
       } else {
         setAdmin(null);
         setSeller(null);
-        clearRoleCookie();
+        clearCookie();
       }
     });
     return () => {
@@ -99,7 +100,7 @@ export const SellerAuthProvider = ({
   const logout = async () => {
     await auth.signOut();
     localStorage.removeItem("seller");
-    clearRoleCookie();
+    clearCookie();
     router.push("/login");
   };
 

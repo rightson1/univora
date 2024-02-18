@@ -45,7 +45,7 @@ const SellerSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["paused", "active", "suspended"],
+      enum: ["active", "suspended"],
       default: "active",
     },
     visibility: {

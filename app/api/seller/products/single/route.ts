@@ -2,10 +2,12 @@ import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import { conn } from "@/models/mongo_db_connection";
 import { IProductUpdate } from "@/types/sellerTypes";
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   try {
     const _id = req.nextUrl.searchParams.get("_id");
     Category;
@@ -21,6 +23,7 @@ export async function GET(req: NextRequest) {
 //edit product
 export async function PUT(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   try {
     const productData: IProductUpdate = await req.json();
 
@@ -42,6 +45,7 @@ export async function PUT(req: NextRequest) {
 }
 export async function DELETE(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   try {
     const productId = req.nextUrl.searchParams.get("_id");
     const product = await Product.findByIdAndDelete(productId);

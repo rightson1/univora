@@ -192,6 +192,8 @@ export interface ISellerFetched extends ISellerBase, IFetched {
   description: string;
   profileImage?: string;
   socials: ISocialLink[];
+  visibility: "public" | "private";
+  status: "active" | "suspended";
 }
 export interface IAuthUser {
   email: string;
@@ -250,6 +252,7 @@ export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
   business: ISellerFetched;
   variants: IVariantFetched[];
+  status: "approved" | "suspended";
 }
 export type TOrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 export type TPaymentStatus = "pending" | "paid" | "partial";

@@ -1,6 +1,7 @@
 import Business from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
 import { ISeller, ISellerBase, ISellerFetched } from "@/types";
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -9,6 +10,8 @@ export async function GET() {
 //edit seller
 export async function PUT(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
+
   try {
     const seller: ISellerFetched = await req.json();
     const no_of_slugs = await Business.countDocuments({ slug: seller.slug });

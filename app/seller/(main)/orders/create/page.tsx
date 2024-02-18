@@ -349,13 +349,15 @@ const Product = ({
                     <SelectGroup>
                       <SelectLabel>Variants</SelectLabel>
 
-                      {selectedProduct.variants?.map((variant) => (
-                        <SelectItem key={variant._id} value={variant._id}>
-                          {Object.values(variant.options)
-                            .join(" ")
-                            .replace(/_/g, " ")}
-                        </SelectItem>
-                      ))}
+                      {selectedProduct.variants
+                        ?.filter((variant) => variant.active)
+                        .map((variant) => (
+                          <SelectItem key={variant._id} value={variant._id}>
+                            {Object.values(variant.options)
+                              .join(" ")
+                              .replace(/_/g, " ")}
+                          </SelectItem>
+                        ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>

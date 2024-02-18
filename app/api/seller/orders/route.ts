@@ -3,9 +3,11 @@ import Product from "@/models/Product";
 import { NextRequest, NextResponse } from "next/server";
 import { conn } from "@/models/mongo_db_connection";
 import { IProductFetched } from "@/types";
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   const body = await req.json();
   try {
     const order = await Order.create(body);
@@ -64,6 +66,7 @@ export async function POST(req: NextRequest) {
 }
 export async function GET(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   const seller_Id = req.nextUrl.searchParams.get("sellerId");
   Product;
   try {

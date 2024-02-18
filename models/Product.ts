@@ -75,7 +75,11 @@ const ProductSchema = new Schema(
         ],
       },
     ],
-
+    status: {
+      type: String,
+      default: "approved",
+      enum: ["approved", "suspended"],
+    },
     variants: {
       type: [
         {

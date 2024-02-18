@@ -1,11 +1,12 @@
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import { conn } from "@/models/mongo_db_connection";
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   await conn();
-
+  await verifyIdToken(req);
   try {
     const productData = await req.json();
     const slugCount = await Product.countDocuments({
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
 }
 export async function GET(req: NextRequest) {
   await conn();
+  await verifyIdToken(req);
   try {
     const sellerId = req.nextUrl.searchParams.get("sellerId");
     Category;

@@ -1,7 +1,9 @@
+import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 
 const nodeMailer = require(`nodemailer`);
 export async function POST(req: NextRequest, res: NextResponse) {
+  await verifyIdToken(req);
   const { subject, message, email, sellerName } = await req.json();
   if (!subject || !message || !email || !sellerName) {
     return NextResponse.json(
