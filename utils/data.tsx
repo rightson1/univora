@@ -23,6 +23,8 @@ export const baseUrl: string =
     ? `http://${root_domain}`
     : `https://${root_domain}`;
 
+export const protocal =
+  process.env.NODE_ENV === "development" ? "http" : "https";
 export const navLinks: INavLinks[] = [
   {
     title: "Home",

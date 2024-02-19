@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { baseUrl } from "./utils/data";
+import { protocal } from "./utils/data";
 // ?!api/|
 export const config = {
   matcher: ["/((?!_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
@@ -35,7 +35,7 @@ export default async function middleware(req: NextRequest) {
   const school = req.cookies.get("school")?.value;
   if (school) {
     return NextResponse.redirect(
-      `${baseUrl}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+      `${protocal}://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     );
   }
 
