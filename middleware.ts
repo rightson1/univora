@@ -5,13 +5,12 @@ export const config = {
 };
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
-  let hostname = req.headers
-    .get("host")!
-    .replace(
-      /(.localhost:3000|192.168.100.2:3000)$/,
-      `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    );
-  hostname = hostname.replace("www.", "");
+  let hostname = req.headers.get("host")!;
+  // .replace(
+  //   /(.localhost:3000|192.168.100.2:3000)$/,
+  //   `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+  // );
+  // hostname = hostname.replace("www.", "");
   const searchParams = req.nextUrl.searchParams.toString();
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""
@@ -19,10 +18,6 @@ export default async function middleware(req: NextRequest) {
   if (path.startsWith("/api")) {
     NextResponse.rewrite(new URL(`${path}`, req.url));
     return NextResponse.next();
-  }
-  //if www rewrite to root domain
-  if (hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    return NextResponse.rewrite(new URL(`${path}`, req.url));
   }
 
   if (hostname == `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
@@ -49,7 +44,11 @@ export default async function middleware(req: NextRequest) {
   }
 
   let subdomain = hostname.split(".")[0];
-  if (subdomain && subdomain !== process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
+  if (
+    subdomain &&
+    subdomain !== "www" &&
+    subdomain !== process.env.NEXT_PUBLIC_ROOT_DOMAIN
+  ) {
     return NextResponse.rewrite(new URL(`/school/${subdomain}`, req.url));
   }
 
