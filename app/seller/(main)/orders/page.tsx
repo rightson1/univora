@@ -2,7 +2,6 @@
 import { Metadata } from "next";
 import { DataTable } from "@/components/seller/orders/data-table";
 import { columns } from "@/components/seller/orders/columns";
-import { orders } from "@/utils/data";
 import { Button } from "@/components/ui/button";
 import { Create_Custom_Order } from "@/components/seller/orders/create_custom_order";
 import Link from "next/link";

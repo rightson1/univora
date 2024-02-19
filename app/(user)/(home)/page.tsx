@@ -1,19 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { getSchool } from "@/utils/api";
+import { SearchSchool } from "@/components/user_general/search_school";
+import Button from "@/components/utils/Button";
 import { hero } from "@/utils/data";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-const School = async ({
-  params,
-}: {
-  params: {
-    school: string;
-  };
-}) => {
-  const school = await getSchool(params.school);
+const Home = () => {
   return (
     <div>
+      {/* <SchoolNavigator /> */}
       <section className="flex-1-2 gap-10 py-[50px]">
         <div className="left flex-col-start w-full pad-x gap-5 text-center md:text-start md:max-w-[800px] ">
           <h1
@@ -21,13 +16,10 @@ const School = async ({
         "
           >
             {hero.title}
-            <span className="text-sm text-indigo">({school?.subdomain})</span>
           </h1>
           <p>{hero.description}</p>
           <div className="self-center md:self-start">
-            <Button className="rounded-full" variant={"indigo"}>
-              Search Products
-            </Button>
+            <SearchSchool />
           </div>
         </div>
         <div className="w-full pad-x gap-5 fc h-[350px] md:h-[400px] overflow-hidden ">
@@ -62,4 +54,4 @@ const School = async ({
   );
 };
 
-export default School;
+export default Home;

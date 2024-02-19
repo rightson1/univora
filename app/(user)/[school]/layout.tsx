@@ -3,14 +3,8 @@ import React, { useEffect, useState } from "react";
 import NavBar from "@/components/user/Navbar";
 
 import Footer from "@/components/user/Footer";
-import { SchoolSelect } from "@/components/user/SchoolSelect";
-import { useRouter } from "next/navigation";
-
+import { ThemeProvider } from "next-themes";
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [school, setSchool] = useState(true);
-  const router = useRouter();
-
-  // useEffect(() => {
   //   if (typeof window !== "undefined") {
   //     if (localStorage.getItem("school")) {
   //       console.log(localStorage.getItem("school"));
@@ -45,14 +39,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   // console.log(school);
   return (
     <div
-      className="bg-background  min-h-screen max-w-screen overflow-x-hidden
+      className="min-h-screen max-w-screen overflow-x-hidden
     "
     >
-      <NavBar />
-      {/* {!school && <SchoolSelect />} */}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="client"
+        disableTransitionOnChange
+        forcedTheme="client"
+      >
+        <NavBar />
 
-      <div className="mt-20 min-h-[70vh]">{children}</div>
-      <Footer />
+        <div className="mt-20 min-h-[70vh] ">{children}</div>
+        <Footer />
+      </ThemeProvider>
     </div>
   );
 };

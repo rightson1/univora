@@ -9,22 +9,27 @@ export async function POST(req: NextRequest) {
   await verifyIdToken(req);
   try {
     const productData = await req.json();
+
     const slugCount = await Product.countDocuments({
       slug: productData.slug,
     });
-    if (slugCount > 1) {
-      productData.slug = `${productData.slug}-${slugCount}`;
+    console.log(slugCount, "slugCount");
+    if (slugCount >= 1) {
+      productData.slug = `${productData.slug}-${
+        Math.floor(Math.random() * 1000) + 1
+      }`;
     }
+    // console.log(productData, "productData");
     const product = await Product.create(productData);
     return NextResponse.json({
       message: "Product created successfully",
       success: true,
       data: product,
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
     return NextResponse.json({
-      message: "Error creating Product",
+      message: e.message,
       success: false,
     });
   }

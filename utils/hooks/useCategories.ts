@@ -1,3 +1,4 @@
+import { eCheck } from "@/components/helpers/functions";
 import { ICategory, ICategoryFetched, TEdit } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,7 +9,7 @@ export const useAddCategory = () => {
   return useMutation({
     mutationKey: ["addCategory"],
     mutationFn: (category: ICategory) =>
-      axios.post("/api/s/categories", category),
+      axios.post("/api/s/categories", category).then(eCheck),
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "populatedCategories",
@@ -31,6 +32,25 @@ export const useEditCategory = () => {
     mutationKey: ["editCategory"],
     mutationFn: (category: TEdit<ICategory>) =>
       axios.put("/api/s/categories", category),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "populatedCategories",
+      });
+    },
+  });
+};
+//use delete category
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["deleteCategory"],
+    mutationFn: (_id: string) =>
+      axios
+        .delete("/api/s/categories", {
+          params: { _id },
+        })
+        .then(eCheck),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "populatedCategories",

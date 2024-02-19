@@ -35,8 +35,6 @@ import {
 import { Input } from "@/components/ui/input";
 
 import Image from "next/image";
-import { IProductTable } from "@/types/sellerTypes";
-import { productsTable as data } from "@/utils/data";
 import Link from "next/link";
 import {
   MdDeleteOutline,

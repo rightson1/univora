@@ -13,12 +13,19 @@ import {
 import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 import { AddCategory } from "./add-category";
 import { Button } from "@/components/ui/button";
-import { useGetPopulatedCategories } from "@/utils/hooks/useCategories";
+import {
+  useDeleteCategory,
+  useGetPopulatedCategories,
+} from "@/utils/hooks/useCategories";
 import { EditCategory } from "./edit-category";
+import { MdDeleteOutline } from "react-icons/md";
+import { useCustomToast } from "@/components/helpers/functions";
 
 export const CategoryTable = () => {
   const { data: categories, isLoading } = useGetPopulatedCategories();
-  console.log(categories);
+  const { mutateAsync: deleteCategory } = useDeleteCategory();
+  const { loading, customToast } = useCustomToast();
+
   const [openCategories, setOpenCategories] = useState<string[]>([]);
 
   const toggleCategory = (id: string) => {
@@ -57,6 +64,26 @@ export const CategoryTable = () => {
         <div className="flex">
           <AddCategory parentCategory={category} />
           <EditCategory category={category} />
+          <Button
+            size="icon"
+            variant={"ghost"}
+            onClick={async () => {
+              //confirm delete
+              if (
+                window.confirm(
+                  `Are you sure you want to delete ${category.name}?`
+                )
+              ) {
+                customToast({
+                  func: async () => {
+                    await deleteCategory(category._id);
+                  },
+                });
+              }
+            }}
+          >
+            <MdDeleteOutline />
+          </Button>
         </div>
       </motion.div>
     );

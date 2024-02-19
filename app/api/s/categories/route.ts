@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     await conn();
+
     const categoryBody: ICategory = await req.json();
     const { parent } = categoryBody;
     const sortingPriority =
@@ -87,14 +88,20 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await conn();
-    const categoryBody: ICategoryFetched = await req.json();
-    const category = await Category.findById(categoryBody._id);
+    const _id = req.nextUrl.searchParams.get("_id");
+    const category = await Category.findById(_id);
+    if (category.children.length > 0) {
+      return NextResponse.json({
+        message: "Category has children, please delete them first",
+        success: false,
+      });
+    }
 
     //remove category from parent
-    if (categoryBody.parent) {
-      const parentCategory = await Category.findById(categoryBody.parent);
+    if (category.parent) {
+      const parentCategory = await Category.findById(category.parent);
       if (parentCategory) {
-        parentCategory.children.pull(categoryBody._id);
+        parentCategory.children.pull(category._id);
         await parentCategory.save();
       }
     }

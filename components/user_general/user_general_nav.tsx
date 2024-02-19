@@ -9,11 +9,24 @@ import { BiArrowBack } from "react-icons/bi";
 
 import useScreen from "@/utils/hooks/useScreen";
 import Button from "../utils/Button";
-const NavBar = () => {
+import { MobileMenu } from "@/components/user/MobileMenu";
+export const User_General_Nav = () => {
   const { scrolled } = useScreen();
 
   const pathname = usePathname();
   const router = useRouter();
+
+  const navLinks = [
+    {
+      title: "Home",
+      link: "/",
+    },
+
+    {
+      title: "Contact Us",
+      link: "/contact",
+    },
+  ];
   return (
     <header
       className={`w-screen px-[15px] md:px-[50px]  fb nav-h z-10  fixed top-0 left-0 ${
@@ -21,28 +34,18 @@ const NavBar = () => {
       }`}
     >
       <nav className="fb w-full z-[20]">
-        {mobileLinks.find(({ link }) => link === pathname) ? (
-          <Link
-            href="/"
-            className="flex flex-row items-center justify-start gap-[10px] text-button-3"
-          >
-            <Image
-              width={100}
-              height={100}
-              className="logo "
-              src="/logo.svg"
-              alt="Univora Logo"
-            />
-          </Link>
-        ) : (
-          <button
-            onClick={() => router.back()}
-            className="flex flex-row items-center justify-start gap-[10px] text-button-3 "
-          >
-            <BiArrowBack className="w-6 h-6" />
-            <span>Back</span>
-          </button>
-        )}
+        <Link
+          href="/"
+          className="flex flex-row items-center justify-start gap-[10px] text-button-3"
+        >
+          <Image
+            width={100}
+            height={100}
+            className="logo "
+            src="/logo.svg"
+            alt="Univora Logo"
+          />
+        </Link>
 
         <div className=" gap-4 fb-sm">
           {navLinks.map(({ link, title }) => (
@@ -57,19 +60,12 @@ const NavBar = () => {
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
           <Link href={`https://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}>
-            <Button title="Seller" containerStyles="outlined"></Button>
+            <Button title="My Shop" containerStyles="filled"></Button>
           </Link>
-
-          <Link href="/login">
-            <Button title="Login" containerStyles="filled"></Button>
-          </Link>
-          {/* )} */}
         </div>
 
-        {/* <MobileMenu /> */}
+        <MobileMenu />
       </nav>
     </header>
   );
 };
-
-export default NavBar;

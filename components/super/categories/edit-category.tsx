@@ -35,6 +35,7 @@ export const EditCategory = ({ category }: { category: ICategoryFetched }) => {
     isActive: category.isActive,
     isFeatured: category.isFeatured,
     image: category.image,
+    keywords: category.keywords || [],
   });
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -78,7 +79,7 @@ export const EditCategory = ({ category }: { category: ICategoryFetched }) => {
       disableSubmit={loading}
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
-      title={`Add Category to ${category.name}`}
+      title={`Edit ${category.name} Category`}
       trigger={
         <Button size={"icon"} variant={"ghost"}>
           <IoIosMore className="text-xl" />
@@ -98,6 +99,19 @@ export const EditCategory = ({ category }: { category: ICategoryFetched }) => {
             onChange={handleChange}
           />
         </div>
+        <div className="flex flex-col space-y-1.5 ">
+          <Label htmlFor="keywords">Keywords </Label>
+          <Input
+            id="keywords"
+            placeholder="Keywords of your category"
+            name="keywords"
+            value={values.keywords.join(",")}
+            onChange={(e) => {
+              setValues({ ...values, keywords: e.target.value.split(",") });
+            }}
+          />
+        </div>
+
         <div className="flex flex-col space-y-1.5 ">
           <Label htmlFor="description">Description *</Label>
           <Textarea

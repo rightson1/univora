@@ -26,6 +26,10 @@ const CategorySchema = new Schema(
     description: {
       type: String,
     },
+    keywords: {
+      type: [String],
+      default: [],
+    },
     image: {
       type: String,
     },
@@ -45,6 +49,6 @@ const CategorySchema = new Schema(
     timestamps: true,
   }
 );
-
+// CategorySchema.index({ name: "text", keywords: "text" });
 const Category = models.Category || model("Category", CategorySchema);
 export default Category;

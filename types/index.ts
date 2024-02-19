@@ -154,6 +154,7 @@ export interface ICategory {
   isFeatured: boolean;
   isActive: boolean;
   sortingPriority?: number;
+  keywords?: string[];
 }
 
 export interface ICategoryFetched extends IFetched, ICategory {

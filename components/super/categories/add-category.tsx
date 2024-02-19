@@ -36,6 +36,12 @@ export const AddCategory = ({
       (formData.get("isActive") as string) === "true" ? true : false;
     let isFeatured =
       (formData.get("isFeatured") as string) === "true" ? true : false;
+
+    let keywords_raw = formData.get("keywords") as string;
+    const keywords = keywords_raw
+      .split(",")
+      .map((item) => item.trim().toLocaleLowerCase());
+
     const category: ICategory = {
       name,
       description,
@@ -44,6 +50,7 @@ export const AddCategory = ({
       slug: toSlug(name),
       parent: parentCategory ? parentCategory._id : undefined,
       children: [],
+      keywords,
     };
     let url = "";
     const uploadCat = async () => {
@@ -92,6 +99,15 @@ export const AddCategory = ({
             placeholder="Name of your category"
             required
             name="name"
+          />
+        </div>
+        {/* keywords */}
+        <div className="flex flex-col space-y-1.5 ">
+          <Label htmlFor="keywords">Keywords </Label>
+          <Input
+            id="keywords"
+            placeholder="Keywords of your category"
+            name="keywords"
           />
         </div>
         <div className="flex flex-col space-y-1.5 ">
