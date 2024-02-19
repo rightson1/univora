@@ -26,7 +26,7 @@ const Home = () => {
           <div className="w-full flex-[3] h-full">
             <Image
               alt="Games"
-              src="/imgs/Makeup.png"
+              src="/makeup.png"
               width={500}
               height={500}
               className="  w-full h-full  rounded-[5px]"
@@ -35,14 +35,14 @@ const Home = () => {
           <div className="flex-col-start  w-full  flex-[2] h-full gap-5 ">
             <Image
               alt="Hero Image"
-              src="/imgs/games.png"
+              src="/games.png"
               width={300}
               height={300}
               className="h-1/2 w-full object-cover rounded-[5px]"
             />
             <Image
               alt="Headphones"
-              src="/imgs/headphone.png"
+              src="/headphone.png"
               width={300}
               height={300}
               className="h-1/2 w-full obkect-cover rounded-[5px]"

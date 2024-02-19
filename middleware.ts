@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { baseUrl } from "./utils/data";
 // ?!api/|
 export const config = {
   matcher: ["/((?!_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
@@ -6,11 +7,6 @@ export const config = {
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   let hostname = req.headers.get("host")!;
-  // .replace(
-  //   /(.localhost:3000|192.168.100.2:3000)$/,
-  //   `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-  // );
-  // hostname = hostname.replace("www.", "");
   const searchParams = req.nextUrl.searchParams.toString();
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""
@@ -39,7 +35,7 @@ export default async function middleware(req: NextRequest) {
   const school = req.cookies.get("school")?.value;
   if (school) {
     return NextResponse.redirect(
-      `http://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+      `${baseUrl}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     );
   }
 
