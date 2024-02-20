@@ -22,7 +22,7 @@ const Footer = () => {
       <div className="p-[.2px] bg-black/10 w-full"></div>
       <div className="fc flex-wrap gap-5 pad-x py-2 mt-5">
         <LinkItem
-          link={`https://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
+          link={`http://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
           icon={<ShoppingBag size={20} className="text-[.6rem] text-red-400" />}
           text="Sell"
         />

@@ -4,6 +4,7 @@ import { Questrial, Manrope } from "@next/font/google";
 import "yet-another-react-lightbox/styles.css";
 import Client from "@/components/utils/Client";
 import { Metadata } from "next";
+import type { Viewport } from "next";
 
 const questrail = Questrial({
   weight: "400",
@@ -22,7 +23,6 @@ export const metadata: Metadata = {
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["univora"],
-  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#fff" }],
   authors: [
     { name: "Rightson Tole" },
     {
@@ -30,12 +30,20 @@ export const metadata: Metadata = {
       url: "https://rightson.vercel.app/",
     },
   ],
-  viewport:
-    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
     { rel: "apple-touch-icon", url: "icons/icon-128x128.png" },
     { rel: "icon", url: "icons/icon-128x128.png" },
   ],
+};
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#F0F0F0" },
+  ],
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: "cover",
+  width: "device-width",
 };
 
 export default function RootLayout({
