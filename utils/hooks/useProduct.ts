@@ -83,3 +83,4 @@ export const useDeleteProduct = () => {
     },
   });
 };
+//get single product

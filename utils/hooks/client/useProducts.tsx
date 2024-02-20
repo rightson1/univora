@@ -44,3 +44,20 @@ export const useGetProductsInCategory = (
     ...sTime(40),
   });
 };
+
+export const useGetProduct = (slug: string, initialData: IProductFetched) => {
+  return useQuery<IProductFetched>({
+    queryKey: ["product", slug],
+    queryFn: async () => {
+      return await axios
+        .get("/api/client/products/single", {
+          params: {
+            slug,
+          },
+        })
+        .then(eCheck);
+    },
+    initialData,
+    ...sTime(40),
+  });
+};

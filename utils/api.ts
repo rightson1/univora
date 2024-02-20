@@ -106,3 +106,18 @@ export async function getProductsInCategory(
 
   return data;
 }
+
+//get single product
+export async function getSingleProduct(slug: string): Promise<IProductFetched> {
+  const data = await fetch(
+    `${baseUrl}/api/client/products/single?slug=${slug}`,
+    {
+      next: {
+        revalidate: 60 * 60 * 5,
+        tags: [`product-${slug}`],
+      },
+    }
+  ).then(ec);
+
+  return data;
+}
