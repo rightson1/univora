@@ -45,7 +45,9 @@ export default async function middleware(req: NextRequest) {
     subdomain !== "www" &&
     subdomain !== process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
-    return NextResponse.rewrite(new URL(`/school/${subdomain}`, req.url));
+    return NextResponse.rewrite(
+      new URL(`/school/${subdomain}${path === "/" ? "" : path}`, req.url)
+    );
   }
 
   return NextResponse.next();

@@ -9,6 +9,7 @@ import { BiArrowBack } from "react-icons/bi";
 
 import useScreen from "@/utils/hooks/useScreen";
 import Button from "../utils/Button";
+import { MobileMenu } from "@/components/client/MobileMenu";
 const NavBar = () => {
   const { scrolled } = useScreen();
 
@@ -66,7 +67,7 @@ const NavBar = () => {
           {/* )} */}
         </div>
 
-        {/* <MobileMenu /> */}
+        <MobileMenu />
       </nav>
     </header>
   );

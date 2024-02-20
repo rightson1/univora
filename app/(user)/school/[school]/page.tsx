@@ -1,7 +1,9 @@
+import { Categories } from "@/components/client/home/categories";
 import { Button } from "@/components/ui/button";
-import { getSchool } from "@/utils/api";
-import { hero } from "@/utils/data";
+import { getFeaturedCategories, getSchool } from "@/utils/api";
+import { client_hero as hero } from "@/utils/data";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const School = async ({
@@ -12,6 +14,8 @@ const School = async ({
   };
 }) => {
   const school = await getSchool(params.school);
+  const categories = await getFeaturedCategories();
+
   return (
     <div>
       <section className="flex-1-2 gap-10 py-[50px]">
@@ -56,6 +60,20 @@ const School = async ({
               className="h-1/2 w-full obkect-cover rounded-[5px]"
             />
           </div>
+        </div>
+      </section>
+      <section className=" pad-x">
+        <h2 className="h2-size text-indigo-500 text-start   my-5">
+          Shop our top categories
+        </h2>
+        <Categories categories={categories} />
+
+        <div className="fc my-5  w-full fc">
+          <Link href="/categories" className="fc">
+            <Button variant={"indigo"} className="rounded-full">
+              View All
+            </Button>
+          </Link>
         </div>
       </section>
     </div>

@@ -121,7 +121,8 @@ export const paymentStatus: {
   },
 ];
 export const hero = {
-  title: "Empowering Student Entrepreneurs",
+  // title: "Empowering Student Entrepreneurs",
+  title: "UNDER CONSTRUCTION",
   description: `Oya, buy from a comrade asilale njaa
    ,ama we  ni entrepreneur? or 
   unataka tu za cabbage , lets sale you phone.Anyways,
@@ -129,4 +130,15 @@ export const hero = {
      with customers within your school.
        Plus, we offer a special point of sale for you.
   Manage your inventory,sales  and finances with ease.`,
+};
+export const client_hero = {
+  title: "Empowering Student Entrepreneurs",
+  description: `
+  Are you an entrepreneur or a nail artist like me?
+   Univora connects you with customers around your school.
+    Start selling by clicking on 'Sell' in the footer.
+     Plus, we offer a special point of sale for you. 
+     No need to wait for market days.
+      Showcase your skills and products now for free. 
+  `,
 };
