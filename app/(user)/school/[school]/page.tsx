@@ -1,6 +1,13 @@
 import { Categories } from "@/components/client/home/categories";
+import { Newest_Arrials } from "@/components/client/home/newest_arrivals";
+import { Sellers } from "@/components/client/shared/Sellers";
 import { Button } from "@/components/ui/button";
-import { getFeaturedCategories, getSchool } from "@/utils/api";
+import {
+  getFeaturedCategories,
+  getNewArrivals,
+  getNewestSellers,
+  getSchool,
+} from "@/utils/api";
 import { client_hero as hero } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,11 +20,14 @@ const School = async ({
     school: string;
   };
 }) => {
-  const school = await getSchool(params.school);
-  const categories = await getFeaturedCategories();
-
+  const [school, categories, newest_arrivals, sellers] = await Promise.all([
+    getSchool(params.school),
+    getFeaturedCategories(),
+    getNewArrivals(params.school),
+    getNewestSellers(params.school),
+  ]);
   return (
-    <div>
+    <div className="pb-5">
       <section className="flex-1-2 gap-10 py-[50px]">
         <div className="left flex-col-start w-full pad-x gap-5 text-center md:text-start md:max-w-[800px] ">
           <h1
@@ -75,6 +85,23 @@ const School = async ({
             </Button>
           </Link>
         </div>
+      </section>
+      <section className="pad-x my-10 py-1">
+        <h2 className="h2 text-indigo-500  my-5">Latest Arrivals</h2>
+        <Newest_Arrials products={newest_arrivals} subdomain={params.school} />
+      </section>
+
+      <section className="pad-x flex-col-start gap-5">
+        <h2 className="h2-size text-indigo-500 text-start   mt-5">
+          Top Dealers
+        </h2>
+        <Sellers sellers={sellers} subdomain={params.school} />
+
+        <Link href="/dealers" className="w-full fc">
+          <Button variant={"indigo"} className="rounded-full">
+            View All
+          </Button>
+        </Link>
       </section>
     </div>
   );

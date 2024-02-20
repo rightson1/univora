@@ -216,7 +216,7 @@ export interface IProductBase {
   business: string | ISellerFetched;
   name: string;
   price: number;
-  description?: string;
+  description: string;
   longDescription?: string;
   school: string;
   stock?: number;

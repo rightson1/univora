@@ -7,7 +7,7 @@ import React from "react";
 
 export const CategoryCard = ({ category }: { category: ICategoryFetched }) => {
   const { name, image, slug, children } = category;
-  const link = children.length > 0 ? `/categories/${slug}` : `/items/${slug}`;
+  const link = children.length > 0 ? `/category/${slug}` : `/category/${slug}`;
   return (
     <Link className="w-full    overflow-hidden flex-col-start" href={link}>
       <Image
