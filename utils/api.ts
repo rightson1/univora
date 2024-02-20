@@ -60,3 +60,49 @@ export async function getNewestSellers(
 
   return data;
 }
+//get categories by parent
+export async function getSubCategories(
+  parent: string
+): Promise<ICategoryFetched[]> {
+  console.log(parent);
+  const data = await fetch(
+    `${baseUrl}/api/client/categories?category_slug=${parent}`,
+    {
+      next: {
+        revalidate: 60 * 60 * 5,
+        tags: ["sub-categories"],
+      },
+    }
+  ).then(ec);
+
+  return data;
+}
+//get single category
+export async function getSingleCategory(
+  slug: string
+): Promise<ICategoryFetched> {
+  const data = await fetch(`${baseUrl}/api/client/categories?slug=${slug}`, {
+    next: {
+      revalidate: 60 * 60 * 5,
+      tags: [`category-${slug}`],
+    },
+  }).then(ec);
+
+  return data;
+}
+//get products in a category
+export async function getProductsInCategory(
+  school: string,
+  category: string
+): Promise<IProductFetched[]> {
+  const url = `${baseUrl}/api/client/categories/products?school=${school}&category=${category}`;
+
+  const data = await fetch(url, {
+    next: {
+      revalidate: 60 * 60 * 5,
+      tags: [`products-${category}`],
+    },
+  }).then(ec);
+
+  return data;
+}

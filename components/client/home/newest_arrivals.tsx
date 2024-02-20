@@ -22,7 +22,7 @@ export const Newest_Arrials = ({
   return (
     <Carousel className="w-full ">
       <CarouselContent className="-ml-1  gap-4">
-        {products.map((product, index) => (
+        {products?.map((product, index) => (
           <CarouselItem
             key={index}
             className="pl-1 

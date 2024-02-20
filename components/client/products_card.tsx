@@ -72,9 +72,11 @@ export const Product_Card = ({
               : description}
           </p>
         </Link>
-        <Button variant={"outline"} className="rounded-full bg-transparent">
-          Save Product
-        </Button>
+        {button && (
+          <Button variant={"outline"} className="rounded-full bg-transparent">
+            Save Product
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -92,10 +92,10 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0, 0%, 18%;
+    --border: 0, 0%, 50%;
 
     --input: 0, 0%, 60%;
-    --ring: 0, 0%, 10%;
+    --ring: 0, 0%, 70%;
 
     --radius: 0.5rem;
   }

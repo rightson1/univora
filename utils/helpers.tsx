@@ -6,6 +6,13 @@ export const ec = async (res: Response) => {
     }
     return data;
   } catch (err) {
-    console.error(err);
+    // console.error(err);
   }
 };
+export function sTime(staleTimeInMinutes: number) {
+  const staleTime = 1000 * 60 * staleTimeInMinutes;
+  return {
+    staleTime,
+    initialDataUpdatedAt: Date.now() - staleTime,
+  };
+}

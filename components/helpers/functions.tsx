@@ -63,7 +63,7 @@ export const useCustomToast = () => {
   return { customToast, loading, modalOpen, setModalOpen };
 };
 export const toSlug = (str: string) => {
-  return str.toLocaleLowerCase().replace(/\s/g, "-");
+  return str.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase();
 };
 export const uploadFile = (file: File, name: string) => {
   const fileRef = ref(storage, `/${name}`);

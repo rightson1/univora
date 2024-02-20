@@ -55,6 +55,8 @@ export const EditCategory = ({ category }: { category: ICategoryFetched }) => {
         ...values,
         image: url || category.image,
         _id: category._id,
+        //remove all special character from name and make it slug,
+        slug: values.name.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase(),
       };
       await editCategory(data);
     };

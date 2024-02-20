@@ -3,6 +3,7 @@ import { ISellerFetched } from "@/types";
 import { ec } from "@/utils/helpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { sTime } from "@/utils/helpers";
 
 export const useGetLatestSellers = (
   subdomain: string,
@@ -19,6 +20,6 @@ export const useGetLatestSellers = (
         })
         .then(eCheck),
     initialData,
-    initialDataUpdatedAt: Date.now(),
+    ...sTime(10),
   });
 };

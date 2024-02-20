@@ -4,7 +4,7 @@ import { useFeaturedCategories } from "@/utils/hooks/client/useCategories";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { CategoryCard } from "./category_card";
+import { CategoryCard } from "../category_card";
 
 export const Categories = ({
   categories: data,

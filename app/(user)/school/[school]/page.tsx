@@ -51,7 +51,7 @@ const School = async ({
               src="/makeup.png"
               width={500}
               height={500}
-              className="  w-full h-full  rounded-[5px]"
+              className="  w-full h-full  rounded-[5px] mb:object-cover"
             />
           </div>
           <div className="flex-col-start  w-full  flex-[2] h-full gap-5 ">

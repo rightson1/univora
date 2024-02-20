@@ -64,18 +64,13 @@ export async function PUT(req: NextRequest) {
   try {
     await conn();
     const categoryBody: ICategoryFetched = await req.json();
-    const { parent } = categoryBody;
-    const category = await Category.findById(categoryBody._id);
-    if (category) {
-      category.name = categoryBody.name;
-      category.slug = categoryBody.slug;
-      category.image = categoryBody.image;
-      category.parent = categoryBody.parent;
-      await category.save();
-    }
-    return NextResponse.json({
-      message: "Category updated successfully",
-    });
+    const category = await Category.findOneAndUpdate(
+      { _id: categoryBody._id },
+      { ...categoryBody },
+      { new: true }
+    );
+
+    return NextResponse.json(category);
   } catch (error) {
     console.error(error);
     return NextResponse.json({

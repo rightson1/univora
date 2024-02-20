@@ -1,6 +1,6 @@
 import { eCheck } from "@/components/helpers/functions";
 import { IProductFetched } from "@/types";
-import { ec } from "@/utils/helpers";
+import { ec, sTime } from "@/utils/helpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -20,6 +20,27 @@ export const useGetNewestArrivals = (
         })
         .then(eCheck),
     initialData,
-    initialDataUpdatedAt: Date.now(),
+    ...sTime(10),
+  });
+};
+//products in a category
+export const useGetProductsInCategory = (
+  subdomain: string,
+  category_slug: string,
+  initialData: IProductFetched[]
+) => {
+  return useQuery<IProductFetched[]>({
+    queryKey: ["products_in_category", category_slug],
+    queryFn: async () =>
+      await axios
+        .get(`/api/client/categories/products`, {
+          params: {
+            school: subdomain,
+            category: category_slug,
+          },
+        })
+        .then(eCheck),
+    initialData,
+    ...sTime(40),
   });
 };
