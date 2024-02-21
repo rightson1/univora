@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     const search = req.nextUrl.searchParams.get("search");
     const subdomain = req.nextUrl.searchParams.get("school");
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
-    const limit = 15;
+    const limit = Number(req.nextUrl.searchParams.get("limit")) || 15;
     const skip = (page - 1) * limit;
     const school = await School.findOne({ subdomain });
     if (!school) {

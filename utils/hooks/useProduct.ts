@@ -1,6 +1,11 @@
 import { eCheck } from "@/components/helpers/functions";
 import { IProduct, IProductFetched } from "@/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 export const useAddProduct = () => {
@@ -86,52 +91,3 @@ export const useDeleteProduct = () => {
 //get single product
 
 //auto complete
-
-export const useAutoComplete = ({
-  school,
-  search,
-}: {
-  school: string;
-  search: string;
-}) => {
-  return useQuery<IProductFetched[]>({
-    queryKey: ["autoComplete", school, search],
-    queryFn: async () => {
-      return await axios
-        .get("/api/client/products/autocomplete", {
-          params: {
-            school,
-            search,
-          },
-        })
-        .then(eCheck);
-    },
-    enabled: search.length > 2,
-  });
-};
-//use get product bu search and school
-export const useGetProductsBySearch = ({
-  school,
-  search,
-  page,
-}: {
-  school: string;
-  search: string;
-  page: number;
-}) => {
-  return useQuery<IProductFetched[]>({
-    queryKey: ["products", school, search],
-    queryFn: async () => {
-      return await axios
-        .get("/api/client/products/search", {
-          params: {
-            school,
-            search,
-            page,
-          },
-        })
-        .then(eCheck);
-    },
-    enabled: search.length > 2,
-  });
-};

@@ -1,7 +1,12 @@
 import { eCheck } from "@/components/helpers/functions";
 import { IProductFetched } from "@/types";
 import { ec, sTime } from "@/utils/helpers";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 //get newest arrivals
@@ -59,5 +64,145 @@ export const useGetProduct = (slug: string, initialData: IProductFetched) => {
     },
     initialData,
     ...sTime(40),
+  });
+};
+//pagination all products
+// export const useGetAllProducts = ({
+//   school,
+//   search,
+//   page,
+//   limit,
+// }: {
+//   school: string;
+//   search: string;
+//   page: number;
+//   limit: number;
+// }) => {
+//   return useQuery<IProductFetched[]>({
+//     queryKey: ["all_products", page],
+//     queryFn: async () =>
+//       await axios
+//         .get(`/api/client/products/all`, {
+//           params: {
+//             school,
+//             search,
+//             page,
+//             limit,
+//           },
+//         })
+//         .then(eCheck),
+//     placeholderData: keepPreviousData,
+//     ...sTime(40),
+//   });
+// };
+//use get product bu search and school
+// export const useGetProductsBySearch = ({
+//   school,
+//   search,
+//   page,
+// }: {
+//   school: string;
+//   search: string;
+//   page: number;
+// }) => {
+//   return useQuery<IProductFetched[]>({
+//     queryKey: ["products", school, search],
+//     queryFn: async () => {
+//       return await axios
+//         .get("/api/client/products/search", {
+//           params: {
+//             school,
+//             search,
+//             page,
+//           },
+//         })
+//         .then(eCheck);
+//     },
+//     enabled: search.length > 2,
+//   });
+// };
+
+export const useAutoComplete = ({
+  school,
+  search,
+}: {
+  school: string;
+  search: string;
+}) => {
+  return useQuery<IProductFetched[]>({
+    queryKey: ["autoComplete", school, search],
+    queryFn: async () => {
+      return await axios
+        .get("/api/client/products/autocomplete", {
+          params: {
+            school,
+            search,
+          },
+        })
+        .then(eCheck);
+    },
+    enabled: search.length > 2,
+  });
+};
+export const useGetAllProducts = ({
+  school,
+  limit,
+}: {
+  school: string;
+  limit: number;
+}) => {
+  return useInfiniteQuery<IProductFetched[]>({
+    initialPageParam: 1,
+    queryKey: ["products_search_page"],
+    queryFn: async ({ pageParam }) => {
+      return await axios
+        .get("/api/client/products/all", {
+          params: {
+            school,
+            page: pageParam,
+            limit,
+          },
+        })
+        .then(eCheck);
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < limit) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+};
+// useGetProductsBySearch with infinite query
+export const useGetProductsBySearch = ({
+  school,
+  search,
+  limit,
+}: {
+  school: string;
+  search: string;
+  limit: number;
+}) => {
+  return useInfiniteQuery<IProductFetched[]>({
+    initialPageParam: 1,
+    queryKey: ["products_search", search],
+    queryFn: async ({ pageParam }) => {
+      return await axios
+        .get("/api/client/products/search", {
+          params: {
+            school,
+            search,
+            page: pageParam,
+            limit,
+          },
+        })
+        .then(eCheck);
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < limit) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
   });
 };

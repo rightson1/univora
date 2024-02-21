@@ -7,7 +7,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     function updateThemeColor() {
       const metaTag = document.querySelector('meta[name="theme-color"]');
       if (metaTag) {
-        console.log("metaTag", metaTag);
         metaTag.setAttribute("content", whiteColor);
       }
     }

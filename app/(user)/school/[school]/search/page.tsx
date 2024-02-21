@@ -1,7 +1,13 @@
 "use client";
 import { Auto_Complete } from "@/components/client/search/auto_complete";
 import { Product_cards } from "@/components/client/shared/product_cards";
-import { useGetProductsBySearch } from "@/utils/hooks/useProduct";
+import { Button } from "@/components/ui/button";
+import { IProductFetched } from "@/types";
+import {
+  useGetAllProducts,
+  useGetProductsBySearch,
+} from "@/utils/hooks/client/useProducts";
+// import { useGetProductsBySearch } from "@/utils/hooks/useProduct";
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 const Page = ({
@@ -14,18 +20,44 @@ const Page = ({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const { data: products, isInitialLoading } = useGetProductsBySearch({
+
+  const {
+    data: products_search,
+    fetchNextPage: next,
+    hasNextPage: nextExists,
+    isFetchingNextPage: nextFetching,
+    isFetching: fetching,
+  } = useGetProductsBySearch({
     school: params.school,
     search,
-    page,
+    limit: 15,
   });
-  console.log(products);
+  const { data, fetchNextPage, isLoading, hasNextPage, isFetchingNextPage } =
+    useGetAllProducts({
+      school: params.school,
+      limit: 15,
+    });
+
   useEffect(() => {
     if (!open && query) {
       setSearch(query);
     }
   }, [open]);
+  useEffect(() => {
+    if (products_search) {
+      const all_products = products_search.pages.flatMap((page) => page);
+      setProducts(all_products);
+    }
+  }, [products_search]);
+
+  const [products, setProducts] = useState<IProductFetched[] | undefined>();
+
+  useEffect(() => {
+    if (data) {
+      const allProducts = data.pages.flatMap((page) => page);
+      setProducts(allProducts);
+    }
+  }, [data]);
 
   return (
     <section className="pad-x  flex-col gap-4 flex md:mt-[100px]">
@@ -64,9 +96,27 @@ const Page = ({
           setQuery,
         }}
       />
-      <div className="py-5">
-        <Product_cards products={products} loading={isInitialLoading} />
-      </div>
+      {products_search || search ? (
+        <div className="py-5">
+          <Product_cards
+            products={products}
+            loading={products_search ? false : fetching}
+            fetchNextPage={next}
+            hasNextPage={nextExists}
+            isFetchingNextPage={nextFetching}
+          />
+        </div>
+      ) : (
+        <div className="py-5">
+          <Product_cards
+            products={products}
+            loading={isLoading}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </div>
+      )}
     </section>
   );
 };

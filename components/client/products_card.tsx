@@ -23,6 +23,7 @@ export const Product_Card = ({
   deleteProduct,
   slice = 40,
   button = true,
+  setBottom,
 }: IPcard) => {
   const router = useRouter();
   return (

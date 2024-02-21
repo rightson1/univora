@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useAutoComplete } from "@/utils/hooks/useProduct";
+import { useAutoComplete } from "@/utils/hooks/client/useProducts";
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export function Auto_Complete({
   open,
@@ -34,7 +33,7 @@ export function Auto_Complete({
     <Dialog onOpenChange={(open) => setOpen(open)} open={open}>
       <DialogContent
         close={false}
-        className="mb:w-[85vw] rounded-md sm:max-w-[425px] p-0 blr  overflow-hidden "
+        className=" mb:w-[85vw] top-[30%]  rounded-md sm:max-w-[425px] p-0 blr  overflow-hidden "
       >
         <div className="flex flex-col w-full">
           <div className="flex gap-2  flex-col md:flex-row">

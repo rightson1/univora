@@ -18,4 +18,5 @@ export interface IPcard {
     height: number;
   };
   deleteProduct?: boolean;
+  setBottom?: React.Dispatch<React.SetStateAction<boolean>>;
 }
