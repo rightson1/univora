@@ -40,7 +40,7 @@ const School = async ({
           <p>{hero.description}</p>
           <div className="self-center md:self-start">
             <Button className="rounded-full" variant={"indigo"}>
-              Search Products
+              <Link href="/search">Search Products</Link>
             </Button>
           </div>
         </div>

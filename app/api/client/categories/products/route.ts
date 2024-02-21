@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     const category_slug = req.nextUrl.searchParams.get("category");
 
     const school = await School.findOne({ subdomain });
+
     const category = await Category.findOne({ slug: category_slug });
     if (school && category) {
       const products = await Product.find({

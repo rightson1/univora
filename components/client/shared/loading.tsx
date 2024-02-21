@@ -11,7 +11,7 @@ export const Loading = () => {
     setLoadingMessage(randomMessage);
   }, []);
   return (
-    <div className="main-h  py-10 fx-col-c gap-5 relative">
+    <div className="h-[calc(100vh-100px)]  py-10 fx-col-c gap-5 relative">
       <span className="load"></span>
       <p className="pxs text-center text-indigo">{"loading... "}</p>
     </div>

@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IPcard } from "@/types/client";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export const Product_Card = ({
   title,
@@ -22,12 +24,16 @@ export const Product_Card = ({
   slice = 40,
   button = true,
 }: IPcard) => {
+  const router = useRouter();
   return (
     <div
       className={
         containerStyles ||
         " w-full  h-full shadow-md p-0 my-3 product-bg card-hover"
       }
+      onClick={() => {
+        router.push(`/products/${slug}`);
+      }}
     >
       <Link href={`/products/${slug}`}>
         <Image

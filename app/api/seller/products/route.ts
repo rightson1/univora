@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
     const slugCount = await Product.countDocuments({
       slug: productData.slug,
     });
-    console.log(slugCount, "slugCount");
     if (slugCount >= 1) {
       productData.slug = `${productData.slug}-${
         Math.floor(Math.random() * 1000) + 1

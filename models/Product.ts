@@ -58,10 +58,6 @@ const ProductSchema = new Schema(
       default: "product",
       enum: ["product", "service"],
     },
-    active: {
-      type: Boolean,
-      default: true,
-    },
     options: [
       {
         title: {
@@ -77,8 +73,8 @@ const ProductSchema = new Schema(
     ],
     status: {
       type: String,
-      default: "approved",
-      enum: ["approved", "suspended"],
+      default: "published",
+      enum: ["published", "unpublished", "suspended"],
     },
     variants: {
       type: [

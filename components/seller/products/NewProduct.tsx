@@ -81,6 +81,7 @@ export const NewProductForm = () => {
     const data = {
       ...values,
       longDescription: longDescription,
+
       options,
       variants,
       tags: values.tags.map((tag) => tag.trim()),
@@ -128,6 +129,7 @@ export const NewProductForm = () => {
     if (variants.length > 0) {
       const totalStock = variants.reduce((acc, curr) => acc + curr.stock, 0);
       const lowestPrice = Math.min(...variants.map((v) => v.price));
+
       setValues({
         ...values,
         stock: totalStock,
@@ -400,7 +402,11 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
                 id="brand"
                 placeholder="Brand of your product"
                 name="brand"
-                onChange={handleChange}
+                onChange={(e) => {
+                  //trim
+                  let value = e.target.value.trim();
+                  setValues({ ...values, brand: value });
+                }}
                 value={values.brand}
               />
             </div>

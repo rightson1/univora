@@ -41,16 +41,16 @@ export const Products_By_Category = ({
           product.tags?.some((tag) => fuzzyQuery.test(tag.toLowerCase()))
       );
 
-      const remainingProducts = products.filter(
-        (school) => !includesFiltered.includes(school)
-      );
-      const fuse = new Fuse(remainingProducts, {
-        keys: ["name", "brand"],
-        threshold: 0.4,
+      const fuse = new Fuse(products_raw, {
+        keys: ["description"],
+        threshold: 0.6,
       });
       const fuseFiltered = fuse.search(query).map((res) => res.item);
+      const combinedFiltered = Array.from(
+        new Set([...includesFiltered, ...fuseFiltered])
+      );
 
-      setProducts([...includesFiltered, ...fuseFiltered]);
+      setProducts(combinedFiltered);
     } else {
       setProducts(products_raw);
     }
@@ -72,8 +72,8 @@ export const Products_By_Category = ({
           </span>
         </button>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-        {products.map((product, index: number) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {products?.map((product, index: number) => {
           return (
             <Product_Card
               key={index}
