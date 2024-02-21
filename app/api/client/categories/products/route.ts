@@ -10,15 +10,13 @@ export async function GET(req: NextRequest) {
   try {
     const subdomain = req.nextUrl.searchParams.get("school");
     const category_slug = req.nextUrl.searchParams.get("category");
-
     const school = await School.findOne({ subdomain });
-
     const category = await Category.findOne({ slug: category_slug });
     if (school && category) {
       const products = await Product.find({
         school: school._id,
         category: category._id,
-      });
+      }).limit(15);
       return NextResponse.json(products);
     }
   } catch (e) {

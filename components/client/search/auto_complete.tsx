@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { IProductFetched } from "@/types";
 import { useAutoComplete } from "@/utils/hooks/client/useProducts";
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
@@ -10,17 +11,15 @@ export function Auto_Complete({
   query,
   school,
   setQuery,
+  products,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   school: string;
+  products?: IProductFetched[];
 }) {
-  const { data: products, isInitialLoading } = useAutoComplete({
-    search: query,
-    school,
-  });
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setQuery(query);

@@ -206,3 +206,68 @@ export const useGetProductsBySearch = ({
     },
   });
 };
+
+// export const useGetProductsInCategoryBySearch infinite query
+export const useGetProductsInCategoryBySearch = ({
+  school,
+  category,
+  search,
+  limit,
+}: {
+  school: string;
+  category: string;
+  search: string;
+  limit: number;
+}) => {
+  return useInfiniteQuery<IProductFetched[]>({
+    initialPageParam: 1,
+    queryKey: ["products_in_category_search", category, search],
+    queryFn: async ({ pageParam }) => {
+      return await axios
+        .get("/api/client/categories/products/search", {
+          params: {
+            school,
+            category: category,
+            search,
+            page: pageParam,
+            limit,
+          },
+        })
+        .then(eCheck);
+    },
+    enabled: search.length > 2,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < limit) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+};
+
+//export autocomeplete products on category
+export const useAutoCompleteCategory = ({
+  school,
+  category,
+  search,
+}: {
+  school: string;
+  category: string;
+  search: string;
+}) => {
+  return useQuery<IProductFetched[]>({
+    queryKey: ["autoCompleteCategory", school, category, search],
+    queryFn: async () => {
+      return await axios
+        .get("/api/client/categories/products/autocomplete", {
+          params: {
+            school,
+            category,
+            search,
+          },
+        })
+        .then(eCheck);
+    },
+    enabled: search.length > 2,
+  });
+};

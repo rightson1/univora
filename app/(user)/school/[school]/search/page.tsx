@@ -4,6 +4,7 @@ import { Product_cards } from "@/components/client/shared/product_cards";
 import { Button } from "@/components/ui/button";
 import { IProductFetched } from "@/types";
 import {
+  useAutoComplete,
   useGetAllProducts,
   useGetProductsBySearch,
 } from "@/utils/hooks/client/useProducts";
@@ -58,7 +59,10 @@ const Page = ({
       setProducts(allProducts);
     }
   }, [data]);
-
+  const { data: products_autocomplete, isInitialLoading } = useAutoComplete({
+    search: query,
+    school: params.school,
+  });
   return (
     <section className="pad-x  flex-col gap-4 flex md:mt-[100px]">
       <h1 className="h2-size text-indigo-500">Search For Items</h1>
@@ -94,6 +98,7 @@ const Page = ({
           query,
           school: params.school,
           setQuery,
+          products: products_autocomplete,
         }}
       />
       {products_search || search ? (
