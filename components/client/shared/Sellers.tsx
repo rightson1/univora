@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ISellerFetched } from "@/types";
 import { useGetLatestSellers } from "@/utils/hooks/client/useSellers";
+import { isArr } from "@/utils/helpers";
+import { Button } from "@/components/ui/button";
 
 export const Sellers = ({
   sellers: data,
@@ -43,14 +45,24 @@ export const Sellers = ({
       </Link>
     );
   };
-  return (
-    <>
-      {" "}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+  return isArr(sellers) ? (
+    <div className="fx-c gap-5">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {sellers?.map((seller, index) => {
           return <Card key={index} {...seller} />;
         })}
       </div>
-    </>
+      <Link href="/sellers" className="w-full fc">
+        <Button variant={"indigo"} className="rounded-full">
+          View All
+        </Button>
+      </Link>
+    </div>
+  ) : (
+    <div className="w-full h-[200px] fc">
+      <h2 className="h4 text-indigo-500">
+        No Sellers Found,be the first to sell
+      </h2>
+    </div>
   );
 };

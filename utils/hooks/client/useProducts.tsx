@@ -29,26 +29,26 @@ export const useGetNewestArrivals = (
   });
 };
 //products in a category
-export const useGetProductsInCategory = (
-  subdomain: string,
-  category_slug: string,
-  initialData: IProductFetched[]
-) => {
-  return useQuery<IProductFetched[]>({
-    queryKey: ["products_in_category", category_slug],
-    queryFn: async () =>
-      await axios
-        .get(`/api/client/categories/products`, {
-          params: {
-            school: subdomain,
-            category: category_slug,
-          },
-        })
-        .then(eCheck),
-    initialData,
-    ...sTime(40),
-  });
-};
+// export const useGetProductsInCategory = (
+//   subdomain: string,
+//   category_slug: string,
+//   initialData: IProductFetched[]
+// ) => {
+//   return useQuery<IProductFetched[]>({
+//     queryKey: ["products_in_category", category_slug],
+//     queryFn: async () =>
+//       await axios
+//         .get(`/api/client/categories/products`, {
+//           params: {
+//             school: subdomain,
+//             category: category_slug,
+//           },
+//         })
+//         .then(eCheck),
+//     initialData,
+//     ...sTime(40),
+//   });
+// };
 
 export const useGetProduct = (slug: string, initialData: IProductFetched) => {
   return useQuery<IProductFetched>({
@@ -269,5 +269,39 @@ export const useAutoCompleteCategory = ({
         .then(eCheck);
     },
     enabled: search.length > 2,
+  });
+};
+
+//use get products in category with infinite query
+export const useGetProductsInCategory = ({
+  school,
+  category,
+  limit,
+}: {
+  school: string;
+  category: string;
+  limit: number;
+}) => {
+  return useInfiniteQuery<IProductFetched[]>({
+    initialPageParam: 1,
+    queryKey: ["products_in_category", category],
+    queryFn: async ({ pageParam }) => {
+      return await axios
+        .get("/api/client/categories/products/all", {
+          params: {
+            school,
+            category,
+            page: pageParam,
+            limit,
+          },
+        })
+        .then(eCheck);
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < limit) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
   });
 };

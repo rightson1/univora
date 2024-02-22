@@ -18,13 +18,11 @@ import {
 } from "@radix-ui/react-icons";
 
 const root_domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
+export const protocal = process.env.NEXT_PUBLIC_PROTOCAL || "https";
 export const baseUrl: string =
   process.env.NODE_ENV === "development"
-    ? `http://${root_domain}`
-    : `https://${root_domain}`;
-
-export const protocal =
-  process.env.NODE_ENV === "development" ? "http" : "https";
+    ? `${protocal}://${root_domain}`
+    : `${protocal}://${root_domain}`;
 export const navLinks: INavLinks[] = [
   {
     title: "Home",

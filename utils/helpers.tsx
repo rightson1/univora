@@ -16,3 +16,7 @@ export function sTime(staleTimeInMinutes: number) {
     initialDataUpdatedAt: Date.now() - staleTime,
   };
 }
+//check is array is not undefine of length is greater than 0
+export const isArr = (arr?: any[]) => {
+  return arr && arr.length > 0;
+};

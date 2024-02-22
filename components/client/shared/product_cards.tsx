@@ -2,6 +2,7 @@
 import { IProductFetched } from "@/types";
 import React, { useEffect } from "react";
 import { Product_Card } from "../products_card";
+import { isArr } from "@/utils/helpers";
 
 export const Product_cards = ({
   products,
@@ -23,7 +24,7 @@ export const Product_cards = ({
           <div className="w-full  py-10 flex justify-center col-span-4">
             <span className="load"></span>
           </div>
-        ) : products && products.length > 0 ? (
+        ) : isArr(products) ? (
           products?.map((product, index: number) => {
             return (
               <Product_Card

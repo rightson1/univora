@@ -5,9 +5,9 @@ import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
   try {
+    await conn();
+    await verifyIdToken(req);
     const productData = await req.json();
 
     const slugCount = await Product.countDocuments({
@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
   }
 }
 export async function GET(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
   try {
+    await conn();
+    await verifyIdToken(req);
     const sellerId = req.nextUrl.searchParams.get("sellerId");
     Category;
     const products = await Product.find({

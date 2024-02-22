@@ -3,16 +3,23 @@ import { conn } from "@/models/mongo_db_connection";
 import { ISeller, ISellerBase, ISellerFetched } from "@/types";
 import { verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET() {
-  await conn();
+export const dynamic = "force-dynamic";
+export async function GET(req: NextRequest) {
+  try {
+    await conn();
+    await verifyIdToken(req);
+  } catch (e: any) {
+    return NextResponse.json({
+      message: e.message,
+      success: false,
+    });
+  }
 }
 //edit seller
 export async function PUT(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
-
   try {
+    await conn();
+    await verifyIdToken(req);
     const seller: ISellerFetched = await req.json();
     const no_of_slugs = await Business.countDocuments({ slug: seller.slug });
     if (no_of_slugs > 1) {

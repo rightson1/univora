@@ -21,14 +21,7 @@ export const Products_By_Category = ({
   products: IProductFetched[];
   school: string;
 }) => {
-  const { data: products_raw } = useGetProductsInCategory(
-    school,
-    category.slug,
-    initialData
-  );
-  const [products, setProducts] = React.useState<IProductFetched[]>(
-    initialData || []
-  );
+  const [products, setProducts] = React.useState<IProductFetched[]>();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -37,6 +30,19 @@ export const Products_By_Category = ({
     school: school,
     category: category._id,
   });
+
+  const {
+    data: initial_Products,
+    isFetchingNextPage: initialFetchingNext,
+    isFetching: initialFetching,
+    fetchNextPage: initialFetchNext,
+    hasNextPage: initialHasNextPage,
+  } = useGetProductsInCategory({
+    school,
+    category: category._id,
+    limit: 6,
+  });
+
   const { data, isFetchingNextPage, isFetching, fetchNextPage, hasNextPage } =
     useGetProductsInCategoryBySearch({
       school,
@@ -44,6 +50,14 @@ export const Products_By_Category = ({
       search,
       limit: 15,
     });
+  useEffect(() => {
+    if (initial_Products) {
+      const allProducts = initial_Products.pages.flatMap((page) => page);
+
+      setProducts(allProducts);
+    }
+  }, [initial_Products]);
+
   useEffect(() => {
     if (data) {
       const allProducts = data.pages.flatMap((page) => page);
@@ -104,24 +118,14 @@ export const Products_By_Category = ({
           />
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {products?.map((product, index: number) => {
-            return (
-              <Product_Card
-                key={index}
-                id={product._id}
-                slug={product.slug}
-                price={product.price}
-                description={product.description}
-                image={product.thumbnail}
-                title={product.name}
-                imageStyles="w-full h-[150px] sm:h-[200px] object-cover  rounded-[5px]"
-                descriptionStyles="p-size"
-                imageSizes={{ width: 300, height: 300 }}
-                button={false}
-              />
-            );
-          })}
+        <div className="py-5">
+          <Product_cards
+            products={products}
+            loading={initial_Products ? false : initialFetching}
+            fetchNextPage={initialFetchNext}
+            hasNextPage={initialHasNextPage}
+            isFetchingNextPage={initialFetchingNext}
+          />
         </div>
       )}
     </div>

@@ -6,10 +6,10 @@ import { IProductFetched } from "@/types";
 import { verifyIdToken } from "@/utils/firebaseAdmin";
 export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
-  const body = await req.json();
   try {
+    await conn();
+    await verifyIdToken(req);
+    const body = await req.json();
     const order = await Order.create(body);
     //update product stock
 
@@ -65,11 +65,11 @@ export async function POST(req: NextRequest) {
   }
 }
 export async function GET(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
-  const seller_Id = req.nextUrl.searchParams.get("sellerId");
-  Product;
   try {
+    await conn();
+    await verifyIdToken(req);
+    const seller_Id = req.nextUrl.searchParams.get("sellerId");
+    Product;
     const orders = await Order.find({ seller: seller_Id })
       .populate("product")
       .sort({ createdAt: -1 });

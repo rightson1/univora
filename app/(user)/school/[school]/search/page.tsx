@@ -8,7 +8,6 @@ import {
   useGetAllProducts,
   useGetProductsBySearch,
 } from "@/utils/hooks/client/useProducts";
-// import { useGetProductsBySearch } from "@/utils/hooks/useProduct";
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 const Page = ({
@@ -40,7 +39,7 @@ const Page = ({
     });
 
   useEffect(() => {
-    if (!open && query) {
+    if (!open && query.length > 2) {
       setSearch(query);
     }
   }, [open]);

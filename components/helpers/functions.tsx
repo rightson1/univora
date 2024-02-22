@@ -1,3 +1,4 @@
+"use client";
 import { ICategoryFetched } from "@/types";
 import { storage } from "@/utils/firebase";
 import { AxiosResponse } from "axios";

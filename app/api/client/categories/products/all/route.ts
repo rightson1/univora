@@ -8,19 +8,24 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
   try {
-    const subdomain = req.nextUrl.searchParams.get("school");
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
     const limit = Number(req.nextUrl.searchParams.get("limit")) || 15;
+    const category = req.nextUrl.searchParams.get("category");
     const skip = (page - 1) * limit;
     const school = toObj(await getS(req));
-    if (!school) {
+    if (!category) {
       return NextResponse.json({
-        message: "School not found",
+        message: "Category not found",
         success: false,
       });
     }
     const products = await Product.aggregate([
-      { $match: { school: school } },
+      {
+        $match: {
+          school: school,
+          category: toObj(category),
+        },
+      },
       { $skip: skip },
       { $limit: limit },
     ]);

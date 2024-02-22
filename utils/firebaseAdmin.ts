@@ -36,6 +36,10 @@ export async function initAdmin() {
 //verify token
 export async function verifyIdToken(req: NextRequest) {
   const token = req.cookies.get("token")?.value || "";
-  await initAdmin();
-  return admin.auth().verifyIdToken(token);
+  try {
+    await initAdmin();
+    await admin.auth().verifyIdToken(token);
+  } catch (e) {
+    throw new Error("Token is invalid or expired. Please login again.");
+  }
 }

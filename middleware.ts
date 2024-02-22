@@ -31,9 +31,11 @@ export default async function middleware(req: NextRequest) {
       new URL(`/seller${path === "/" ? "" : path}`, req.url)
     );
   }
-  //if cookies school is set redirect to school subdomain
+
   const school = req.cookies.get("school")?.value;
-  if (school) {
+  const noredirect = Boolean(searchParams.match(/noredirect/));
+
+  if (school && !noredirect) {
     return NextResponse.redirect(
       `${protocal}://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     );
@@ -49,6 +51,5 @@ export default async function middleware(req: NextRequest) {
       new URL(`/school/${subdomain}${path === "/" ? "" : path}`, req.url)
     );
   }
-
   return NextResponse.next();
 }

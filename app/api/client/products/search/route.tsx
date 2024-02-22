@@ -1,8 +1,11 @@
+import { getS } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
 import { conn } from "@/models/mongo_db_connection";
+import { getSchool } from "@/utils/api";
 import { products_query } from "@/utils/pipelines/products";
+import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 // export async function GET(req: NextRequest) {
@@ -72,21 +75,14 @@ export async function GET(req: NextRequest) {
   await conn();
   try {
     const search = req.nextUrl.searchParams.get("search");
-    const subdomain = req.nextUrl.searchParams.get("school");
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
     const limit = Number(req.nextUrl.searchParams.get("limit")) || 15;
     const skip = (page - 1) * limit;
-    const school = await School.findOne({ subdomain });
-    if (!school) {
-      return NextResponse.json({
-        message: "School not found",
-        success: false,
-      });
-    }
+    const school = await getS(req);
     const query = products_query(search);
     const products = await Product.aggregate([
       query,
-      { $match: { school: school._id } },
+      { $match: { school: new Types.ObjectId(school) } },
       { $skip: skip },
       { $limit: limit },
     ]);

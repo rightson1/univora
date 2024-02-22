@@ -6,11 +6,11 @@ import { IOrderFetched } from "@/types";
 import { verifyIdToken } from "@/utils/firebaseAdmin";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
-  const _id = req.nextUrl.searchParams.get("_id");
-  Product;
   try {
+    await conn();
+    await verifyIdToken(req);
+    const _id = req.nextUrl.searchParams.get("_id");
+    Product;
     const order = await Order.findOne({ _id }).populate("product");
     return NextResponse.json(order);
   } catch (error: any) {
@@ -23,12 +23,12 @@ export async function GET(req: NextRequest) {
 }
 //edit
 export async function PUT(req: NextRequest) {
-  await conn();
-  await verifyIdToken(req);
-  const orderData: IOrderFetched = await req.json();
-  const _id = orderData._id;
-  console.log(orderData);
   try {
+    await conn();
+    await verifyIdToken(req);
+    const orderData: IOrderFetched = await req.json();
+    const _id = orderData._id;
+    console.log(orderData);
     Product;
     const order = await Order.findOneAndUpdate({ _id }, orderData, {
       new: true,
@@ -45,10 +45,10 @@ export async function PUT(req: NextRequest) {
 }
 //delete order
 export async function DELETE(req: NextRequest) {
-  await verifyIdToken(req);
-  await conn();
-  const _id = req.nextUrl.searchParams.get("_id");
   try {
+    await verifyIdToken(req);
+    await conn();
+    const _id = req.nextUrl.searchParams.get("_id");
     const order = await Order.findOneAndDelete({ _id });
     return NextResponse.json(order);
   } catch (error: any) {

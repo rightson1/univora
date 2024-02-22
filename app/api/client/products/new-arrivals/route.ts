@@ -1,3 +1,4 @@
+import { getS } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -7,14 +8,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
   try {
-    const subdomain = req.nextUrl.searchParams.get("school");
-    const school = await School.findOne({
-      subdomain,
-    });
-    //fetch new added 10 products
-    const products = await Product.find({ school: school?._id })
+    const school = await getS(req);
+    const products = await Product.find({ school: school })
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(6);
     return NextResponse.json(products);
   } catch (e) {
     return NextResponse.json({

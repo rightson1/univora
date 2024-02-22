@@ -1,3 +1,4 @@
+import { getS, toObj } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -9,17 +10,7 @@ export async function GET(req: NextRequest) {
   await conn();
   try {
     const search = req.nextUrl.searchParams.get("search");
-    const subdomain = req.nextUrl.searchParams.get("school");
-    const school = await School.findOne({
-      subdomain: subdomain,
-    });
-    if (!school) {
-      return NextResponse.json({
-        success: false,
-        message: "No school found",
-      });
-    }
-
+    const schoolId = toObj(await getS(req));
     const query = {
       $search: {
         index: "products",
@@ -36,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     const products = await Product.aggregate([
       query,
-      { $match: { school: school._id } },
+      { $match: { school: schoolId } },
     ]);
 
     return NextResponse.json(products);

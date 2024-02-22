@@ -1,4 +1,5 @@
 import { Categories } from "@/components/client/home/categories";
+import { Hero } from "@/components/client/home/hero";
 import { Newest_Arrials } from "@/components/client/home/newest_arrivals";
 import { Sellers } from "@/components/client/shared/Sellers";
 import { Button } from "@/components/ui/button";
@@ -8,8 +9,7 @@ import {
   getNewestSellers,
   getSchool,
 } from "@/utils/api";
-import { client_hero as hero } from "@/utils/data";
-import Image from "next/image";
+
 import Link from "next/link";
 import React from "react";
 
@@ -26,52 +26,10 @@ const School = async ({
     getNewArrivals(params.school),
     getNewestSellers(params.school),
   ]);
+
   return (
     <div className="pb-5">
-      <section className="flex-1-2 gap-10 py-[50px]">
-        <div className="left flex-col-start w-full pad-x gap-5 text-center md:text-start md:max-w-[800px] ">
-          <h1
-            className="h1-size text-indigo-500 
-        "
-          >
-            {hero.title}
-            <span className="text-sm text-indigo">({school?.subdomain})</span>
-          </h1>
-          <p>{hero.description}</p>
-          <div className="self-center md:self-start">
-            <Button className="rounded-full" variant={"indigo"}>
-              <Link href="/search">Search Products</Link>
-            </Button>
-          </div>
-        </div>
-        <div className="w-full pad-x gap-5 fc h-[350px] md:h-[400px] overflow-hidden ">
-          <div className="w-full flex-[3] h-full">
-            <Image
-              alt="Games"
-              src="/makeup.png"
-              width={500}
-              height={500}
-              className="  w-full h-full  rounded-[5px] mb:object-cover"
-            />
-          </div>
-          <div className="flex-col-start  w-full  flex-[2] h-full gap-5 ">
-            <Image
-              alt="Hero Image"
-              src="/games.png"
-              width={300}
-              height={300}
-              className="h-1/2 w-full object-cover rounded-[5px]"
-            />
-            <Image
-              alt="Headphones"
-              src="/headphone.png"
-              width={300}
-              height={300}
-              className="h-1/2 w-full obkect-cover rounded-[5px]"
-            />
-          </div>
-        </div>
-      </section>
+      <Hero school={school} subdomain={params.school} />
       <section className=" pad-x">
         <h2 className="h2-size text-indigo-500 text-start   my-5">
           Shop our top categories
@@ -93,15 +51,9 @@ const School = async ({
 
       <section className="pad-x flex-col-start gap-5">
         <h2 className="h2-size text-indigo-500 text-start   mt-5">
-          Top Dealers
+          Newest Sellers
         </h2>
         <Sellers sellers={sellers} subdomain={params.school} />
-
-        <Link href="/dealers" className="w-full fc">
-          <Button variant={"indigo"} className="rounded-full">
-            View All
-          </Button>
-        </Link>
       </section>
     </div>
   );

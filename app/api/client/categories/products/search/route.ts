@@ -5,6 +5,7 @@ import { products_query } from "@/utils/pipelines/products";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
 import { Types } from "mongoose";
+import { getS, toObj } from "@/app/api/utils/funcs";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
     const limit = Number(req.nextUrl.searchParams.get("limit")) || 15;
     const skip = (page - 1) * limit;
-    const school = await School.findOne({ subdomain });
+    const school = toObj(await getS(req));
 
     if (school && category) {
       const query = products_query(search);
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
         query,
         {
           $match: {
-            school: school._id,
+            school: school,
             category: new Types.ObjectId(category),
           },
         },

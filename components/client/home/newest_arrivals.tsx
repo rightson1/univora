@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import { Product_Card } from "../products_card";
 import { useGetNewestArrivals } from "@/utils/hooks/client/useProducts";
+import { isArr } from "@/utils/helpers";
 
 export const Newest_Arrials = ({
   subdomain,
@@ -19,7 +20,12 @@ export const Newest_Arrials = ({
   products: IProductFetched[];
 }) => {
   const { data: products } = useGetNewestArrivals(subdomain, data);
-  return (
+
+  return !isArr(products) ? (
+    <div className="w-full h-[200px] fc">
+      <h2 className="h3 text-indigo-500">No Products Found</h2>
+    </div>
+  ) : (
     <Carousel className="w-full ">
       <CarouselContent className="-ml-1  gap-4">
         {products?.map((product, index) => (
