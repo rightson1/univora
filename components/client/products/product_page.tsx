@@ -8,6 +8,8 @@ import { fv, priceRange } from "@/utils/helpers";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "timeago.js";
+import { vArr } from "@/app/api/utils/funcs";
+import { Related } from "./related_products";
 
 export const Product_Page = ({
   product: product_raw,
@@ -50,7 +52,9 @@ export const Product_Page = ({
             </h5>
           )}
           <div className="p-4 shadow-sm w-full rounded-lg ">
-            <h2 className="h4 font-bold mb-4 ">Select Variants</h2>
+            {vArr(product.variants) && (
+              <h2 className="h4 font-bold mb-4 ">Select Variants</h2>
+            )}
             <div className="text-h6 mb-2 ">
               <strong>Stock:</strong>{" "}
               {selectedVariant ? selectedVariant.stock : product.stock}
@@ -102,18 +106,24 @@ export const Product_Page = ({
 
             <div className="my fx-c gap-1 w-full">
               <Link href={`/checkout/${product.slug}`} className="w-full flex">
-                <Button className="w-full">Checkout</Button>
+                <Button variant={"outline"} className="w-full">
+                  Checkout
+                </Button>
               </Link>
 
-              <Link href={`/seller/${product.slug}`} className="w-full flex">
-                <Button className="w-full">View Seller</Button>
+              <Link
+                href={`/sellers/${product.business._id}`}
+                className="w-full flex"
+              >
+                <Button className="w-full">View Seller Shop</Button>
               </Link>
             </div>
           </div>
         </div>
       </div>
       <div className="mt-10">
-        <h1 className="h2-size text-indigo-500">Customers Also Viewed</h1>
+        <h1 className="h4 text-indigo-500">Related Items</h1>
+        <Related product={product} />
       </div>
     </section>
   );

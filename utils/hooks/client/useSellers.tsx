@@ -23,3 +23,23 @@ export const useGetLatestSellers = (
     ...sTime(10),
   });
 };
+
+//all sellers
+export const useGetSellers = (
+  subdomain: string,
+  initialData: ISellerFetched[]
+) => {
+  return useQuery<ISellerFetched[]>({
+    queryKey: ["sellers"],
+    queryFn: async () =>
+      await axios
+        .get(`/api/client/sellers`, {
+          params: {
+            school: subdomain,
+          },
+        })
+        .then(eCheck),
+    initialData,
+    ...sTime(10),
+  });
+};

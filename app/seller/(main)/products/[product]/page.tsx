@@ -245,7 +245,7 @@ const Options = ({
   const editVariants = async () => {
     let minPrice = Math.min(...fv(variants).map((item) => item.price));
     minPrice = minPrice == 0 ? product.price : minPrice;
-    const stock = variants.reduce((acc, curr) => acc + curr.stock, 0);
+    const stock = fv(variants).reduce((acc, curr) => acc + curr.stock, 0);
     customToast({
       func: async () => {
         await mutateAsync({

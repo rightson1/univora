@@ -7,18 +7,14 @@ export async function getS(req: NextRequest): Promise<string> {
   const subdomain =
     req.nextUrl.searchParams.get("school") ||
     req.nextUrl.searchParams.get("subdomain");
-  try {
-    if (school_id) {
-      return school_id;
-    } else {
-      const school = await School.findOne({ subdomain });
-      if (!school) {
-        throw new Error("School not found");
-      }
-      return school._id;
+  if (school_id) {
+    return school_id;
+  } else {
+    const school = await School.findOne({ subdomain });
+    if (!school) {
+      throw new Error("School not found");
     }
-  } catch (e) {
-    throw new Error("Token is invalid or expired. Please login again.");
+    return school._id;
   }
 }
 export const toObj = (str: string) => {

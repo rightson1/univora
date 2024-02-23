@@ -1,7 +1,7 @@
 import { Categories } from "@/components/client/home/categories";
 import { Hero } from "@/components/client/home/hero";
 import { Newest_Arrials } from "@/components/client/home/newest_arrivals";
-import { Sellers } from "@/components/client/shared/Sellers";
+import { Sellers_Home } from "@/components/client/shared/Sellers";
 import { Button } from "@/components/ui/button";
 import {
   getFeaturedCategories,
@@ -53,7 +53,12 @@ const School = async ({
         <h2 className="h2-size text-indigo-500 text-start   mt-5">
           Newest Sellers
         </h2>
-        <Sellers sellers={sellers} subdomain={params.school} />
+        <Sellers_Home sellers={sellers} subdomain={params.school} />
+        <Link href="/sellers" className="w-full fc">
+          <Button variant={"indigo"} className="rounded-full">
+            View All
+          </Button>
+        </Link>
       </section>
     </div>
   );

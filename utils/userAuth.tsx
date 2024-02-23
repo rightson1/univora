@@ -10,7 +10,6 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
   const { data: school } = useGetSchool(params.school as string);
 
   useEffect(() => {
-    console.log(school);
     if (school) {
       Cookies.set("school_id", school._id);
     }

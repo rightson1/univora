@@ -29,12 +29,12 @@ export const navLinks: INavLinks[] = [
     link: "/",
   },
   {
-    title: "Categories",
-    link: "/categories",
+    title: "Sellers",
+    link: "/sellers",
   },
   {
-    title: "Dealers",
-    link: "/dealers",
+    title: "Categories",
+    link: "/categories",
   },
   {
     title: "Saved Items",

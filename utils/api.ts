@@ -121,3 +121,15 @@ export async function getSingleProduct(slug: string): Promise<IProductFetched> {
 
   return data;
 }
+
+///get sellers
+export async function getSellers(school: string): Promise<ISellerFetched[]> {
+  const data = await fetch(`${baseUrl}/api/client/sellers?school=${school}`, {
+    next: {
+      revalidate: 60 * 60 * 5,
+      tags: ["sellers"],
+    },
+  }).then(ec);
+
+  return data;
+}
