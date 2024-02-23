@@ -43,3 +43,19 @@ export const useGetSellers = (
     ...sTime(10),
   });
 };
+
+export const useGetSeller = (seller: string, initialData: ISellerFetched) => {
+  return useQuery<ISellerFetched>({
+    queryKey: ["seller", seller],
+    queryFn: async () =>
+      await axios
+        .get(`/api/client/sellers/single`, {
+          params: {
+            seller,
+          },
+        })
+        .then(eCheck),
+    initialData,
+    ...sTime(10),
+  });
+};

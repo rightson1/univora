@@ -112,7 +112,7 @@ export const Product_Page = ({
               </Link>
 
               <Link
-                href={`/sellers/${product.business._id}`}
+                href={`/sellers/${product.business.slug}`}
                 className="w-full flex"
               >
                 <Button className="w-full">View Seller Shop</Button>

@@ -133,3 +133,18 @@ export async function getSellers(school: string): Promise<ISellerFetched[]> {
 
   return data;
 }
+
+//get single seller
+export async function getSingleSeller(slug: string): Promise<ISellerFetched> {
+  const data = await fetch(
+    `${baseUrl}/api/client/sellers/single?seller=${slug}`,
+    {
+      next: {
+        revalidate: 0,
+        tags: [`seller-${slug}`],
+      },
+    }
+  ).then(ec);
+
+  return data;
+}
