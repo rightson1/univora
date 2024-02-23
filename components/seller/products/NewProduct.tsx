@@ -110,6 +110,7 @@ export const NewProductForm = () => {
       const product: IProduct = {
         ...data,
         thumbnail: thumbnailUrl,
+        status: "published",
         media: mediaUrls,
         school: seller.school._id,
       };

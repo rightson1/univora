@@ -49,7 +49,7 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (
-      productData: Partial<IProductFetched> & {
+      productData: Partial<IProduct> & {
         _id: string;
       }
     ): Promise<IProductFetched> => {

@@ -171,7 +171,7 @@ export default function Products({
                     : () => handleProductState(product._id, true)
                 }
               >
-                {product.status === "approved" ? (
+                {product.status === "suspended" ? (
                   <MdUnpublished />
                 ) : (
                   <MdPublishedWithChanges />
