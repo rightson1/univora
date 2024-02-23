@@ -55,8 +55,8 @@ export const mobileLinks = [
     link: "/categories",
   },
   {
-    title: "Dealers",
-    link: "/dealers",
+    title: "Sellers",
+    link: "/sellers",
   },
   {
     title: "Saved Items",

@@ -1,3 +1,4 @@
+import Product from "@/models/Product";
 import Business from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
 import { ISeller, ISellerBase, ISellerFetched } from "@/types";
@@ -8,6 +9,12 @@ export async function GET(req: NextRequest) {
   try {
     await conn();
     await verifyIdToken(req);
+    //set all products status to published
+    const products = await Product.find();
+    return NextResponse.json({
+      message: products,
+      success: true,
+    });
   } catch (e: any) {
     return NextResponse.json({
       message: e.message,

@@ -1,3 +1,5 @@
+import { IVariantFetched } from ".";
+
 export interface IPcard {
   id: string;
   title: string;
@@ -13,6 +15,7 @@ export interface IPcard {
   titleContainerStyles?: string;
   button?: boolean;
   slice?: number | 40;
+  variants?: IVariantFetched[];
   imageSizes?: {
     width: number;
     height: number;

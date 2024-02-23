@@ -253,7 +253,7 @@ export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
   business: ISellerFetched;
   variants: IVariantFetched[];
-  status: "approved" | "suspended";
+  status: "published" | "unpublished" | "suspended";
 }
 export type TOrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 export type TPaymentStatus = "pending" | "paid" | "partial";

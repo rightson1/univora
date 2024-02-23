@@ -25,5 +25,5 @@ const SchoolSchema = new Schema(
   }
 );
 
-const School = models.School || model("School", SchoolSchema);
+const School = models?.School || model("School", SchoolSchema);
 export default School;

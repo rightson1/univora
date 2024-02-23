@@ -21,17 +21,16 @@ import {
   useGetSingleProduct,
   useUpdateProduct,
 } from "@/utils/hooks/useProduct";
-import { IProductFetched, IVariant } from "@/types";
+import { IVariant, IVariantFetched } from "@/types";
 import { DashboardLoading } from "@/components/shared/dashboard_loading";
 import { IProductEdit, TOption } from "@/types/sellerTypes";
 import { X } from "lucide-react";
 import { deleteFile, useCustomToast } from "@/components/helpers/functions";
 import { Product_Options } from "@/components/seller/product/product_options";
-
-import { useSellerAuth } from "@/utils/sellerAuth";
 import Link from "next/link";
 import Item_not_found from "@/components/shared/item_not_found";
 import { Product_Variants_Trial } from "@/components/seller/product/product_variant_trial";
+import { fv } from "@/utils/helpers";
 const EditProduct = ({
   params,
 }: {
@@ -95,9 +94,9 @@ const GeneralInfo = ({ product }: IProductEdit) => {
         <div className="fb">
           <h4 className="h3 text-foreground">{product.name}</h4>
           <div className="fc">
-            <Button variant="ghost" className="hidden md:flex">
+            <Button variant="ghost" className="flex">
               <GoDotFill className="mr-2 text-indigo" />
-              Published
+              {product.status}
             </Button>
             <EditGeneralInfo product={product} />
           </div>
@@ -239,18 +238,19 @@ const Options = ({
   setOptions: React.Dispatch<React.SetStateAction<TOption[]>>;
   options: TOption[];
 }) => {
-  const [variants, setVariants] = useState<IVariant[]>(product.variants || []);
+  const [variants, setVariants] = useState<IVariant[]>(product.variants);
   const { mutateAsync } = useUpdateProduct();
   const { customToast, loading } = useCustomToast();
 
   const editVariants = async () => {
-    const minPrice = Math.min(...variants.map((item) => item.price));
+    let minPrice = Math.min(...fv(variants).map((item) => item.price));
+    minPrice = minPrice == 0 ? product.price : minPrice;
     const stock = variants.reduce((acc, curr) => acc + curr.stock, 0);
     customToast({
       func: async () => {
         await mutateAsync({
           _id: product._id,
-          variants,
+          variants: variants as IVariantFetched[],
           options,
           price: minPrice,
           stock,

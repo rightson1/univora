@@ -24,3 +24,14 @@ export async function getS(req: NextRequest): Promise<string> {
 export const toObj = (str: string) => {
   return new Types.ObjectId(str);
 };
+export function vArr<T>(value: T[] | T | undefined): value is T[] {
+  if (typeof value === "undefined") {
+    return false;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 1;
+  }
+
+  return false;
+}

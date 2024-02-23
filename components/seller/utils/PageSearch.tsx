@@ -33,6 +33,7 @@ import { useSellerAuth } from "@/utils/sellerAuth";
 import { useGetProducts } from "@/utils/hooks/useProduct";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { vArr } from "@/app/api/utils/funcs";
 
 export function PageSearch() {
   const { seller } = useSellerAuth();
@@ -79,20 +80,21 @@ export function PageSearch() {
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup>
-              {products?.map((product) => (
-                <CommandItem
-                  onSelect={(value) => {
-                    const link = products.find(
-                      (p) => p.name.toLocaleLowerCase() === value
-                    )?._id;
-                    router.push(`/products/${link}`);
-                  }}
-                  key={product.name}
-                  value={product.name}
-                >
-                  {product.name}
-                </CommandItem>
-              ))}
+              {vArr(products) &&
+                products.map((product) => (
+                  <CommandItem
+                    onSelect={(value) => {
+                      const link = products.find(
+                        (p) => p.name.toLocaleLowerCase() === value
+                      )?._id;
+                      router.push(`/products/${link}`);
+                    }}
+                    key={product.name}
+                    value={product.name}
+                  >
+                    {product.name}
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>

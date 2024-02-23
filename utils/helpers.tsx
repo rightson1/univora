@@ -1,3 +1,5 @@
+import { IVariant, IVariantFetched } from "@/types";
+
 export const ec = async (res: Response) => {
   try {
     const data = await res.json();
@@ -17,6 +19,30 @@ export function sTime(staleTimeInMinutes: number) {
   };
 }
 //check is array is not undefine of length is greater than 0
-export const isArr = (arr?: any[]) => {
-  return arr && arr.length > 0;
+export const isArr = (arr: any[] | undefined) => {
+  if (arr && arr.length > 0) {
+    return true;
+  }
+  return false;
+};
+export const priceRange = (price: number, variants?: IVariantFetched[]) => {
+  if (variants && isArr(variants)) {
+    const prices = fv(variants).map((variant) => variant.price);
+    const max = Math.max(...prices);
+    const min = Math.min(...prices);
+    if (min !== max && min !== 0 && max !== 0) {
+      return `${min} - ${max}`;
+    } else {
+      return price;
+    }
+  } else {
+    return price;
+  }
+};
+
+//function to filter out !active variants
+export const fv = <T extends IVariantFetched | IVariant>(
+  variants: T[]
+): T[] => {
+  return variants.filter((variant: T) => variant.active);
 };

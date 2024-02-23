@@ -43,6 +43,7 @@ export const Newest_Arrials = ({
               image={product.thumbnail}
               slug={product.slug}
               title={product.name}
+              variants={product.variants}
               imageStyles=" h-[200px] object-cover rounded-[5px]"
               descriptionStyles="p-size "
               slice={20}

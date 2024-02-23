@@ -1,8 +1,13 @@
 "use client";
-import { IProductFetched } from "@/types";
+import { IProductFetched, IVariantFetched } from "@/types";
 import { useGetProduct } from "@/utils/hooks/client/useProducts";
-import React from "react";
+import React, { useState } from "react";
 import { Media_Display } from "../shared/media_display";
+import { Button } from "@/components/ui/button";
+import { fv, priceRange } from "@/utils/helpers";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { format } from "timeago.js";
 
 export const Product_Page = ({
   product: product_raw,
@@ -12,6 +17,12 @@ export const Product_Page = ({
   slug: string;
 }) => {
   const { data: product } = useGetProduct(slug, product_raw);
+  const [selectedVariant, setSelectedVariant] = useState<IVariantFetched>();
+  const seller = product?.business;
+  const handleVariantSelect = (variant: IVariantFetched) => {
+    setSelectedVariant(variant);
+  };
+
   return (
     <section className="pad-x  flex-col gap-4 flex mt-20 md:mt-[100px] ">
       <h1 className="p-size text-indigo-500">{`Home > Products >${product.name}`}</h1>
@@ -31,36 +42,78 @@ export const Product_Page = ({
           ) : null}
           <div className="bg-black-400 p-[1px] w-full" />
 
-          <h5 className="h3-size">ksh {product?.price}</h5>
+          {selectedVariant ? (
+            <h5 className="h3-size">ksh {selectedVariant.price}</h5>
+          ) : (
+            <h5 className="h3-size">
+              ksh {priceRange(product.price, product.variants)}
+            </h5>
+          )}
+          <div className="p-4 shadow-sm w-full rounded-lg ">
+            <h2 className="h4 font-bold mb-4 ">Select Variants</h2>
+            <div className="text-h6 mb-2 ">
+              <strong>Stock:</strong>{" "}
+              {selectedVariant ? selectedVariant.stock : product.stock}
+            </div>
+            {product.variants && (
+              <div className="flex flex-wrap gap-2">
+                {fv(product.variants).map((variant, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => handleVariantSelect(variant)}
+                    className="flex gap-2"
+                    variant={
+                      selectedVariant?.options === variant.options
+                        ? "default"
+                        : "outline"
+                    }
+                  >
+                    {/* Display variant options */}
+                    {Object.keys(variant.options).map((key) => (
+                      <span key={key} className="">
+                        <strong>{key}:</strong> {variant.options[key]}
+                      </span>
+                    ))}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-5 flex-col md:flex-row items-start w-full">
+            <div className="blr p-4 rounded-md w-full ">
+              <div className="flex gap-2">
+                <Avatar>
+                  <AvatarImage src={seller.profileImage} alt="@shadcn" />
+                  <AvatarFallback>{seller?.name}</AvatarFallback>
+                </Avatar>
+                <div className="fx-c">
+                  <Link href={`/sellers/${seller?.slug}`} className="h4">
+                    {seller?.name}
+                  </Link>
+                  <div className="fc">
+                    <span className="font-semibold text-sm">Joined:</span>
+                    <span className="text-sm">
+                      {format(new Date(seller.createdAt))}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <p className="p-size">
-            <span className="h3-size pr-1">NB</span>
-            Payment is done on delivery.When you check out , only your details
-            will be sent to the seller.
-          </p>
+            <div className="my fx-c gap-1 w-full">
+              <Link href={`/checkout/${product.slug}`} className="w-full flex">
+                <Button className="w-full">Checkout</Button>
+              </Link>
 
-          {/* <div className="my fb gap-5">
-            <Link href={`/checkout/${product.slug}`}>
-              <Button containerStyles="filled" title="Checkout" />
-            </Link>
-
-            <Link href={`/dealers/${product.businessId}`}>
-              <Button containerStyles="outlined" title="View Seller Shop" />
-            </Link>
-          </div> */}
+              <Link href={`/seller/${product.slug}`} className="w-full flex">
+                <Button className="w-full">View Seller</Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <div className="mt-10">
         <h1 className="h2-size text-indigo-500">Customers Also Viewed</h1>
-        {/* <Suspense fallback={<div>Loading...</div>}>
-          <Related
-            {...{
-              tags: product.tags,
-              slug: product.slug,
-              category: product.categories[0],
-            }}
-          />
-        </Suspense> */}
       </div>
     </section>
   );

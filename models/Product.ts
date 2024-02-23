@@ -76,6 +76,7 @@ const ProductSchema = new Schema(
       default: "published",
       enum: ["published", "unpublished", "suspended"],
     },
+
     variants: {
       type: [
         {

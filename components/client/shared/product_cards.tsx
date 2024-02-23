@@ -39,6 +39,7 @@ export const Product_cards = ({
                 descriptionStyles="p-size"
                 imageSizes={{ width: 300, height: 300 }}
                 button={false}
+                variants={product.variants}
               />
             );
           })

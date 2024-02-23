@@ -1,4 +1,5 @@
 import Product from "@/models/Product";
+import Seller from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
@@ -6,7 +7,8 @@ export async function GET(req: NextRequest) {
   await conn();
   try {
     const slug = req.nextUrl.searchParams.get("slug");
-    const product = await Product.findOne({ slug: slug });
+    Seller;
+    const product = await Product.findOne({ slug: slug }).populate("business");
     if (product) {
       return NextResponse.json(product);
     } else {

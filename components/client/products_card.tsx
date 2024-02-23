@@ -5,6 +5,8 @@ import Link from "next/link";
 import { IPcard } from "@/types/client";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { isArr, priceRange } from "@/utils/helpers";
+import { IVariantFetched } from "@/types";
 
 export const Product_Card = ({
   title,
@@ -24,8 +26,10 @@ export const Product_Card = ({
   slice = 40,
   button = true,
   setBottom,
+  variants,
 }: IPcard) => {
   const router = useRouter();
+
   return (
     <div
       className={
@@ -65,7 +69,7 @@ export const Product_Card = ({
           </span>
           <span className="flex  gap-1">
             <span className={priceStyles || "p-size font-bold text-indigo-500"}>
-              {price}
+              {priceRange(price, variants)}
             </span>
             <span className="text-black-200 text-[9px]">Ksh</span>
           </span>

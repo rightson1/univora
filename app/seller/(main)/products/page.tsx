@@ -66,15 +66,18 @@ export default function Products() {
   const { mutateAsync: editProduct } = useUpdateProduct();
   const { customToast, loading } = useCustomToast();
   const { mutateAsync: deleteProduct } = useDeleteProduct();
-  const handleProductState = async (id: string, active: boolean) => {
+  const handleProductState = async (
+    id: string,
+    status: IProductFetched["status"]
+  ) => {
     customToast({
       func: async () => {
         await editProduct({
           _id: id,
-          active,
+          status,
         });
       },
-      suc: `Product ${active ? "published" : "unpublished"} successfully`,
+      suc: `Product ${status}`,
     });
   };
   const handleDeleteProduct = async (product: IProductFetched) => {
@@ -123,12 +126,10 @@ export default function Products() {
       ),
     },
     {
-      accessorKey: "active",
-      header: "Published",
+      accessorKey: "status",
+      header: "Status",
       cell: ({ row }) => (
-        <div className="capitalize">
-          {row.getValue("active") === true ? "True" : "False"}
-        </div>
+        <div className="capitalize">{row.getValue("status")}</div>
       ),
     },
 
@@ -175,20 +176,25 @@ export default function Products() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled={loading}
+                disabled={product.status === "suspended" || loading}
                 className="flex items-center space-x-2 cursor-pointer"
                 onClick={
-                  product.active
-                    ? () => handleProductState(product._id, false)
-                    : () => handleProductState(product._id, true)
+                  product.status === "published"
+                    ? () => handleProductState(product._id, "unpublished")
+                    : () => handleProductState(product._id, "published")
                 }
               >
-                {product.active ? (
-                  <MdUnpublished />
+                {product.status === "published" ? (
+                  <div className="fc gap-2">
+                    <MdUnpublished />
+                    <span>Unpublish</span>
+                  </div>
                 ) : (
-                  <MdPublishedWithChanges />
+                  <div className="fc gap-2">
+                    <MdPublishedWithChanges />
+                    <span>publish</span>
+                  </div>
                 )}
-                <span>{product.active ? "Unpublish" : "Publish"}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

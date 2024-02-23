@@ -75,16 +75,9 @@ export const Product_Variants_Trial: React.FC<VariantsProps> = ({
         .filter((option) => Object.keys(option.variants).length > 0)
         .map((option) => {
           const found = initialVariants.find((v) => {
-            const keys = Object.keys(v.options);
-
-            return keys.every((key) => {
-              return v.options[key] === option.variants[key];
-            });
+            Object.values(v.options).join(",") ==
+              Object.values(option.variants).join(",");
           });
-
-          if (found) {
-            return found;
-          }
           return {
             options: option.variants,
             price: 0,
@@ -92,6 +85,22 @@ export const Product_Variants_Trial: React.FC<VariantsProps> = ({
             stock: 1,
           };
         });
+
+      //find if their is any combination element that has the same options as the initial variants
+      combinations.forEach((combination) => {
+        const found = initialVariants.find((v) => {
+          const combinationOptions = Object.values(combination.options).join(
+            ","
+          );
+          const vOptions = Object.values(v.options).join(",");
+          return combinationOptions === vOptions;
+        });
+        if (found) {
+          combination.price = found.price;
+          combination.stock = found.stock;
+        }
+      });
+
       setVariants(combinations);
     } else {
       const combinations = allOptions
