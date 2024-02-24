@@ -1,4 +1,4 @@
-import { IVariant, IVariantFetched } from "@/types";
+import { IProductFetched, IVariant, IVariantFetched } from "@/types";
 
 export const ec = async (res: Response) => {
   try {
@@ -45,4 +45,33 @@ export const fv = <T extends IVariantFetched | IVariant>(
   variants: T[]
 ): T[] => {
   return variants.filter((variant: T) => variant.active);
+};
+//calculate total price of a product
+export const totalPrice = (
+  product: IProductFetched,
+  variant?: IVariantFetched
+) => {
+  if (variant && variant?.price > 0) {
+    return variant.price;
+  } else {
+    return product.price;
+  }
+};
+//max quantity of a product
+export const maxQuantity = (
+  product: IProductFetched,
+  variant?: IVariantFetched
+): number => {
+  if (variant && typeof variant.stock === "number" && variant.stock > 0) {
+    return variant.stock;
+  } else if (typeof product.stock === "number") {
+    return product.stock;
+  } else {
+    throw new Error("Stock is not a number");
+  }
+};
+
+//confirem product.productType is product
+export const isProduct = (product: IProductFetched) => {
+  return product.productType === "product";
 };

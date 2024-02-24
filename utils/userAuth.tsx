@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth2 as auth } from "./firebase";
 import { IFUser, IUser, IUserFetched } from "@/types/client";
 import axios from "axios";
 import { useCustomToast } from "@/components/helpers/functions";
@@ -24,6 +24,7 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
   const [fUser, setFUser] = useState<IFUser | {} | null>({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const provider = new GoogleAuthProvider();
 
   const fetchUser = async (uid: string) =>
     await axios.get(`/api/client/users?uid=${uid}`).then((res) => {
@@ -91,30 +92,27 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const handleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-
-    const signIn = async () =>
-      await signInWithPopup(auth, provider).then(async (result) => {
-        const { displayName, email, uid } = result.user;
-        if (displayName && email && uid) {
-          {
-            const data: IUser = {
-              uid: uid,
-              email: email,
-              school: Cookies.get("school_id")!,
-              displayName,
-              status: "active",
-            };
-            await axios.post("/api/client/users", data);
-          }
-        } else {
-          throw new Error("Could not sign in");
-        }
-      });
     customToast({
-      func: signIn,
+      func: async () => {
+        await signInWithPopup(auth, provider).then(async (result) => {
+          const { displayName, email, uid } = result.user;
+          if (displayName && email && uid) {
+            {
+              const data: IUser = {
+                uid: uid,
+                email: email,
+                school: Cookies.get("school_id")!,
+                displayName,
+                status: "active",
+              };
+              await axios.post("/api/client/users", data);
+            }
+          } else {
+            throw new Error("Could not sign in");
+          }
+        });
+      },
       suc: "Signed in successfully",
-      err: "Could not sign in",
       sfunc: () => window.location.reload(),
     });
   };
