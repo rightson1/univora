@@ -9,7 +9,7 @@ type linkProps = {
   icon: React.ReactNode;
   text: string;
 };
-const Footer = () => {
+export const User_Gen_Footer = () => {
   const LinkItem = ({ link, icon, text }: linkProps) => {
     return (
       <Link href={link} className="fc gap-4 hover:underline">
@@ -32,11 +32,7 @@ const Footer = () => {
           icon={<Mail size={20} className="text-[.6rem] text-red-400" />}
           text="Contact"
         />
-        <LinkItem
-          link={`${process.env.NEXT_PUBLIC_PROTOCAL}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`}
-          icon={<School size={20} className="text-[.6rem] text-red-400" />}
-          text="Schools"
-        />
+
         <span className="text-center p-0">
           Made by{" "}
           <a
@@ -51,5 +47,3 @@ const Footer = () => {
     </div>
   );
 };
-
-export default Footer;

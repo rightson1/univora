@@ -13,20 +13,6 @@ import { MobileMenu } from "@/components/user/MobileMenu";
 export const User_General_Nav = () => {
   const { scrolled } = useScreen();
 
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const navLinks = [
-    {
-      title: "Home",
-      link: "/",
-    },
-
-    {
-      title: "Contact Us",
-      link: "/contact",
-    },
-  ];
   return (
     <header
       className={`w-screen px-[15px] md:px-[50px]  fb nav-h z-10  fixed top-0 left-0 ${
@@ -48,15 +34,16 @@ export const User_General_Nav = () => {
         </Link>
 
         <div className=" gap-4 fb-sm">
-          {navLinks.map(({ link, title }) => (
-            <Link
-              href={link}
-              key={link}
-              className="link hover-text hover:no-underline"
-            >
-              {title}
-            </Link>
-          ))}
+          <Link href={"/"} className="link hover-text hover:no-underline">
+            Home
+          </Link>
+
+          <Link
+            href={"/contact"}
+            className="link hover-text hover:no-underline"
+          >
+            Contact
+          </Link>
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
           <Link href={`https://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}>

@@ -21,10 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import { Checkbox } from "../ui/checkbox";
 export function SearchSchool() {
   const { data: schools, isLoading } = useGetSchoolsOpen();
   const [school, setSchool] = useState("");
@@ -34,22 +35,32 @@ export function SearchSchool() {
     if (!school) {
       return toast.error("Please select a school, dont make me angry");
     }
-    Cookies.set("school", school);
+    if (remember) {
+      Cookies.set("school", school);
+    }
     router.push(`http://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   };
+  const params = useSearchParams();
+  const noredirect = params.get("noredirect");
+  useEffect(() => {
+    if (noredirect) {
+      Cookies.remove("school");
+    }
+  }, [noredirect]);
+  const [remember, setRemember] = useState(false);
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={"indigo"} className="rounded-full text-white">
-          Search School
+          Select School
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] blr">
+      <DialogContent className="max-w-[90vw] sm:max-w-[425px] blr">
         <form onSubmit={submit}>
           <DialogHeader>
-            <DialogTitle>Search for a school</DialogTitle>
+            <DialogTitle>Select your School</DialogTitle>
             <DialogDescription>
-              Search for you school and select it to continue
+              Select your school to get started
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -76,7 +87,22 @@ export function SearchSchool() {
             </Select>
           </div>
           <DialogFooter>
-            <Button type="submit">Lets Go</Button>
+            <div className="fb w-full">
+              <div className="flex gap-2  w-full">
+                <Checkbox
+                  id="profile"
+                  checked={remember}
+                  onCheckedChange={(e) => setRemember(e as boolean)}
+                />
+                <label
+                  htmlFor="profile"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Remember My School
+                </label>
+              </div>
+              <Button type="submit">Lets Go</Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

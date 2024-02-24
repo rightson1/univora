@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Footer from "@/components/user/Footer";
 import { User_General_Nav } from "@/components/user_general/user_general_nav";
+import { User_Gen_Footer } from "@/components/user_general/footer";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       >
         {children}
       </div>
-      <Footer />
+      <User_Gen_Footer />
     </>
   );
 };

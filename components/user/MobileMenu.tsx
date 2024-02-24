@@ -36,12 +36,6 @@ export function MobileMenu() {
             Contact Us
           </Button>
           <Button variant="link" size="sm" className="hover:bg-background">
-            Services
-          </Button>
-          <Button variant="link" size="sm" className="hover:bg-background">
-            Blogs
-          </Button>
-          <Button variant="link" size="sm" className="hover:bg-background">
             Sell
           </Button>
         </div>
