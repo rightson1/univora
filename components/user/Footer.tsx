@@ -1,3 +1,4 @@
+import { protocal } from "@/utils/data";
 import { School } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -33,10 +34,11 @@ const Footer = () => {
           text="Contact"
         />
         <LinkItem
-          link={`${process.env.NEXT_PUBLIC_PROTOCAL}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`}
+          link={`${protocal}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`}
           icon={<School size={20} className="text-[.6rem] text-red-400" />}
           text="Schools"
         />
+        NEXT_PUBLIC_PROTOCAL
         <span className="text-center p-0">
           Made by{" "}
           <a
