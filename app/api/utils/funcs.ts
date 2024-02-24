@@ -1,4 +1,6 @@
 import School from "@/models/School";
+import { IProductFetched } from "@/types";
+import { fv } from "@/utils/helpers";
 import { Types } from "mongoose";
 import { NextRequest } from "next/server";
 
@@ -31,3 +33,8 @@ export function vArr<T>(value: T[] | T | undefined): value is T[] {
 
   return false;
 }
+
+//check is product variants exists
+export const hasVariants = (product: IProductFetched) => {
+  return fv(product.variants).length > 0;
+};

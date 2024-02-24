@@ -1,3 +1,4 @@
+import { IFetched } from "./index";
 import { IVariantFetched } from ".";
 
 export interface IPcard {
@@ -23,3 +24,18 @@ export interface IPcard {
   deleteProduct?: boolean;
   setBottom?: React.Dispatch<React.SetStateAction<boolean>>;
 }
+//intercae user
+export interface IUser {
+  uid: string;
+  email: string;
+  displayName: string;
+  status: "active" | "inactive";
+  school: string;
+  phone?: string;
+}
+export interface IFUser {
+  displayName: string;
+  email: string;
+  uid: string;
+}
+export interface IUserFetched extends IUser, IFetched {}

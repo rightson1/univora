@@ -10,6 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "timeago.js";
 import { vArr } from "@/app/api/utils/funcs";
 import { Related } from "./related_products";
+import { useUser } from "@/utils/userAuth";
+import toast from "react-hot-toast";
+import { Checkout_Form } from "./checkout";
 
 export const Product_Page = ({
   product: product_raw,
@@ -105,12 +108,7 @@ export const Product_Page = ({
             </div>
 
             <div className="my fx-c gap-1 w-full">
-              <Link href={`/checkout/${product.slug}`} className="w-full flex">
-                <Button variant={"outline"} className="w-full">
-                  Checkout
-                </Button>
-              </Link>
-
+              <Checkout_Form product={product} variant={selectedVariant} />
               <Link
                 href={`/sellers/${product.business.slug}`}
                 className="w-full flex"
