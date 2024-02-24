@@ -192,6 +192,7 @@ export interface ISellerFetched extends ISellerBase, IFetched {
   school: ISchoolFetched;
   description: string;
   profileImage?: string;
+  coverImage?: string;
   socials: ISocialLink[];
   visibility: "public" | "private";
   status: "active" | "suspended";

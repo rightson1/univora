@@ -140,8 +140,25 @@ export async function getSingleSeller(slug: string): Promise<ISellerFetched> {
     `${baseUrl}/api/client/sellers/single?seller=${slug}`,
     {
       next: {
-        revalidate: 0,
+        revalidate: 60 * 60 * 5,
         tags: [`seller-${slug}`],
+      },
+    }
+  ).then(ec);
+
+  return data;
+}
+
+//get products by seller
+export async function getProductsBySeller(
+  seller: string
+): Promise<IProductFetched[]> {
+  const data = await fetch(
+    `${baseUrl}/api/client/products/seller?seller=${seller}`,
+    {
+      next: {
+        revalidate: 60 * 60 * 5,
+        tags: [`${seller}-products`],
       },
     }
   ).then(ec);

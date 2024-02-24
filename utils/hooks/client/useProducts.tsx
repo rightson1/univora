@@ -305,3 +305,23 @@ export const useGetProductsInCategory = ({
     },
   });
 };
+
+//get products by seller
+export const useGetProductsBySeller = (
+  seller: string,
+  initialData: IProductFetched[]
+) => {
+  return useQuery<IProductFetched[]>({
+    queryKey: ["products_by_seller", seller],
+    queryFn: async () =>
+      await axios
+        .get(`/api/client/products/seller`, {
+          params: {
+            seller,
+          },
+        })
+        .then(eCheck),
+    initialData,
+    ...sTime(40),
+  });
+};

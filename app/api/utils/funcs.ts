@@ -26,7 +26,7 @@ export function vArr<T>(value: T[] | T | undefined): value is T[] {
   }
 
   if (Array.isArray(value)) {
-    return value.length > 1;
+    return value.length > 0;
   }
 
   return false;

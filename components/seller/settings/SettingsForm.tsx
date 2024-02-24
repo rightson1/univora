@@ -21,6 +21,7 @@ import { useSellerAuth } from "@/utils/sellerAuth";
 import { useUpdateSeller } from "@/utils/hooks/useSeller";
 import {
   deleteFile,
+  toSlug,
   uploadFile,
   useCustomToast,
 } from "@/components/helpers/functions";
@@ -115,7 +116,10 @@ const GeneralInformation = ({
               </Label>
               <Input
                 value={values.slug}
-                onChange={handleChanges}
+                onChange={(e) => {
+                  const value = toSlug(e.target.value);
+                  setValue((prev) => ({ ...prev, slug: value }));
+                }}
                 id="slug"
                 placeholder="Same as @username in twitter/ig"
               />

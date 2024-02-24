@@ -2,6 +2,7 @@ import {
   ICategoryTable,
   INavLinks,
   ISchoolTable,
+  ISocialLink,
   TOrderStatus,
   TPaymentStatus,
 } from "@/types";
@@ -16,6 +17,7 @@ import {
   QuestionMarkCircledIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
+import { FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 
 const root_domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 export const protocal = process.env.NEXT_PUBLIC_PROTOCAL || "https";
@@ -140,3 +142,25 @@ export const client_hero = {
       Showcase your skills and products now for free. 
   `,
 };
+export const platformIcons: {
+  title: ISocialLink["platform"];
+  icon: React.ComponentType<{ className?: string }>;
+  link?: string;
+}[] = [
+  {
+    title: "instagram",
+    icon: FaInstagram,
+    link: "https://instagram.com",
+  },
+  //tiktok
+  {
+    title: "tiktok",
+    icon: FaTiktok,
+    link: "https://tiktok.com",
+  },
+  {
+    title: "whatsapp",
+    icon: FaWhatsapp,
+    link: "https://wa.me",
+  },
+];
