@@ -8,18 +8,20 @@ import { mobileLinks, navLinks } from "@/utils/data";
 import { BiArrowBack } from "react-icons/bi";
 
 import useScreen from "@/utils/hooks/useScreen";
-import Button from "../utils/Button";
 import { MobileMenu } from "@/components/client/MobileMenu";
+import { useUser } from "@/utils/userAuth";
+import { Button } from "../ui/button";
 const NavBar = () => {
   const { scrolled } = useScreen();
-
+  const { user } = useUser();
   const pathname = usePathname();
   const router = useRouter();
   return (
     <header
-      className={`w-screen px-[15px] md:px-[50px]  fb nav-h z-10  fixed top-0 left-0 ${
+      className={`${
         scrolled ? "nav-glass" : "bg-background"
-      }`}
+      } border-t-0 w-screen px-[15px] md:px-[50px]  fb nav-h z-10  fixed top-0 left-0
+       `}
     >
       <nav className="fb w-full z-[20]">
         {mobileLinks.find(({ link }) => link === pathname) ? (
@@ -58,13 +60,24 @@ const NavBar = () => {
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
           <Link href={`https://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}>
-            <Button title="Seller" containerStyles="outlined"></Button>
+            <Button variant={"outline"} className="rounded-full bg-transparent">
+              Sell
+            </Button>
           </Link>
+          {user && (
+            <Link href={`/user/profile`}>
+              <Button className="rounded-full">
+                Hi, {user?.displayName.split(" ")[0]}
+              </Button>
+            </Link>
+          )}
 
-          <Link href="/login">
-            <Button title="Login" containerStyles="filled"></Button>
-          </Link>
-          {/* )} */}
+          {!user && (
+            <Button variant={"outline"} className="rounded-full">
+              Login
+            </Button>
+          )}
+          {!user && <Button className="rounded-full">Sign Up</Button>}
         </div>
 
         <MobileMenu />

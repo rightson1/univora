@@ -38,7 +38,7 @@ const Footer = () => {
           icon={<School size={20} className="text-[.6rem] text-red-400" />}
           text="Schools"
         />
-        NEXT_PUBLIC_PROTOCAL
+
         <span className="text-center p-0">
           Made by{" "}
           <a

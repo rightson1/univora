@@ -22,7 +22,9 @@ export const Hero = ({
         "
         >
           {hero.title}
-          <span className="text-sm text-indigo">({school?.subdomain})</span>
+          <span className="text-sm text-indigo">
+            ({school?.subdomain || subdomain})
+          </span>
         </h1>
         <p>{hero.description}</p>
         <div className="self-center md:self-start">

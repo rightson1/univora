@@ -28,14 +28,12 @@ export const useGetSchoolWithInitialData = (
   return useQuery<ISchoolFetched>({
     queryKey: ["school", subdomain],
     queryFn: async () =>
-      await axios
-        .get("/api/client/schools", {
-          params: {
-            subdomain: subdomain,
-          },
-        })
-        .then(eCheck),
-    ...sTime(300),
+      await axios.get("/api/client/schools", {
+        params: {
+          subdomain: subdomain,
+        },
+      }),
     initialData: initialData,
+    ...sTime(300),
   });
 };

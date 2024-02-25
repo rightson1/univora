@@ -6,6 +6,7 @@ import { ISellerFetched } from "@/types";
 import { useGetLatestSellers } from "@/utils/hooks/client/useSellers";
 import { isArr } from "@/utils/helpers";
 import { Button } from "@/components/ui/button";
+import { vArr } from "@/app/api/utils/funcs";
 
 export const Sellers_Cards = ({
   sellers,
@@ -38,17 +39,31 @@ export const Sellers_Home = ({
   subdomain: string;
 }) => {
   const { data: sellers } = useGetLatestSellers(subdomain, data);
-  return <Sellers_Cards sellers={sellers} />;
+  return (
+    <section className="pad-x flex-col-start gap-5">
+      <h2 className="h2-size text-indigo-500 text-start   mt-5">
+        Newest Sellers
+      </h2>
+      <Sellers_Cards sellers={sellers} />
+      {vArr(sellers) && (
+        <Link href="/sellers" className="w-full fc">
+          <Button variant={"indigo"} className="rounded-full">
+            View All
+          </Button>
+        </Link>
+      )}
+    </section>
+  );
 };
 export const Card = ({
   name,
   description,
   profileImage,
-  _id,
+  slug,
 }: ISellerFetched) => {
   return (
     <Link
-      href={`/seller/${_id}`}
+      href={`/sellers/${slug}`}
       className="fc gap-5  blr  h-[150px] px-3 rounded-md md:rounded-lg cursor-pointer shadow-md card-hover"
     >
       <div className="flex  ">

@@ -48,18 +48,7 @@ const School = async ({
         <h2 className="h2 text-indigo-500  my-5">Latest Arrivals</h2>
         <Newest_Arrials products={newest_arrivals} subdomain={params.school} />
       </section>
-
-      <section className="pad-x flex-col-start gap-5">
-        <h2 className="h2-size text-indigo-500 text-start   mt-5">
-          Newest Sellers
-        </h2>
-        <Sellers_Home sellers={sellers} subdomain={params.school} />
-        <Link href="/sellers" className="w-full fc">
-          <Button variant={"indigo"} className="rounded-full">
-            View All
-          </Button>
-        </Link>
-      </section>
+      <Sellers_Home sellers={sellers} subdomain={params.school} />
     </div>
   );
 };
