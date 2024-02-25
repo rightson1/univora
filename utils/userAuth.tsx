@@ -54,7 +54,8 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
   }, [fUser]);
   useEffect(() => {
     if (school) {
-      Cookies.set("school_id", school._id);
+      const _id = school._id;
+      _id && Cookies.set("school_id", _id);
     }
   }, [school]);
 

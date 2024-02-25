@@ -1,11 +1,13 @@
 "use client";
 import { ISchoolFetched } from "@/types";
 import { useGetSchoolWithInitialData } from "@/utils/hooks/client/useSchool";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { client_hero as hero } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useQueryState } from "next-usequerystate";
 export const Hero = ({
   school: initial,
   subdomain,
@@ -14,6 +16,18 @@ export const Hero = ({
   subdomain: string;
 }) => {
   const { data: school } = useGetSchoolWithInitialData(subdomain, initial);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  useEffect(() => {
+    const refresh = searchParams.get("refresh");
+    if (searchParams.get("refresh") === "true") {
+      const url = new URL(window.location.href);
+      //  set refresh to false
+      url.searchParams.set("refresh", "false");
+      router.replace(url.toString());
+      router.refresh();
+    }
+  }, [searchParams]);
   return (
     <section className="flex-1-2 gap-10 py-[50px]">
       <div className="left flex-col-start w-full pad-x gap-5 text-center md:text-start md:max-w-[800px] ">

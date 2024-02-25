@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       message: "School not found",
     });
   }
+
   cookies().set("school_id", school._id);
 
   return NextResponse.json(school);

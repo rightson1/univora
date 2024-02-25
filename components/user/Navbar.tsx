@@ -73,7 +73,7 @@ const NavBar = () => {
           )}
 
           {!user && (
-            <Button variant={"outline"} className="rounded-full">
+            <Button variant={"outline"} className="rounded-full bg-transparent">
               Login
             </Button>
           )}

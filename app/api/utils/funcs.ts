@@ -6,9 +6,14 @@ import { NextRequest } from "next/server";
 
 export async function getS(req: NextRequest): Promise<string> {
   const school_id = req.cookies.get("school_id")?.value || "";
+  console.log({
+    school_id,
+  });
+
   const subdomain =
     req.nextUrl.searchParams.get("school") ||
     req.nextUrl.searchParams.get("subdomain");
+
   if (school_id) {
     return school_id;
   } else {

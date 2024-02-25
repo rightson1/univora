@@ -32,15 +32,6 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  const school = req.cookies.get("school")?.value;
-  const noredirect = Boolean(searchParams.match(/noredirect/));
-
-  if (school && !noredirect) {
-    return NextResponse.redirect(
-      `${protocal}://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    );
-  }
-
   let subdomain = hostname.split(".")[0];
   if (
     subdomain &&
@@ -49,6 +40,14 @@ export default async function middleware(req: NextRequest) {
   ) {
     return NextResponse.rewrite(
       new URL(`/school/${subdomain}${path === "/" ? "" : path}`, req.url)
+    );
+  }
+  const school = req.cookies.get("school")?.value;
+  const noredirect = Boolean(searchParams.match(/noredirect/));
+
+  if (school && !noredirect) {
+    return NextResponse.redirect(
+      `${protocal}://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     );
   }
   return NextResponse.next();

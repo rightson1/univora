@@ -31,13 +31,14 @@ export const navLinks: INavLinks[] = [
     link: "/",
   },
   {
+    title: "Search",
+    link: "/search",
+  },
+  {
     title: "Sellers",
     link: "/sellers",
   },
-  {
-    title: "Categories",
-    link: "/categories",
-  },
+
   {
     title: "Saved Items",
     link: "/saved-items",

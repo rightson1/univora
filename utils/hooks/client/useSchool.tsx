@@ -15,7 +15,11 @@ export const useGetSchool = (subdomain: string) => {
             subdomain: subdomain,
           },
         })
-        .then(eCheck),
+        .then(eCheck)
+        .then((res) => {
+          console.log(res);
+          return res;
+        }),
     //stale time 2 days
     staleTime: 1000 * 60 * 60 * 24 * 2,
   });
