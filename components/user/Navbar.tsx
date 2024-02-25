@@ -65,7 +65,7 @@ const NavBar = () => {
             </Button>
           </Link>
           {user && (
-            <Link href={`/user/profile`}>
+            <Link href={`/profile`}>
               <Button className="rounded-full">
                 Hi, {user?.displayName.split(" ")[0]}
               </Button>

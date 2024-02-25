@@ -100,20 +100,29 @@ export async function POST(req: NextRequest) {
     });
   }
 }
-// export async function GET(req: NextRequest) {
-//   try {
-//     await conn();
-//     await verifyIdToken(req);
-//     const seller_Id = req.nextUrl.searchParams.get("user");
-//     Product;
-//     const orders = await Order.find({ seller: seller_Id })
-//       .populate("product")
-//       .sort({ createdAt: -1 });
-//     return NextResponse.json(orders);
-//   } catch (error: any) {
-//     return NextResponse.json({
-//       message: error.message,
-//       success: false,
-//     });
-//   }
-// }
+export async function GET(req: NextRequest) {
+  try {
+    await conn();
+
+    const user_Id = req.nextUrl.searchParams.get("user_id");
+    Product;
+    const orders = await Order.find({
+      customer: user_Id,
+    })
+      .populate([
+        {
+          path: "product",
+        },
+        {
+          path: "seller",
+        },
+      ])
+      .sort({ createdAt: -1 });
+    return NextResponse.json(orders);
+  } catch (error: any) {
+    return NextResponse.json({
+      message: error.message,
+      success: false,
+    });
+  }
+}

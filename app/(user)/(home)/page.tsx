@@ -1,5 +1,5 @@
 import { SearchSchool } from "@/components/user_general/search_school";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/utils/Button";
 import { hero } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,13 +19,7 @@ const Home = () => {
           </h1>
           <p>{hero.description}</p>
           <div className="self-center md:self-start">
-            <SearchSchool
-              trigger={
-                <Button variant={"indigo"} className="rounded-full text-white">
-                  Select School
-                </Button>
-              }
-            />
+            <SearchSchool />
           </div>
         </div>
         <div className="w-full pad-x gap-5 fc h-[350px] md:h-[400px] overflow-hidden ">

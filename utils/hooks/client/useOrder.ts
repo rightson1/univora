@@ -16,3 +16,19 @@ export const useCreateOrder = () => {
     },
   });
 };
+//get orders by user
+export const useGetOrders = (user_id: string | undefined) => {
+  return useQuery<IOrderFetched[], Error>({
+    queryKey: ["orders", user_id],
+    enabled: !!user_id,
+    queryFn: async () => {
+      return await axios
+        .get(`/api/client/orders`, {
+          params: {
+            user_id: user_id,
+          },
+        })
+        .then(eCheck);
+    },
+  });
+};

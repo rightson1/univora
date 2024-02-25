@@ -20,6 +20,8 @@ import { useCreateOrder } from "@/utils/hooks/client/useOrder";
 import { isProduct, maxQuantity, totalPrice } from "@/utils/helpers";
 import { useEditUser } from "@/utils/hooks/client/useUser";
 import { useCustomToast } from "@/components/helpers/functions";
+import { addDoc, collection } from "firebase/firestore";
+import { db2 } from "@/utils/firebase";
 export const Checkout_Form = ({
   product,
   variant,
@@ -76,9 +78,17 @@ export const Checkout_Form = ({
       otherPayments: [],
       customer: user._id,
     };
+    const notificationData = {
+      subject: "New Order",
+      message: `You have a new order from ${user.displayName}`,
+      type: "order",
+      link: `/admin/orders`,
+    };
+
     customToast({
       func: async () => {
         await addOrder(data);
+        await addDoc(collection(db2, "notifications"), notificationData);
         if (updateProfile) {
           await editUser({
             _id: user?._id,
