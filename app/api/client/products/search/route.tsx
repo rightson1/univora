@@ -1,4 +1,4 @@
-import { getS } from "@/app/api/utils/funcs";
+import { getS, published } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
     const query = products_query(search);
     const products = await Product.aggregate([
       query,
-      { $match: { school: new Types.ObjectId(school) } },
+      { $match: { school: new Types.ObjectId(school), ...published } },
       { $skip: skip },
       { $limit: limit },
     ]);

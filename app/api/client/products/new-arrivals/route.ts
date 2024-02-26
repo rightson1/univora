@@ -1,4 +1,4 @@
-import { getS } from "@/app/api/utils/funcs";
+import { getS, published } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   await conn();
   try {
     const school = await getS(req);
-    const products = await Product.find({ school: school })
+    const products = await Product.find({ school: school, ...published })
       .sort({ createdAt: -1 })
       .limit(6);
     return NextResponse.json(products);

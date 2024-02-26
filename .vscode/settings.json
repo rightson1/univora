@@ -16,7 +16,7 @@
     "**yarn-error.log": true,
     "**theme.d.ts": true,
     "**.eslintrc.json": true,
-    "**/node_modules": false,
+    "**/node_modules": true,
     "**/tsconfig.json": true,
     "**/components.json": true
   }

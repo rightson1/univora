@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -26,6 +27,7 @@ import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Checkbox } from "../ui/checkbox";
+import { Add_School } from "../user/add_school";
 export function SearchSchool() {
   const { data: schools, isLoading } = useGetSchoolsOpen();
   const [school, setSchool] = useState("");
@@ -50,6 +52,7 @@ export function SearchSchool() {
     }
   }, [noredirect]);
   const [remember, setRemember] = useState(false);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -62,7 +65,8 @@ export function SearchSchool() {
           <DialogHeader>
             <DialogTitle>Select your School</DialogTitle>
             <DialogDescription>
-              Select your school to get started
+              Cant find your school?
+              <Add_School />
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

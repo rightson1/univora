@@ -39,6 +39,9 @@ export const priceRange = (price: number, variants?: IVariantFetched[]) => {
     return price;
   }
 };
+export const pRange = (product: IProductFetched) => {
+  return priceRange(product.price, product.variants);
+};
 
 //function to filter out !active variants
 export const fv = <T extends IVariantFetched | IVariant>(
@@ -74,4 +77,13 @@ export const maxQuantity = (
 //confirem product.productType is product
 export const isProduct = (product: IProductFetched) => {
   return product.productType === "product";
+};
+//product quantit
+export const pQty = (product: IProductFetched, variant?: IVariantFetched) => {
+  const max = maxQuantity(product, variant);
+  if (max < 0) {
+    return "Out of stock";
+  } else {
+    return max;
+  }
 };

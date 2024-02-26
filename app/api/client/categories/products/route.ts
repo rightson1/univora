@@ -1,3 +1,4 @@
+import { published } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -12,10 +13,12 @@ export async function GET(req: NextRequest) {
     const category_slug = req.nextUrl.searchParams.get("category");
     const school = await School.findOne({ subdomain });
     const category = await Category.findOne({ slug: category_slug });
+
     if (school && category) {
       const products = await Product.find({
         school: school._id,
         category: category._id,
+        ...published,
       }).limit(15);
       return NextResponse.json(products);
     }

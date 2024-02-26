@@ -34,6 +34,12 @@ export async function initAdmin() {
   return firebaseAdminApp;
 }
 //verify token
+//export auth
+export async function auth_admin() {
+  await initAdmin();
+  return admin.auth();
+}
+
 export async function verifyIdToken(req: NextRequest) {
   const token = req.cookies.get("token")?.value || "";
   try {

@@ -1,3 +1,4 @@
+import { published } from "./../../../utils/funcs";
 import { getS, toObj } from "@/app/api/utils/funcs";
 import Product from "@/models/Product";
 import { conn } from "@/models/mongo_db_connection";
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest) {
       });
     }
     const products = await Product.aggregate([
-      { $match: { school: school } },
+      { $match: { school: school, ...published } },
       { $skip: skip },
       { $limit: limit },
     ]);

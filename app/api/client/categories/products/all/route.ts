@@ -1,4 +1,4 @@
-import { getS, toObj } from "@/app/api/utils/funcs";
+import { getS, published, toObj } from "@/app/api/utils/funcs";
 import Category from "@/models/Categories";
 import Product from "@/models/Product";
 import School from "@/models/School";
@@ -19,11 +19,13 @@ export async function GET(req: NextRequest) {
         success: false,
       });
     }
+
     const products = await Product.aggregate([
       {
         $match: {
           school: school,
           category: toObj(category),
+          ...published,
         },
       },
       { $skip: skip },

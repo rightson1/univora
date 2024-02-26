@@ -11,13 +11,14 @@ import { IOrderFetched } from "@/types";
 import { useGetOrders } from "@/utils/hooks/client/useOrder";
 import { vArr } from "@/app/api/utils/funcs";
 import { isProduct } from "@/utils/helpers";
+import { View_Order } from "../orders/view_order";
 
 const CheckoutForm = () => {
   const { user, fetchUser, logout } = useUser();
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = useState("");
-  const { data: orders } = useGetOrders(user?._id);
+  const { data: orders, isLoading } = useGetOrders(user?._id);
   const [isOpen, setIsOpen] = useState(false);
   const [order, setOrder] = useState<IOrderFetched>();
 
@@ -129,35 +130,37 @@ const CheckoutForm = () => {
                 <tr className="bg-gray-100 items-start">
                   <th className="p-size p-2 text-start">Product</th>
                   <th className="p-size p-2 text-start">Quantity</th>
-                  <th className="p-size p-2 text-start">Total</th>
                   <th className="p-size p-2 text-start">Status</th>
+                  <th className="p-size p-2 text-start">Total</th>
+
                   <th className="p-size p-2 text-start">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
-                {vArr(orders) &&
+                {isLoading ? (
+                  <tr className="w-full p-4">
+                    <td colSpan={5}>Loading</td>
+                  </tr>
+                ) : vArr(orders) ? (
                   orders.map((order) => (
                     <tr key={order._id} className="bg-white">
                       <td className="p-size p-2">{order.product.name}</td>
                       <td className="p-size p-2">
                         {isProduct(order.product) ? order.quantity : "N/A"}
                       </td>
-                      <td className="p-size p-2">{order.totalAmount}</td>
                       <td className="p-size p-2">{order.fulfillmentStatus}</td>
+                      <td className="p-size p-2">{order.totalAmount}</td>
+
                       <td className="p-size p-2">
-                        <button
-                          onClick={() => {
-                            setOrder(order);
-                            setIsOpen(true);
-                          }}
-                          className="bg-indigo-500 text-white p-2 rounded-md"
-                          type="button"
-                        >
-                          View
-                        </button>
+                        <View_Order order={order} />
                       </td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr className="p-4">
+                    <td>No Orders</td>
+                  </tr>
+                )}
               </tbody>
             </table>
             {/* {order && (

@@ -13,7 +13,7 @@ export const Related = ({ product }: { product: IProductFetched }) => {
     isFetchingNextPage,
     isFetching,
   } = useGetProductsBySearch({
-    school: product.school,
+    school: product.school as string,
     search: product.name,
     limit: 8,
   });

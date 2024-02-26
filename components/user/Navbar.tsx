@@ -80,7 +80,9 @@ const NavBar = () => {
           {!user && <Button className="rounded-full">Sign Up</Button>}
         </div>
 
-        <MobileMenu />
+        <div className="flex md:hidden">
+          <MobileMenu />
+        </div>
       </nav>
     </header>
   );

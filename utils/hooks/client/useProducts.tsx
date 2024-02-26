@@ -1,9 +1,10 @@
 import { eCheck } from "@/components/helpers/functions";
-import { IProductFetched } from "@/types";
+import { IProductFetched, IProductWithSchool } from "@/types";
 import { ec, sTime } from "@/utils/helpers";
 import {
   keepPreviousData,
   useInfiniteQuery,
+  useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -50,8 +51,11 @@ export const useGetNewestArrivals = (
 //   });
 // };
 
-export const useGetProduct = (slug: string, initialData: IProductFetched) => {
-  return useQuery<IProductFetched>({
+export const useGetProduct = (
+  slug: string,
+  initialData: IProductWithSchool
+) => {
+  return useQuery<IProductWithSchool>({
     queryKey: ["product", slug],
     queryFn: async () => {
       return await axios
@@ -63,6 +67,7 @@ export const useGetProduct = (slug: string, initialData: IProductFetched) => {
         .then(eCheck);
     },
     initialData,
+    enabled: slug.length > 0,
     ...sTime(40),
   });
 };
@@ -323,5 +328,52 @@ export const useGetProductsBySeller = (
         .then(eCheck),
     initialData,
     ...sTime(40),
+  });
+};
+
+//add product to saved items
+export const useAddProductToSaved = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { user: string; item: string }) =>
+      await axios.post("/api/client/products/saved", data).then(eCheck),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved_items"],
+      });
+    },
+  });
+};
+
+//get saved items
+export const useGetSavedItems = (userId?: string) => {
+  return useQuery<IProductFetched[]>({
+    queryKey: ["saved_items", userId],
+    queryFn: async () =>
+      await axios
+        .get(`/api/client/products/saved`, {
+          params: {
+            userId,
+          },
+        })
+
+        .then(eCheck),
+
+    enabled: !!userId,
+  });
+};
+//delete product from saved items
+export const useDeleteProductFromSaved = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { userId: string; item: string }) =>
+      await axios.delete("/api/client/products/saved", {
+        params: data,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved_items"],
+      });
+    },
   });
 };

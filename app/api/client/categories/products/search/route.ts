@@ -5,7 +5,7 @@ import { products_query } from "@/utils/pipelines/products";
 import { conn } from "@/models/mongo_db_connection";
 import { NextRequest, NextResponse } from "next/server";
 import { Types } from "mongoose";
-import { getS, toObj } from "@/app/api/utils/funcs";
+import { getS, published, toObj } from "@/app/api/utils/funcs";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
           $match: {
             school: school,
             category: new Types.ObjectId(category),
+            ...published,
           },
         },
         { $skip: skip },

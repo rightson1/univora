@@ -7,10 +7,18 @@ const Product = async ({
 }: {
   params: {
     product: string;
+    school: string;
   };
 }) => {
   const product = await getSingleProduct(params.product);
-  return <Product_Page product={product} slug={params.product} />;
+
+  return (
+    <Product_Page
+      product={product}
+      slug={params.product}
+      school={params.school}
+    />
+  );
 };
 
 export default Product;

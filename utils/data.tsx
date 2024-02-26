@@ -19,7 +19,7 @@ import {
 } from "@radix-ui/react-icons";
 import { FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 
-const root_domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
+export const root_domain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 export const protocal = process.env.NEXT_PUBLIC_PROTOCAL || "https";
 export const baseUrl: string =
   process.env.NODE_ENV === "development"
@@ -167,3 +167,4 @@ export const platformIcons: {
     link: "https://wa.me",
   },
 ];
+export const sell_url = `http://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`;

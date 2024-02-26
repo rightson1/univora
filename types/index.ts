@@ -219,7 +219,7 @@ export interface IProductBase {
   price: number;
   description: string;
   longDescription?: string;
-  school: string;
+  school: string | ISchoolFetched;
   stock?: number;
   tags: string[];
   brand?: string;
@@ -255,6 +255,9 @@ export interface IProductFetched extends IProductBase, IFetched {
   category: ICategoryFetched;
   business: ISellerFetched;
   variants: IVariantFetched[];
+}
+export interface IProductWithSchool extends IProductFetched {
+  school: ISchoolFetched;
 }
 export type TOrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 export type TPaymentStatus = "pending" | "paid" | "partial";

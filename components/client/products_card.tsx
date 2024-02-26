@@ -7,6 +7,12 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { isArr, priceRange } from "@/utils/helpers";
 import { IVariantFetched } from "@/types";
+import { useUser } from "@/utils/userAuth";
+import {
+  useAddProductToSaved,
+  useDeleteProductFromSaved,
+} from "@/utils/hooks/client/useProducts";
+import { useCustomToast } from "../helpers/functions";
 
 export const Product_Card = ({
   title,
@@ -22,13 +28,17 @@ export const Product_Card = ({
   priceStyles,
   titleContainerStyles,
   imageSizes,
-  deleteProduct,
+  deleteBtn,
   slice = 40,
   button = true,
   setBottom,
   variants,
 }: IPcard) => {
   const router = useRouter();
+  const { user, handleSignIn } = useUser();
+  const { mutateAsync: add } = useAddProductToSaved();
+  const { mutateAsync: remove } = useDeleteProductFromSaved();
+  const { customToast, loading } = useCustomToast();
 
   return (
     <div
@@ -84,8 +94,29 @@ export const Product_Card = ({
           </p>
         </Link>
         {button && (
-          <Button variant={"outline"} className="rounded-full bg-transparent">
-            Save Product
+          <Button
+            disabled={loading}
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (!user) {
+                await handleSignIn();
+              }
+              if (deleteBtn) {
+                customToast({
+                  func: () => remove({ userId: user?._id!, item: id }),
+                  suc: "Product removed",
+                });
+              } else {
+                customToast({
+                  func: () => add({ user: user?._id!, item: id }),
+                  suc: "Product saved",
+                });
+              }
+            }}
+            variant={"outline"}
+            className="rounded-full bg-transparent"
+          >
+            {deleteBtn ? "Remove Product" : "  Save Product"}
           </Button>
         )}
       </div>

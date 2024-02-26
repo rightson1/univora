@@ -2,6 +2,7 @@ import Category from "@/models/Categories";
 import { conn } from "@/models/mongo_db_connection";
 import { ICategory, ICategoryFetched } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
+import { published } from "../../utils/funcs";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   await conn();
@@ -17,7 +18,9 @@ export async function GET(req: NextRequest) {
     const category = await Category.findOne({ slug });
     return NextResponse.json(category);
   } else if (category_slug) {
-    const parentCategory = await Category.findOne({ slug: category_slug });
+    const parentCategory = await Category.findOne({
+      slug: category_slug,
+    });
 
     const categories = await Category.find({
       parent: parentCategory?._id,

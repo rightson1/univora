@@ -40,3 +40,6 @@ export function vArr<T>(value: T[] | T | undefined): value is T[] {
 export const hasVariants = (product: IProductFetched) => {
   return fv(product.variants).length > 0;
 };
+export const published = {
+  status: "published",
+};

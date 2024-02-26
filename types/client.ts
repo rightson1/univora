@@ -16,6 +16,7 @@ export interface IPcard {
   titleContainerStyles?: string;
   button?: boolean;
   slice?: number | 40;
+  deleteBtn?: boolean;
   variants?: IVariantFetched[];
   imageSizes?: {
     width: number;

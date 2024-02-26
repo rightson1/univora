@@ -1,6 +1,7 @@
 import {
   ICategoryFetched,
   IProductFetched,
+  IProductWithSchool,
   ISchoolFetched,
   ISellerFetched,
 } from "@/types";
@@ -108,7 +109,9 @@ export async function getProductsInCategory(
 }
 
 //get single product
-export async function getSingleProduct(slug: string): Promise<IProductFetched> {
+export async function getSingleProduct(
+  slug: string
+): Promise<IProductWithSchool> {
   const data = await fetch(
     `${baseUrl}/api/client/products/single?slug=${slug}`,
     {

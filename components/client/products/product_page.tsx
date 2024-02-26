@@ -1,25 +1,33 @@
 "use client";
-import { IProductFetched, IVariantFetched } from "@/types";
-import { useGetProduct } from "@/utils/hooks/client/useProducts";
+import { IProductFetched, IProductWithSchool, IVariantFetched } from "@/types";
+import {
+  useAddProductToSaved,
+  useGetProduct,
+} from "@/utils/hooks/client/useProducts";
 import React, { useState } from "react";
 import { Media_Display } from "../shared/media_display";
 import { Button } from "@/components/ui/button";
-import { fv, priceRange } from "@/utils/helpers";
+import { fv, pQty, priceRange } from "@/utils/helpers";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "timeago.js";
 import { vArr } from "@/app/api/utils/funcs";
 import { Related } from "./related_products";
 import { useUser } from "@/utils/userAuth";
-import toast from "react-hot-toast";
-import { Checkout_Form } from "./checkout";
 
+import { Checkout_Form } from "./checkout";
+import { useCustomToast } from "@/components/helpers/functions";
+import { protocal } from "@/utils/data";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 export const Product_Page = ({
   product: product_raw,
   slug,
+  school,
 }: {
-  product: IProductFetched;
+  product: IProductWithSchool;
   slug: string;
+  school: string;
 }) => {
   const { data: product } = useGetProduct(slug, product_raw);
   const [selectedVariant, setSelectedVariant] = useState<IVariantFetched>();
@@ -27,7 +35,14 @@ export const Product_Page = ({
   const handleVariantSelect = (variant: IVariantFetched) => {
     setSelectedVariant(variant);
   };
+  const { user, handleSignIn } = useUser();
+  const { mutateAsync: add } = useAddProductToSaved();
+  const { customToast, loading } = useCustomToast();
 
+  const [sameSchool, setSameSchool] = useState(
+    product.school.subdomain === school ? true : false
+  );
+  const router = useRouter();
   return (
     <section className="pad-x  flex-col gap-4 flex mt-20 md:mt-[100px] ">
       <h1 className="p-size text-indigo-500">{`Home > Products >${product.name}`}</h1>
@@ -59,8 +74,7 @@ export const Product_Page = ({
               <h2 className="h4 font-bold mb-4 ">Select Variants</h2>
             )}
             <div className="text-h6 mb-2 ">
-              <strong>Stock:</strong>{" "}
-              {selectedVariant ? selectedVariant.stock : product.stock}
+              <strong>Stocks:</strong> {pQty(product, selectedVariant)}
             </div>
             {product.variants && (
               <div className="flex flex-wrap gap-2">
@@ -87,21 +101,42 @@ export const Product_Page = ({
             )}
           </div>
           <div className="flex gap-5 flex-col md:flex-row items-start w-full">
-            <div className="blr p-4 rounded-md w-full ">
+            <div
+              className="blr p-4 rounded-md w-full  cursor-pointer"
+              onClick={(e) => {
+                if (sameSchool) {
+                  router.push(`/sellers/${seller.slug}`);
+                } else {
+                  toast(`Redirect to ${product.school.name}?`, {
+                    description: `Product is from a different school, are you sure you want to redirect`,
+                    action: {
+                      label: "Let go baby!",
+                      onClick: () => {
+                        router.push(
+                          `${protocal}://${product.school.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/sellers/${product.business.slug}`
+                        );
+                      },
+                    },
+                  });
+                }
+              }}
+            >
               <div className="flex gap-2">
                 <Avatar>
                   <AvatarImage src={seller.profileImage} alt="@shadcn" />
                   <AvatarFallback>{seller?.name}</AvatarFallback>
                 </Avatar>
                 <div className="fx-c">
-                  <Link href={`/sellers/${seller?.slug}`} className="h4">
-                    {seller?.name}
-                  </Link>
+                  <h6 className="h4 underline">{seller?.name}</h6>
                   <div className="fc">
                     <span className="font-semibold text-sm">Joined:</span>
                     <span className="text-sm">
                       {format(new Date(seller.createdAt))}
                     </span>
+                  </div>
+                  <div className="fc">
+                    <span className="font-semibold text-sm">School:</span>
+                    <span className="text-sm">{product.school.name}</span>
                   </div>
                 </div>
               </div>
@@ -109,12 +144,21 @@ export const Product_Page = ({
 
             <div className="my fx-c gap-1 w-full">
               <Checkout_Form product={product} variant={selectedVariant} />
-              <Link
-                href={`/sellers/${product.business.slug}`}
-                className="w-full flex"
+              <Button
+                className="w-full"
+                onClick={async (e) => {
+                  if (!user) {
+                    await handleSignIn();
+                  } else {
+                    customToast({
+                      func: () => add({ user: user._id, item: product._id }),
+                      suc: "Product saved",
+                    });
+                  }
+                }}
               >
-                <Button className="w-full">View Seller Shop</Button>
-              </Link>
+                Save Product
+              </Button>
             </div>
           </div>
         </div>

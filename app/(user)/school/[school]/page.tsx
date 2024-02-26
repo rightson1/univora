@@ -9,6 +9,7 @@ import {
   getNewestSellers,
   getSchool,
 } from "@/utils/api";
+import { protocal } from "@/utils/data";
 
 import Link from "next/link";
 import React from "react";
@@ -37,9 +38,12 @@ const School = async ({
         <Categories categories={categories} />
 
         <div className="fc my-5  w-full fc">
-          <Link href="/categories" className="fc">
+          <Link
+            href={`${protocal}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`}
+            className="fc"
+          >
             <Button variant={"indigo"} className="rounded-full">
-              View All
+              Start Selling
             </Button>
           </Link>
         </div>

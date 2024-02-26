@@ -1,3 +1,4 @@
+import { published } from "@/app/api/utils/funcs";
 import Product from "@/models/Product";
 import Seller from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
@@ -8,7 +9,10 @@ export async function GET(req: NextRequest) {
   try {
     const slug = req.nextUrl.searchParams.get("slug");
     Seller;
-    const product = await Product.findOne({ slug: slug }).populate("business");
+    const product = await Product.findOne({
+      slug: slug,
+      ...published,
+    }).populate("business school");
     if (product) {
       return NextResponse.json(product);
     } else {
