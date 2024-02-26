@@ -67,7 +67,7 @@ export const toSlug = (str: string) => {
   return str.replace(/[^a-zA-Z0-9]+/g, "-").toLowerCase();
 };
 export const uploadFile = (file: File, name: string) => {
-  const fileRef = ref(storage, `/${name}`);
+  const fileRef = ref(storage, `/${name}-${Math.floor(Math.random() * 1000)}`);
   return uploadBytes(fileRef, file)
     .then((res) => getDownloadURL(res.ref))
     .catch((err) => {
@@ -75,7 +75,8 @@ export const uploadFile = (file: File, name: string) => {
       throw err;
     });
 };
-export const deleteFile = async (url: string) => {
+export const deleteFile = async (url?: string) => {
+  if (!url) return;
   try {
     const deleteRef = ref(storage, url);
     await deleteObject(deleteRef).then(() => {

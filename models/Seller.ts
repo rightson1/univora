@@ -53,6 +53,9 @@ const SellerSchema = new Schema(
       enum: ["public", "private"],
       default: "public",
     },
+    coverImage: {
+      type: String,
+    },
     deliveryOptions: [
       {
         type: String,

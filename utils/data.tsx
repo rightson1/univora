@@ -170,3 +170,4 @@ export const platformIcons: {
 export const sell_url = `http://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`;
 export const admin_email =
   process.env.NEXT_PUBLIC_ADMIN_EMAIL || "chari.rightson@gmail.com";
+export const schools_domain = `${protocal}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`;

@@ -14,7 +14,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { TOption } from "@/types/sellerTypes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageInputWithView } from "../utils/image-input";
+import {
+  ImageInputWithView,
+  SingleImageInputWithView,
+} from "../utils/image-input";
 import { Editor } from "../utils/Editor";
 import { ISellerFetched, ISocialLink, InputChangeEventTypes } from "@/types";
 import { useSellerAuth } from "@/utils/sellerAuth";
@@ -28,35 +31,55 @@ import {
 
 export const SettingsForm = () => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [coverImage, setCoverImage] = useState<File | null>(null);
   const { seller, fetchSeller } = useSellerAuth();
   const [values, setValues] = useState<ISellerFetched>(seller);
   const { mutateAsync: editSeller } = useUpdateSeller();
   const { loading, customToast } = useCustomToast();
-
   const handleChanges = (e: ChangeEvent<InputChangeEventTypes>) => {
     setValues((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let url = "";
+    let pUrl = "";
+    let cUrl = "";
+    let old_profile = seller.profileImage;
+    let old_cover = seller.coverImage;
+
     customToast({
       func: async () => {
         if (thumbnail) {
-          seller.profileImage && deleteFile(seller.profileImage);
-          url = await uploadFile(thumbnail, `sellers/${values.slug}/thumbnail`);
-          await editSeller({
-            ...values,
-            profileImage: url,
-          });
-        } else {
-          await editSeller(values);
+          pUrl = await uploadFile(
+            thumbnail,
+            `/${seller.slug}/profile/${thumbnail.name}`
+          );
         }
+        if (coverImage) {
+          cUrl = await uploadFile(
+            coverImage,
+            `/${seller.slug}/cover/${coverImage.name}`
+          );
+        }
+        const updatedSeller = {
+          ...values,
+          profileImage: pUrl || old_profile,
+          coverImage: cUrl || old_cover,
+        };
+
+        await editSeller(updatedSeller);
+        fetchSeller(seller.uid);
       },
+      suc: "Seller updated successfully",
+      err: "An error occurred",
       sfunc: async () => {
-        await fetchSeller(seller.uid);
+        coverImage && (await deleteFile(old_cover));
+        thumbnail && (await deleteFile(old_profile));
+        setThumbnail(null);
+        setCoverImage(null);
       },
       efunc: async () => {
-        url && deleteFile(url);
+        coverImage && (await deleteFile(cUrl));
+        thumbnail && (await deleteFile(pUrl));
       },
     });
   };
@@ -76,7 +99,8 @@ export const SettingsForm = () => {
           handleChanges={handleChanges}
         />
         <ContactInformation values={values} setValue={setValues} />
-        <ThumbNail {...{ thumbnail, setThumbnail }} />
+        <ThumbNail {...{ thumbnail, setThumbnail, seller }} />
+        <CoverImage {...{ coverImage, setCoverImage, seller }} />
       </div>
     </form>
   );
@@ -154,9 +178,11 @@ const GeneralInformation = ({
 const ThumbNail = ({
   thumbnail,
   setThumbnail,
+  seller,
 }: {
   thumbnail: File | null;
   setThumbnail: React.Dispatch<SetStateAction<File | null>>;
+  seller: ISellerFetched;
 }) => {
   return (
     <Card className="w-full">
@@ -167,7 +193,39 @@ const ThumbNail = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ImageInputWithView file={thumbnail} setFile={setThumbnail} />
+        <SingleImageInputWithView
+          imageUrl={seller.profileImage}
+          file={thumbnail}
+          setFile={setThumbnail}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+const CoverImage = ({
+  coverImage,
+  setCoverImage,
+  seller,
+}: {
+  coverImage: File | null;
+  setCoverImage: React.Dispatch<SetStateAction<File | null>>;
+  seller: ISellerFetched;
+}) => {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Cover Image</CardTitle>
+        <CardDescription>
+          Please upload a cover image for your business.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <SingleImageInputWithView
+          file={coverImage}
+          setFile={setCoverImage}
+          imageUrl={seller.coverImage}
+        />
       </CardContent>
     </Card>
   );

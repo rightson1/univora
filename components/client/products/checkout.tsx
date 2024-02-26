@@ -84,8 +84,9 @@ export const Checkout_Form = ({
       type: "order",
       link: `/admin/orders`,
       from: user._id,
-      to: product.business,
+      to: product.business._id,
       read: false,
+      createdAt: new Date().toISOString(),
     };
 
     customToast({

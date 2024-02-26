@@ -19,7 +19,13 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
   const edit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     customToast({
-      func: async () => updateSchoolFunc(values),
+      func: async () =>
+        updateSchoolFunc({
+          _id: school._id,
+          name: values.name,
+          subdomain: values.subdomain,
+          status: values.status,
+        }),
       suc: "School updated successfully",
     });
   };
@@ -50,7 +56,7 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
         <div className="flex flex-col space-y-1.5 ">
           <Label htmlFor="name">Name *</Label>
           <Input
-            id="name"
+            name="name"
             placeholder="Riara University"
             value={values.name}
             onChange={handleChange}

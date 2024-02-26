@@ -10,7 +10,7 @@ import {
   getNewestSellers,
   getSchool,
 } from "@/utils/api";
-import { protocal } from "@/utils/data";
+import { protocal, sell_url } from "@/utils/data";
 import { Metadata, ResolvingMetadata } from "next";
 
 import Link from "next/link";
@@ -40,10 +40,7 @@ const School = async ({
         <Categories categories={categories} />
 
         <div className="fc my-5  w-full fc">
-          <Link
-            href={`${protocal}://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?noredirect=true`}
-            className="fc"
-          >
+          <Link href={sell_url} className="fc">
             <Button variant={"indigo"} className="rounded-full">
               Start Selling
             </Button>

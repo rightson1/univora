@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest) {
         success: false,
       });
     }
-
+    console.log(seller);
     const updatedSeller = await Business.findOneAndUpdate(
       {
         _id: seller._id,

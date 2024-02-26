@@ -22,9 +22,9 @@ const Sidebar = () => {
     fx-c gap-5 "
     >
       <Avatar
-        className={" ring-1 ring-ring" + !seller.profileImage + "p-[2px]"}
+        className={" ring-1 ring-ring " + !seller.profileImage + "p-[2px]"}
       >
-        <AvatarImage src={seller?.profileImage} />
+        <AvatarImage className="object-fit" src={seller?.profileImage} />
         <AvatarFallback className="">
           <span className="font-bold text-2xl">
             {seller?.name?.split("")[0]}

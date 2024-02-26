@@ -293,3 +293,17 @@ export interface IOrderFetched extends IOrder, IFetched {
   product: IProductFetched;
   fulfillmentStatus: TOrderStatus;
 }
+
+export interface INotification {
+  subject: string;
+  link: string;
+  to: string;
+  from: string;
+  message: string;
+  type: "order" | "message";
+  read: boolean;
+  createdAt: string;
+}
+export interface INotificationFetched extends INotification, IFetched {
+  id: string;
+}

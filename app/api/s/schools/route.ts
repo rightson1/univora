@@ -44,7 +44,9 @@ export async function PUT(req: NextRequest) {
   await conn();
   let { name, subdomain, status, _id } = await req.json();
 
-  const school = await School.findOne({ subdomain: subdomain });
+  const school = await School.findOne({
+    _id,
+  });
   if (!school) {
     return NextResponse.json({
       message: "School does not exists",

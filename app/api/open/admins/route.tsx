@@ -2,7 +2,7 @@ import Admin from "@/models/Admin";
 import { conn } from "@/models/mongo_db_connection";
 import { IAdmin, ISAdmin } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   await conn();
 

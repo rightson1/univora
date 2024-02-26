@@ -42,7 +42,7 @@ export function Add_School() {
           <DialogHeader>
             <DialogTitle>Add School</DialogTitle>
             <DialogDescription>
-              Please enter you detail will notify when school is approved
+              Please enter you details will notify when school is approved
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

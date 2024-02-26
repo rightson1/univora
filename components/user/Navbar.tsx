@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { usePathname, useRouter } from "next/navigation";
-import { mobileLinks, navLinks } from "@/utils/data";
+import { mobileLinks, navLinks, sell_url } from "@/utils/data";
 
 import { BiArrowBack } from "react-icons/bi";
 
@@ -59,7 +59,7 @@ const NavBar = () => {
           ))}
         </div>
         <div className="hidden md:fb gap-3  fb-sm">
-          <Link href={`https://seller.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}>
+          <Link href={sell_url}>
             <Button variant={"outline"} className="rounded-full bg-transparent">
               Sell
             </Button>

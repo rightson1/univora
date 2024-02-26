@@ -178,6 +178,7 @@ export const SingleImageInputWithView = ({
       ) : imageUrl ? (
         <Image
           src={imageUrl}
+          unoptimized={true}
           width={200}
           height={200}
           alt="Image"
