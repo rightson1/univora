@@ -59,7 +59,7 @@ export function MobileMenu() {
     //alert user to tell him to make sure this is his school
     if (
       !window.confirm(
-        `Are you sure your school is ${school?.name},if not please go back and select the correct school `
+        `Are you sure your school is ${school?.name},If yes click ok to download the app`
       )
     ) {
       return;

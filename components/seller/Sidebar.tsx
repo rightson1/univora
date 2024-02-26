@@ -10,6 +10,8 @@ import Link from "next/link";
 import { IoIosHome } from "react-icons/io";
 import { useSellerAuth } from "@/utils/sellerAuth";
 import { LogOut, Settings } from "lucide-react";
+import { protocal, root_domain } from "@/utils/data";
+import { CiShop } from "react-icons/ci";
 const Sidebar = () => {
   const pathname = usePathname().split("/")[1];
   const { seller, logout } = useSellerAuth();
@@ -59,6 +61,12 @@ const Sidebar = () => {
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <IoIosSettings className="mr-2 h-4 w-4 font-bold" />
             <span>Settings</span>
+          </Button>
+        </Link>
+        <Link href={`${protocal}://${seller.school.subdomain}.${root_domain}`}>
+          <Button variant={"ghost"} className="font-semibold fc gap-3  ">
+            <CiShop className="mr-2 h-4 w-4 font-bold" />
+            <span>Storefronts</span>
           </Button>
         </Link>
 

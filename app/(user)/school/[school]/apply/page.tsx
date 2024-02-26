@@ -36,7 +36,7 @@ const Contact = () => {
   return (
     <div className="w-full min-h-[70vh] fx-col-c pxs">
       <form onSubmit={handleSubmit} className="gap-3  fx-col-c max-w-[700px]">
-        <h1 className="text-4xl font-bold">
+        <h1 className="text-4xl font-bold text-center w-full">
           Admin For {school?.name || "School"}
         </h1>
         <p className=" opacity-70 p-style text-center">
