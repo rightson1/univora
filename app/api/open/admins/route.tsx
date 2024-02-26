@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     });
   }
   try {
-    const adminRaw = await Admin.findOne({ uid: admin });
+    const adminRaw = await Admin.findOne({ uid: admin }).populate("school");
     if (!adminRaw) {
       return NextResponse.json({
         message: "Who are you?",

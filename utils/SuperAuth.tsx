@@ -29,7 +29,7 @@ export const SuperAdminAuthProvider = ({
   const [admin, setAdmin] = useState<ISAdmin | {} | null>({});
   const [user, setUser] = useState<ISAdmin | null>(null);
   const router = useRouter();
-  const setCookies = (token: string) => {
+  const setCookie = (token: string) => {
     Cookies.set("token", token);
   };
   const clearCookie = () => {
@@ -59,8 +59,8 @@ export const SuperAdminAuthProvider = ({
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
-        console.log(token);
-        setCookies(token);
+
+        setCookie(token);
         setAdmin({
           uid: user.uid,
           email: user.email,

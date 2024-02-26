@@ -66,7 +66,7 @@ export const CustomModal = ({
           <DialogFooter className="border-t pt-4 mb:flex-row mb:justify-end">
             <DialogClose>
               <Button variant="outline" type="button" className="mr-2">
-                Cancel
+                Close
               </Button>
             </DialogClose>
 

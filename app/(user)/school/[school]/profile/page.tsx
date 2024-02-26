@@ -1,34 +1,44 @@
 "use client";
 import React, { useEffect } from "react";
-
 import { toast } from "react-hot-toast";
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { useState } from "react";
-import { db } from "@/utils/firebase";
 import { useUser } from "@/utils/userAuth";
-
 import { IOrderFetched } from "@/types";
 import { useGetOrders } from "@/utils/hooks/client/useOrder";
 import { vArr } from "@/app/api/utils/funcs";
 import { isProduct } from "@/utils/helpers";
 import { View_Order } from "../../../../../components/client/orders/view_order";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useGetSchoolsOpen } from "@/utils/hooks/useSchools";
+import { useEditUser } from "@/utils/hooks/client/useUser";
+import { useCustomToast } from "@/components/helpers/functions";
 
 const CheckoutForm = () => {
-  const { user, fetchUser, logout } = useUser();
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = useState("");
+  const { user, logout, fetchUser } = useUser();
   const { data: orders, isLoading } = useGetOrders(user?._id);
-  const [isOpen, setIsOpen] = useState(false);
-  const [order, setOrder] = useState<IOrderFetched>();
+  const { data: schools, isLoading: loading } = useGetSchoolsOpen();
+  const { mutateAsync: edit_user } = useEditUser();
+  const { customToast, loading: customLoading } = useCustomToast();
+  const [userValues, setUserValues] = useState({
+    name: user?.displayName,
+    email: user?.email,
+    phone: user?.phone,
+    school: user?.school,
+  });
 
-  useEffect(() => {
-    if (user) {
-      setName(user.displayName);
-      setEmail(user.email);
-      setPhone(user.phone || "");
-    }
-  }, [user]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserValues({ ...userValues, [e.target.name]: e.target.value });
+  };
+
   const handleLogout = async () => {
     toast.promise(logout(), {
       loading: "Logging out...",
@@ -39,25 +49,32 @@ const CheckoutForm = () => {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (user) {
-      const update = async () => {
-        const userDocRef = doc(db, "users", user.uid);
-        await updateDoc(userDocRef, {
-          name: name,
-          email: email,
-          phone: phone,
-        }).then(() => {
-          fetchUser(user.uid);
-        });
-      };
-      toast.promise(update(), {
-        loading: "Updating...",
-        success: "Updated",
-        error: "Error Updating",
-      });
+    if (!user) {
+      return;
     }
+    const { name, email, phone, school } = userValues;
+    customToast({
+      func: async () => {
+        await edit_user({
+          _id: user?._id!,
+          displayName: name!,
+          phone: phone!,
+          school: school!,
+        });
+      },
+      sfunc: () => {
+        fetchUser(user.email);
+      },
+    });
   };
+  useEffect(() => {
+    setUserValues({
+      name: user?.displayName,
+      email: user?.email,
+      phone: user?.phone,
+      school: user?.school,
+    });
+  }, [user]);
   return (
     <section className="mt-10 pad-x">
       <h2 className="h2-size  indigo">Account</h2>
@@ -73,8 +90,8 @@ const CheckoutForm = () => {
                 placeholder={user?.displayName}
                 type="text"
                 name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={userValues.name}
+                onChange={handleChange}
                 id="name"
                 className="w-full p-2 border-2 border-black-400"
               />
@@ -83,10 +100,10 @@ const CheckoutForm = () => {
               <label htmlFor="email">Email</label>
               <input
                 type="email"
-                readOnly={!!email}
+                readOnly={!!user?.email}
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userValues.email}
+                onChange={handleChange}
                 id="email"
                 className="w-full p-2 border-2 border-black-400"
               />
@@ -96,14 +113,43 @@ const CheckoutForm = () => {
               <input
                 type="tel"
                 name="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={userValues.phone}
+                onChange={handleChange}
                 required
                 placeholder="Phone Number"
                 id="phone"
                 className="p-2 border-2 border-black-400 w-full"
               />
             </div>
+            {vArr(schools) && (
+              <div className="flex-col-start gap-2 w-full  col-span-2">
+                <Select
+                  required
+                  name="school"
+                  onValueChange={(value) =>
+                    setUserValues({ ...userValues, school: value })
+                  }
+                  defaultValue={userValues.school}
+                >
+                  <SelectTrigger className=" w-full">
+                    <SelectValue placeholder="Select School" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>
+                        {loading ? "Loading..." : "School"}
+                      </SelectLabel>
+                      {vArr(schools) &&
+                        schools.map((school) => (
+                          <SelectItem key={school._id} value={school._id}>
+                            {school.name}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="w-full flex gap-5">
               <button
                 className="w-full bg-indigo-500 text-white p-2 rounded-md"
@@ -113,6 +159,7 @@ const CheckoutForm = () => {
                 Logout
               </button>
               <button
+                disabled={customLoading}
                 className="w-full bg-indigo-500 text-white p-2 rounded-md"
                 type="submit"
               >

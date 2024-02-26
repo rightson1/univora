@@ -13,12 +13,11 @@ const firebaseConfig = {
 };
 const firebaseConfig2 = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY2,
-  authDomain: "hue-14696.firebaseapp.com",
-  projectId: "hue-14696",
-  storageBucket: "hue-14696.appspot.com",
-  messagingSenderId: "870168402867",
-  appId: "1:870168402867:web:3d98511280c95f432809c6",
-  measurementId: "G-X96QNV3R41",
+  authDomain: "univora3.firebaseapp.com",
+  projectId: "univora3",
+  storageBucket: "univora3.appspot.com",
+  messagingSenderId: "705980048329",
+  appId: "1:705980048329:web:457971598bbba324d8be18",
 };
 
 const app = initializeApp(firebaseConfig, {});

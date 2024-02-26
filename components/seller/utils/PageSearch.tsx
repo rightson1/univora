@@ -45,7 +45,7 @@ export function PageSearch() {
     setOpen(false);
   }, [pathname]);
   return (
-    <Dialog onOpenChange={(open) => setOpen(open)} open={open}>
+    <Dialog onOpenChange={(open) => setOpen(open)} open={false}>
       <DialogTrigger asChild>
         <button className="flex bg-transparent fc p-4 ">
           <IoSearch className=" text-2xl text-border mx-2" />

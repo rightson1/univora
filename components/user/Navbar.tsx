@@ -13,7 +13,7 @@ import { useUser } from "@/utils/userAuth";
 import { Button } from "../ui/button";
 const NavBar = () => {
   const { scrolled } = useScreen();
-  const { user } = useUser();
+  const { user, handleSignIn } = useUser();
   const pathname = usePathname();
   const router = useRouter();
   return (
@@ -73,11 +73,19 @@ const NavBar = () => {
           )}
 
           {!user && (
-            <Button variant={"outline"} className="rounded-full bg-transparent">
+            <Button
+              onClick={handleSignIn}
+              variant={"outline"}
+              className="rounded-full bg-transparent"
+            >
               Login
             </Button>
           )}
-          {!user && <Button className="rounded-full">Sign Up</Button>}
+          {!user && (
+            <Button onClick={handleSignIn} className="rounded-full">
+              Sign Up
+            </Button>
+          )}
         </div>
 
         <div className="flex md:hidden">

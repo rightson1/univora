@@ -39,10 +39,16 @@ import { ISellerFetched } from "@/types";
 import { useCustomToast } from "@/components/helpers/functions";
 import { useUpdateSeller } from "@/utils/hooks/useSeller";
 
-export default function Businesses() {
+export default function Businesses({
+  params: { school },
+}: {
+  params: {
+    school: string;
+  };
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const { user } = useAdminAuth();
-  const { data, isPending } = useGetAdminSellers(user.school._id as string);
+  const { data, isPending } = useGetAdminSellers(school);
   const [sellers, setSellers] = React.useState<ISellerFetched[]>([]);
   const { loading, customToast } = useCustomToast();
   const { mutateAsync } = useUpdateAdminSeller();

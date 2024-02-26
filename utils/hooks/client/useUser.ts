@@ -1,3 +1,4 @@
+import { IUser, IUserFetched } from "@/types/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -5,7 +6,10 @@ import axios from "axios";
 
 export const useEditUser = () => {
   return useMutation({
-    mutationFn: async (user: { _id: string; name: string; phone: string }) =>
-      await axios.put(`/api/client/users`, user),
+    mutationFn: async ({
+      ...user
+    }: Partial<IUserFetched> & {
+      _id: string;
+    }) => await axios.put(`/api/client/users`, user),
   });
 };

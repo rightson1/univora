@@ -58,6 +58,11 @@ const ProductSchema = new Schema(
       default: "product",
       enum: ["product", "service"],
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+
     options: [
       {
         title: {

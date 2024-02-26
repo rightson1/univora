@@ -49,34 +49,31 @@ export const Notifications = () => {
     });
     return () => unsubscribe();
   }, [seller]);
-  console.log(notifications);
+
   useEffect(() => {
-    const update = async () => {
-      if (notifications.length > 0) {
-        const unseenNotifications = notifications.filter(
-          (notification) => !notification.read
-        );
-        if (unseenNotifications.length > 0) {
-          const unseenNotificationIds = unseenNotifications.map(
-            (notification) => notification.id
+    if (open) {
+      const update = async () => {
+        if (notifications.length > 0) {
+          const unseenNotifications = notifications.filter(
+            (notification) => !notification.read
           );
-          // unseenNotificationIds.forEach(async (id) => {
-          //   await updateDoc(doc(db2, "notifications", id), {
-          //     read: true,
-          //   });
-          // });
-          await Promise.all(
-            unseenNotificationIds.map(async (id) => {
-              await updateDoc(doc(db2, "notifications", id), {
-                read: true,
-              });
-            })
-          );
+          if (unseenNotifications.length > 0) {
+            const unseenNotificationIds = unseenNotifications.map(
+              (notification) => notification.id
+            );
+            await Promise.all(
+              unseenNotificationIds.map(async (id) => {
+                await updateDoc(doc(db2, "notifications", id), {
+                  read: true,
+                });
+              })
+            );
+          }
         }
-      }
-    };
-    update();
-  }, [notifications]);
+      };
+      update();
+    }
+  }, [open, notifications]);
   return (
     <Sheet open={open} onOpenChange={(open) => setOpen(open)}>
       <SheetTrigger>

@@ -8,8 +8,10 @@ import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAdminAuth } from "@/utils/AdminAuth";
 export const Sidebar = () => {
   const pathname = usePathname().split("/")[1];
+  const { user, logout } = useAdminAuth();
 
   return (
     <div
@@ -21,11 +23,11 @@ export const Sidebar = () => {
     >
       <Avatar className="p-[2px] ring-1 ring-ring">
         <AvatarImage />
-        <AvatarFallback className="">CN</AvatarFallback>
+        <AvatarFallback className="">{user?.displayName[0]}</AvatarFallback>
       </Avatar>
       <div className="fx-c">
-        <span className="tsm">Store</span>
-        <span className=" font-bold">Rightsons Store</span>
+        <span className="tsm">{user?.school.name}</span>
+        <span className=" font-bold">{user.displayName}</span>
       </div>
       <div className="fx-c">
         <Link href={"/"}>
@@ -35,14 +37,11 @@ export const Sidebar = () => {
           </Button>
         </Link>
 
-        {/* <Link href={"/seller/settings"}>
-          <Button variant={"ghost"} className="font-semibold fc gap-3  ">
-            <IoIosSettings className="mr-2 h-4 w-4 font-bold" />
-            <span>Promoted</span>
-          </Button>
-        </Link> */}
-
-        <Button variant={"ghost"} className="font-semibold fc gap-3  ">
+        <Button
+          variant={"ghost"}
+          className="font-semibold fc gap-3  "
+          onClick={logout}
+        >
           <IoCartOutline className="mr-2 h-4 w-4 font-bold" />
           <span>
             <span>Logout</span>

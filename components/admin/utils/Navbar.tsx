@@ -18,8 +18,6 @@ const Navbar = () => {
       </div>
 
       <div className="fc gap-3">
-        <Help />
-        <Notifications />
         <ModeToggle />
       </div>
     </div>

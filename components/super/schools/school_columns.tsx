@@ -15,6 +15,8 @@ import {
 import { MdDeleteOutline, MdUnpublished } from "react-icons/md";
 import { ISchoolFetched } from "@/types";
 import { EditSchool } from "@/components/super/schools/edit-school";
+import { CiShop } from "react-icons/ci";
+import Link from "next/link";
 
 export const school_columns: ColumnDef<ISchoolFetched>[] = [
   {
@@ -72,6 +74,15 @@ export const school_columns: ColumnDef<ISchoolFetched>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center space-x-2" asChild>
               <EditSchool school={school} />
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href={`/schools/${school._id}`}
+                className="flex items-center space-x-2"
+              >
+                <CiShop />
+                <span>View Sellers</span>
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

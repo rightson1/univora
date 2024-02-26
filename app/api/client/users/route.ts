@@ -8,7 +8,11 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   await conn();
   const userData: IUser = await request.json();
-  const existingUser = await User.findOne({ uid: userData.uid });
+
+  const existingUser = await User.findOne({
+    email: userData.email,
+  });
+
   if (existingUser) {
     return NextResponse.json(existingUser, {
       status: 200,
@@ -21,15 +25,15 @@ export async function POST(request: Request) {
 }
 export async function GET(request: NextRequest) {
   await conn();
-  const uid = request.nextUrl.searchParams.get("uid") as string;
+  const email = request.nextUrl.searchParams.get("email") as string;
   School;
-  const user = await User.findOne({ uid }).populate("school");
+  const user = await User.findOne({ email }).populate("school");
   return NextResponse.json(user);
 }
 //edit user
 export async function PUT(request: NextRequest) {
   await conn();
-  const { phone, displayName, _id } = await request.json();
+  const { phone, displayName, _id, school } = await request.json();
   const user = await User.findOneAndUpdate(
     {
       _id,
@@ -37,6 +41,7 @@ export async function PUT(request: NextRequest) {
     {
       phone,
       displayName,
+      school,
     },
     {
       new: true,

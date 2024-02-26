@@ -166,7 +166,7 @@ export function MobileMenu() {
         )}
         {!user && (
           <div className="flex justify-start p-4 w-full rounded-md bg-background   ">
-            <div className="w-full justify-start fx-c " onClick={handleSignIn}>
+            <div className="w-full justify-start fx-c ">
               <LinkButton onClick={handleSignIn} text="Login" icon={LogIn} />
               <LinkButton
                 text="Create Account"

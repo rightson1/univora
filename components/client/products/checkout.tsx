@@ -96,13 +96,13 @@ export const Checkout_Form = ({
         if (updateProfile) {
           await editUser({
             _id: user?._id,
-            name: orderDetails.name,
+            displayName: orderDetails.name,
             phone: orderDetails.phone,
           });
         }
       },
       sfunc: async () => {
-        fetchUser(user.uid);
+        fetchUser(user.email!);
       },
     });
   };
@@ -305,7 +305,7 @@ export const Checkout_Form = ({
                     setOpen(false);
                   }}
                 >
-                  Cancel
+                  Close
                 </Button>
                 <Button type="submit" disabled={loading}>
                   Save changes

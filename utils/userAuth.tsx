@@ -26,8 +26,8 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const provider = new GoogleAuthProvider();
 
-  const fetchUser = async (uid: string) =>
-    await axios.get(`/api/client/users?uid=${uid}`).then((res) => {
+  const fetchUser = async (email: string) =>
+    await axios.get(`/api/client/users?email=${email}`).then((res) => {
       const user = res.data;
       if (user) {
         setUser(res.data);
@@ -67,7 +67,7 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
       : null;
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        if (localUser?.uid === user.uid) {
+        if (localUser?.email === user.email) {
           setFUser({
             uid: user.uid,
             email: user.email,
@@ -76,7 +76,7 @@ export const UserAuth = ({ children }: { children: React.ReactNode }) => {
           });
           setUser(localUser);
         } else {
-          fetchUser(user.uid).catch((err) => {
+          fetchUser(user.email!).catch((err) => {
             if (err.response.status === 404) {
               console.log("User does not exist");
             }

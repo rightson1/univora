@@ -20,7 +20,7 @@ const LOGIN = () => {
         await signIn({ email, password });
         await axios.get(`/api/open/seller?email=${email}`).then(eCheck);
       },
-      suc: "Karibu Bigman",
+      suc: "Karibu ",
     });
   };
   return (
@@ -54,7 +54,7 @@ const LOGIN = () => {
               placeholder="Password "
               className="bg-muted border-border"
               required
-              // type="password"
+              type="password"
             />
 
             <Button disabled={loading}>Submit</Button>

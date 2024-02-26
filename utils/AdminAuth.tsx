@@ -10,7 +10,12 @@ import { useRouter } from "next/navigation";
 import { IAdminFetched, IAdmin } from "@/types";
 import axios from "axios";
 const AuthContext = createContext({});
-
+const setCookie = (token: string) => {
+  Cookies.set("token", token);
+};
+const clearCookie = () => {
+  Cookies.remove("token");
+};
 export const AdminAuthProvider = ({
   children,
 }: {
@@ -19,12 +24,7 @@ export const AdminAuthProvider = ({
   const [admin, setAdmin] = useState<IAdmin | {} | null>({});
   const [user, setUser] = useState<IAdminFetched | null>(null);
   const router = useRouter();
-  const setCookies = (role: string) => {
-    Cookies.set("role", role);
-  };
-  const clearRoleCookie = () => {
-    Cookies.remove("role");
-  };
+
   const fetchUser = async (uid: string) => {
     const userRaw = await axios
       .get(`/api/open/admins?uid=${uid}`)
@@ -37,10 +37,10 @@ export const AdminAuthProvider = ({
     if (fUser) {
       setUser(fUser);
       localStorage.setItem("administrator", JSON.stringify(fUser));
-      setCookies(fUser.role);
     } else {
       setUser(null);
       setAdmin(null);
+      clearCookie();
     }
   };
 
@@ -52,8 +52,10 @@ export const AdminAuthProvider = ({
       ? JSON.parse(userString)
       : null;
 
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const token = await user.getIdToken();
+        setCookie(token);
         if (localUser?.uid === user.uid) {
           setAdmin({
             uid: user.uid,
@@ -61,7 +63,7 @@ export const AdminAuthProvider = ({
             displayName: user.displayName,
             photoURL: user.photoURL,
           });
-          setCookies(localUser.role);
+
           setUser(localUser);
         } else {
           console.log(user);
@@ -70,7 +72,8 @@ export const AdminAuthProvider = ({
       } else {
         setAdmin(null);
         setUser(null);
-        clearRoleCookie();
+
+        clearCookie();
       }
     });
     return () => {
@@ -98,7 +101,8 @@ export const AdminAuthProvider = ({
   const logout = async () => {
     await auth.signOut();
     localStorage.removeItem("administrator");
-    clearRoleCookie();
+
+    clearCookie();
     router.push("/login");
   };
 
@@ -118,7 +122,7 @@ export const AdminAuthProvider = ({
 };
 
 interface AuthContextProps {
-  user: IAdmin;
+  user: IAdminFetched;
   admin: IAdmin | null;
   signIn: ({
     email,
