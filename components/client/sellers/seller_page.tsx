@@ -229,8 +229,8 @@ const MobileHero = ({ seller }: { seller: ISellerFetched }) => {
             height={500}
             alt="Hello"
           />
-          <Link href={toWhatsApp(seller)}>
-            <Button className="rounded-full">Whatsap</Button>
+          <Link href={`tel:${seller?.phone}`}>
+            <Button className="rounded-full">Call Seller</Button>
           </Link>
         </div>
         <div className="flex-col-start">
@@ -240,6 +240,7 @@ const MobileHero = ({ seller }: { seller: ISellerFetched }) => {
           </span>
         </div>
         <p className="p">{seller?.description}</p>
+        <Socials seller={seller} styles="gap-4 p w-full  flex my-3" />
       </div>
     </div>
   );

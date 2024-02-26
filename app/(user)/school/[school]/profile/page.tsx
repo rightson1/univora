@@ -11,7 +11,7 @@ import { IOrderFetched } from "@/types";
 import { useGetOrders } from "@/utils/hooks/client/useOrder";
 import { vArr } from "@/app/api/utils/funcs";
 import { isProduct } from "@/utils/helpers";
-import { View_Order } from "../orders/view_order";
+import { View_Order } from "../../../../../components/client/orders/view_order";
 
 const CheckoutForm = () => {
   const { user, fetchUser, logout } = useUser();
@@ -139,7 +139,9 @@ const CheckoutForm = () => {
               <tbody className="divide-y divide-gray-300">
                 {isLoading ? (
                   <tr className="w-full p-4">
-                    <td colSpan={5}>Loading</td>
+                    <td colSpan={5} className="p-4">
+                      Loading...
+                    </td>
                   </tr>
                 ) : vArr(orders) ? (
                   orders.map((order) => (

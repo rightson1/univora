@@ -19,8 +19,11 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Univora | Home",
-  description: "Showcase your business and products at your school",
+  title: {
+    default: "Univora",
+    template: "%s | Univora",
+  },
+  description: "Showcase your business and products",
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["univora"],

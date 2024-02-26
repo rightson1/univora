@@ -104,7 +104,7 @@ export const Product_Card = ({
               if (deleteBtn) {
                 customToast({
                   func: () => remove({ userId: user?._id!, item: id }),
-                  suc: "Product removed",
+                  suc: "Remove",
                 });
               } else {
                 customToast({

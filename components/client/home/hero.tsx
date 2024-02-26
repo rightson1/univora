@@ -18,16 +18,16 @@ export const Hero = ({
   const { data: school } = useGetSchoolWithInitialData(subdomain, initial);
   const searchParams = useSearchParams();
   const router = useRouter();
-  useEffect(() => {
-    const refresh = searchParams.get("refresh");
-    if (searchParams.get("refresh") === "true") {
-      const url = new URL(window.location.href);
-      //  set refresh to false
-      url.searchParams.set("refresh", "false");
-      router.replace(url.toString());
-      router.refresh();
-    }
-  }, [searchParams]);
+  // useEffect(() => {
+  //   const refresh = searchParams.get("refresh");
+  //   if (searchParams.get("refresh") === "true") {
+  //     const url = new URL(window.location.href);
+  //     //  set refresh to false
+  //     url.searchParams.set("refresh", "false");
+  //     router.replace(url.toString());
+  //     router.refresh();
+  //   }
+  // }, [searchParams]);
   return (
     <section className="flex-1-2 gap-10 py-[50px]">
       <div className="left flex-col-start w-full pad-x gap-5 text-center md:text-start md:max-w-[800px] ">

@@ -3,6 +3,7 @@ import { Hero } from "@/components/client/home/hero";
 import { Newest_Arrials } from "@/components/client/home/newest_arrivals";
 import { Sellers_Home } from "@/components/client/shared/Sellers";
 import { Button } from "@/components/ui/button";
+import { TPageProps } from "@/types";
 import {
   getFeaturedCategories,
   getNewArrivals,
@@ -10,6 +11,7 @@ import {
   getSchool,
 } from "@/utils/api";
 import { protocal } from "@/utils/data";
+import { Metadata, ResolvingMetadata } from "next";
 
 import Link from "next/link";
 import React from "react";
@@ -56,5 +58,25 @@ const School = async ({
     </div>
   );
 };
+export async function generateMetadata(
+  { params, searchParams }: TPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = params.school;
+  const school = await getSchool(slug);
+  const title = school?.name || "School";
+  const description = "Explore products and sellers within " + title;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+
+      locale: "en_US",
+      type: "website",
+    },
+  };
+}
 
 export default School;

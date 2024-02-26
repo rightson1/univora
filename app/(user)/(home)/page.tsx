@@ -1,9 +1,25 @@
 import { SearchSchool } from "@/components/user_general/search_school";
 import Button from "@/components/utils/Button";
-import { hero } from "@/utils/data";
+import { baseUrl, hero } from "@/utils/data";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
 import React from "react";
+export const metadata: Metadata = {
+  title: "Univora",
+  description: "Buy and sell within your university or college community.",
+
+  openGraph: {
+    title: "Univora - Buy and sell within your university or college community",
+    description:
+      "Univora is a platform where students can buy and sell items within their university or college community. Find products, sellers, and more.",
+    images: [`${baseUrl}/logo.png`],
+    url: baseUrl,
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 const Home = () => {
   return (

@@ -1,5 +1,7 @@
 import { Seller_Container } from "@/components/client/search/search_dealers";
-import { getSellers } from "@/utils/api";
+import { TPageProps } from "@/types";
+import { getSchool, getSellers } from "@/utils/api";
+import { Metadata, ResolvingMetadata } from "next";
 import React from "react";
 
 const Page = async ({
@@ -18,5 +20,28 @@ const Page = async ({
     </section>
   );
 };
+export async function generateMetadata(
+  { params, searchParams }: TPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = params.school;
+  const school = await getSchool(slug);
+
+  const title = `Sellers in ${school?.name || "School"}`;
+  const description = `Explore sellers offering products within ${
+    school?.name || "the school"
+  } community`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      locale: "en_US",
+      type: "website",
+    },
+  };
+}
 
 export default Page;

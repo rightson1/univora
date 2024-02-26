@@ -235,6 +235,10 @@ export interface IProductBase {
 export interface IProduct extends IProductBase {
   category: string;
 }
+export type TPageProps = {
+  params: { [key: string]: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 export type IProductType = "product" | "service";
 export interface IProductValues {
   values: Pick<

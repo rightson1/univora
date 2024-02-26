@@ -29,7 +29,7 @@ const Footer = () => {
           text="Sell"
         />
         <LinkItem
-          link="https://api.whatsapp.com/send?phone=254778749554"
+          link="/contact"
           icon={<Mail size={20} className="text-[.6rem] text-red-400" />}
           text="Contact"
         />

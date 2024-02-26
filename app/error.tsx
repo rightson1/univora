@@ -22,7 +22,13 @@ export default function Error({
         {error.message || "Something went wrong"}
       </h1>
       <div className="flex gap-2">
-        <Button onClick={() => reset()}>Retry</Button>
+        <Button
+          onClick={() => {
+            window.location.href = "/";
+          }}
+        >
+          Go Home
+        </Button>
         <Button onClick={() => window.location.reload()}>Reload</Button>
       </div>
     </div>

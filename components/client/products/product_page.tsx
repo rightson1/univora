@@ -1,10 +1,15 @@
 "use client";
-import { IProductFetched, IProductWithSchool, IVariantFetched } from "@/types";
+import {
+  IProductFetched,
+  IProductWithSchool,
+  ISellerFetched,
+  IVariantFetched,
+} from "@/types";
 import {
   useAddProductToSaved,
   useGetProduct,
 } from "@/utils/hooks/client/useProducts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Media_Display } from "../shared/media_display";
 import { Button } from "@/components/ui/button";
 import { fv, pQty, priceRange } from "@/utils/helpers";
@@ -43,6 +48,32 @@ export const Product_Page = ({
     product.school.subdomain === school ? true : false
   );
   const router = useRouter();
+  useEffect(() => {
+    setSameSchool(product.school.subdomain === school ? true : false);
+  }, [product.school.subdomain, school]);
+  const SellerCard = () => {
+    return (
+      <div className="flex gap-2">
+        <Avatar>
+          <AvatarImage src={seller.profileImage} alt="@shadcn" />
+          <AvatarFallback>{seller?.name}</AvatarFallback>
+        </Avatar>
+        <div className="fx-c">
+          <h6 className="h4 underline">{seller?.name}</h6>
+          <div className="fc">
+            <span className="font-semibold text-sm">Joined:</span>
+            <span className="text-sm">
+              {format(new Date(seller.createdAt))}
+            </span>
+          </div>
+          <div className="fc">
+            <span className="font-semibold text-sm">School:</span>
+            <span className="text-sm">{product.school.name}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
   return (
     <section className="pad-x  flex-col gap-4 flex mt-20 md:mt-[100px] ">
       <h1 className="p-size text-indigo-500">{`Home > Products >${product.name}`}</h1>
@@ -101,12 +132,17 @@ export const Product_Page = ({
             )}
           </div>
           <div className="flex gap-5 flex-col md:flex-row items-start w-full">
-            <div
-              className="blr p-4 rounded-md w-full  cursor-pointer"
-              onClick={(e) => {
-                if (sameSchool) {
-                  router.push(`/sellers/${seller.slug}`);
-                } else {
+            {sameSchool ? (
+              <Link
+                className="blr p-4 rounded-md w-full  cursor-pointer"
+                href={`/sellers/${seller.slug}`}
+              >
+                <SellerCard />
+              </Link>
+            ) : (
+              <div
+                className="blr p-4 rounded-md w-full  cursor-pointer"
+                onClick={(e) => {
                   toast(`Redirect to ${product.school.name}?`, {
                     description: `Product is from a different school, are you sure you want to redirect`,
                     action: {
@@ -118,29 +154,11 @@ export const Product_Page = ({
                       },
                     },
                   });
-                }
-              }}
-            >
-              <div className="flex gap-2">
-                <Avatar>
-                  <AvatarImage src={seller.profileImage} alt="@shadcn" />
-                  <AvatarFallback>{seller?.name}</AvatarFallback>
-                </Avatar>
-                <div className="fx-c">
-                  <h6 className="h4 underline">{seller?.name}</h6>
-                  <div className="fc">
-                    <span className="font-semibold text-sm">Joined:</span>
-                    <span className="text-sm">
-                      {format(new Date(seller.createdAt))}
-                    </span>
-                  </div>
-                  <div className="fc">
-                    <span className="font-semibold text-sm">School:</span>
-                    <span className="text-sm">{product.school.name}</span>
-                  </div>
-                </div>
+                }}
+              >
+                <SellerCard />
               </div>
-            </div>
+            )}
 
             <div className="my fx-c gap-1 w-full">
               <Checkout_Form product={product} variant={selectedVariant} />

@@ -13,7 +13,7 @@ const Item_not_found = ({
   ptxt: string;
 }) => {
   return (
-    <div className="p-4 flex items-center justify-center flex-col h-screen ">
+    <div className="p-4 flex items-center justify-center flex-col main-h ">
       <Button>
         <Link href={link} className="text-sm fc ">
           <FaArrowLeftLong className="mr-2" />

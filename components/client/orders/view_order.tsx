@@ -111,14 +111,14 @@ export const View_Order = ({ order }: { order: IOrderFetched }) => {
               </div>
             </div>
           </div>
-          <DialogFooter className="py-2">
+          {/* <DialogFooter className="py-2">
             <div className="flex flex-wrap gap-2 justify-end">
               <Button variant="outline" type="button">
                 Cancel
               </Button>
               <Button type="submit">Save changes</Button>
             </div>
-          </DialogFooter>
+          </DialogFooter> */}
         </form>
       </DialogContent>
     </Dialog>

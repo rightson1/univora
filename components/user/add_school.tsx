@@ -10,11 +10,28 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useCustomToast } from "../helpers/functions";
+import { useSendContactEmail } from "@/utils/hooks/client/useEmails";
 export function Add_School() {
+  const { customToast, loading } = useCustomToast();
+  const { mutateAsync } = useSendContactEmail();
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    const name = data.name as string;
+    const email = data.email as string;
+    const school = data.school as string;
+    let message = `
+    There is a new school application from ${name} with email ${email} for ${school}.
+    `;
+    customToast({
+      func: async () => {
+        mutateAsync({ name, email, message });
+      },
+      suc: "Thanks, will notify you when school is approved.",
+    });
   };
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -55,7 +72,7 @@ export function Add_School() {
           </div>
           <DialogFooter>
             <div className="flex justify-end w-full">
-              <Button type="submit">Lets Go</Button>
+              <Button type="submit">Add</Button>
             </div>
           </DialogFooter>
         </form>

@@ -1,4 +1,5 @@
 import { IOrder, IOrderFetched } from "@/types";
+import { root_domain } from "@/utils/data";
 import {
   Html,
   Head,
@@ -50,7 +51,7 @@ export const NewOrderEmail = ({
             <Text className="mb-1">Total: {total}</Text>
             <Text className="mb-1">Message: {message}</Text>
             <Button
-              href="https://admin.univora.co.ke/orders"
+              href={`https://admin.${root_domain}/orders`}
               className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4"
             >
               View Order Details

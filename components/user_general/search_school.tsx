@@ -40,9 +40,7 @@ export function SearchSchool() {
     if (remember) {
       Cookies.set("school", school);
     }
-    router.push(
-      `http://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?refresh=true`
-    );
+    router.push(`http://${school}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   };
   const params = useSearchParams();
   const noredirect = params.get("noredirect");

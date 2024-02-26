@@ -83,6 +83,9 @@ export const Checkout_Form = ({
       message: `You have a new order from ${user.displayName}`,
       type: "order",
       link: `/admin/orders`,
+      from: user._id,
+      to: product.business,
+      read: false,
     };
 
     customToast({
