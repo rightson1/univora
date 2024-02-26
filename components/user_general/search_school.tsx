@@ -76,7 +76,7 @@ export function SearchSchool() {
               <SelectTrigger className="border-border w-full">
                 <SelectValue placeholder="Select School" />
               </SelectTrigger>
-              <SelectContent className="blr max-w-[85vw]">
+              <SelectContent className="blr max-w-[85vw] max-h-[50vh] overflow-y-auto">
                 <SelectGroup>
                   <SelectLabel>
                     {isLoading ? "Loading..." : "Schools"}

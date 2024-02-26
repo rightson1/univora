@@ -101,7 +101,7 @@ export async function DELETE(req: NextRequest) {
       }
     }
     if (category) {
-      await category.remove();
+      await Category.deleteOne({ _id });
     }
 
     return NextResponse.json({

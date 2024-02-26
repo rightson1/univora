@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function GET() {
   await conn();
-  const schools = await School.find();
+  const schools = await School.find({
+    status: "active",
+  });
   return NextResponse.json(schools);
 }

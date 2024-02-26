@@ -22,7 +22,7 @@ const Page = async ({
   return (
     <section className="pad-x pt-10">
       <h1 className="h2-size text-indigo-500">{`Home >${category?.name} `}</h1>
-      <Sub_Categories categories={categories} parent_slug={category_slug} />;
+      <Sub_Categories categories={categories} parent_slug={category_slug} />
     </section>
   );
 };

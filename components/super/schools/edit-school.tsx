@@ -84,6 +84,7 @@ export const EditSchool = ({ school }: { school: ISchoolFetched }) => {
             bg-background
              focus:outline-none focus:shadow-outline"
             required
+            value={values.status}
             onChange={(e) =>
               setValues((prev) => ({
                 ...prev,
