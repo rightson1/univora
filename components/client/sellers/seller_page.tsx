@@ -191,7 +191,7 @@ const toWhatsApp = (seller: ISellerFetched) => {
 };
 const DesktopHero = ({ seller }: { seller: ISellerFetched }) => {
   return (
-    <div className="md:px-20 pt-[20px]  hidden md:flex">
+    <div className="md:px-20 pt-[30px]  hidden md:flex">
       <div className="w-full rounded-full   relative  fx-c gap-5">
         <Image
           src={seller?.profileImage || "/non.jpg"}
@@ -203,7 +203,7 @@ const DesktopHero = ({ seller }: { seller: ISellerFetched }) => {
             "
         />
 
-        <div className="blr flex flex-col gap-3 absolute -top-10 md:right-10 w-full max-w-[400px] rounded-md p-8">
+        <div className="blr flex flex-col gap-3 absolute -top-7 md:right-10 w-full max-w-[400px] rounded-md p-8">
           <Seller seller={seller} />
         </div>
         <Socials
