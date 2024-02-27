@@ -58,7 +58,7 @@ export function SearchSchool() {
           Select School
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[90vw] sm:max-w-[425px] blr">
+      <DialogContent className="max-w-[90vw] sm:max-w-[500px] blr">
         <form onSubmit={submit}>
           <DialogHeader>
             <DialogTitle>Select your School</DialogTitle>
@@ -67,7 +67,7 @@ export function SearchSchool() {
               <Add_School />
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          {/* <div className="grid gap-4 py-4">
             <Select
               required
               name="school "
@@ -89,6 +89,25 @@ export function SearchSchool() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+          </div> */}
+          <div className="grid gap-4 py-4 w-full">
+            <select
+              required
+              name="school"
+              onChange={(e) => setSchool(e.target.value)}
+              className="blr p-2 rounded-md outline-none w-full"
+            >
+              {schools?.map((school) => (
+                <option
+                  value={school.subdomain}
+                  key={school.subdomain}
+                  className="blr"
+                >
+                  {school.name}{" "}
+                  {/* Replace with the appropriate field for the option's display text */}
+                </option>
+              ))}
+            </select>
           </div>
           <DialogFooter>
             <div className="fb w-full">
