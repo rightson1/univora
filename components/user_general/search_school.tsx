@@ -96,17 +96,26 @@ export function SearchSchool() {
               name="school"
               onChange={(e) => setSchool(e.target.value)}
               className="blr p-2 rounded-md outline-none w-full"
+              value={school || ""}
             >
-              {schools?.map((school) => (
-                <option
-                  value={school.subdomain}
-                  key={school.subdomain}
-                  className="blr"
-                >
-                  {school.name}{" "}
-                  {/* Replace with the appropriate field for the option's display text */}
+              <option value="" disabled>
+                Select school
+              </option>
+              {!isLoading ? (
+                schools?.map((school) => (
+                  <option
+                    value={school.subdomain}
+                    key={school.subdomain}
+                    className="blr"
+                  >
+                    {school.name}{" "}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  Loading...
                 </option>
-              ))}
+              )}
             </select>
           </div>
           <DialogFooter>
