@@ -137,12 +137,11 @@ Univora lets you sell your products and services to students around your school.
 export const client_hero = {
   title: "Empowering Student Entrepreneurs",
   description: `
-  Are you an entrepreneur or a nail artist like me?
-   Univora connects you with customers around your school.
-    Start selling by clicking on 'Sell' in the footer.
-     Plus, we offer a special point of sale for you. 
-     No need to wait for market days.
-      Showcase your skills and products now for free. 
+   Are you an entrepreneur or you just need quick cash?
+Univora lets you sell your products and services to students around your school.
+    Start by selecting your and lets get to buy or sell.
+     We offer a special point of sale for you. You easily manage 
+     you sales and inventory.
   `,
 };
 export const platformIcons: {
