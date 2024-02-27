@@ -12,9 +12,10 @@ import { useSellerAuth } from "@/utils/sellerAuth";
 import { LogOut, Settings } from "lucide-react";
 import { protocal, root_domain } from "@/utils/data";
 import { CiShop } from "react-icons/ci";
+import { sonner } from "@/utils/helpers";
 const Sidebar = () => {
   const pathname = usePathname().split("/")[1];
-  const { seller, logout } = useSellerAuth();
+  const { seller, logout, s_link } = useSellerAuth();
   return (
     <div
       className="w-[250px] border-color-border border-r 
@@ -63,12 +64,27 @@ const Sidebar = () => {
             <span>Settings</span>
           </Button>
         </Link>
-        <Link href={`${protocal}://${seller.school.subdomain}.${root_domain}`}>
+        <div
+          className="w-full cursor-pointer"
+          onClick={() => {
+            sonner(`Naviate to Storefonts `, {
+              description: `Click ok if you want to redirect to storefonts`,
+              action: {
+                label: "Navigate",
+                onClick: () => {
+                  window.open(
+                    `${protocal}://${seller.school.subdomain}.${root_domain}`
+                  );
+                },
+              },
+            });
+          }}
+        >
           <Button variant={"ghost"} className="font-semibold fc gap-3  ">
             <CiShop className="mr-2 h-4 w-4 font-bold" />
             <span>Storefronts</span>
           </Button>
-        </Link>
+        </div>
 
         <Button
           variant={"ghost"}

@@ -1,3 +1,4 @@
+import { vArr } from "@/app/api/utils/funcs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IOrderFetched } from "@/types";
 import { useGetOrders } from "@/utils/hooks/useOrder";
@@ -34,19 +35,19 @@ export function RecentSales() {
           </div>
           <div className="ml-auto font-medium">Loading</div>
         </div>
-      ) : data && orders.length > 0 ? (
+      ) : vArr(orders) ? (
         orders.map((order, i) => (
           <div className="flex items-center gap-5" key={i}>
             <Avatar className="mb:hidden h-9 w-9">
-              <AvatarImage src={order.product.thumbnail} alt="Avatar" />
+              <AvatarImage src={order?.product?.thumbnail || ""} alt="Avatar" />
               <AvatarFallback></AvatarFallback>
             </Avatar>
             <div className="md:ml-4 space-y-1">
               <p className="text-sm font-medium leading-none">
-                {order.product.name}
+                {order?.product?.name || ""}
               </p>
               <p className="text-sm text-muted-foreground">
-                {order.customerName}
+                {order?.customerName || ""}
               </p>
             </div>
             <div className="ml-auto font-medium">KSH {order.totalAmount}</div>
