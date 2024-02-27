@@ -48,9 +48,10 @@ import { useAddProduct } from "@/utils/hooks/useProduct";
 import toast from "react-hot-toast";
 import { Product_Options } from "../product/product_options";
 import { Product_Variants_Trial } from "../product/product_variant_trial";
+import { sonner } from "@/utils/helpers";
 
 export const NewProductForm = () => {
-  const { seller } = useSellerAuth();
+  const { seller, s_link } = useSellerAuth();
   const [values, setValues] = useState<IProductValues["values"]>({
     name: "",
     price: 0,
@@ -119,6 +120,7 @@ export const NewProductForm = () => {
     };
     customToast({
       func: publishProduct,
+      sfunc: async () => {},
       efunc: async () => {
         //delete thumbnail and media
         await deleteFile(thumbnailUrl);
@@ -261,7 +263,7 @@ const GeneralInformation = ({
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 w-full  gap-4">
           <div className="flex flex-col space-y-1.5 ">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">Name*</Label>
             <Input
               id="name"
               placeholder={
@@ -276,7 +278,7 @@ const GeneralInformation = ({
             />
           </div>
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="name">Price</Label>
+            <Label htmlFor="name">Price*</Label>
             <Input
               id="price"
               placeholder="Price of your product"
@@ -288,7 +290,7 @@ const GeneralInformation = ({
             />
           </div>
           <div className="flex flex-col space-y-1.5 md:col-span-2">
-            <Label htmlFor="shortDescription">Short Description</Label>
+            <Label htmlFor="shortDescription">Short Description*</Label>
             <Textarea
               id="shortDescription"
               placeholder="A small description "
@@ -342,7 +344,7 @@ const Organise = ({ values, setValues, handleChange }: IProductValues) => {
         <div className="grid md:grid-cols-2 w-full  gap-4">
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="categories">
-              {isLoading ? "Loading Categories" : "Categories"}
+              {isLoading ? "Loading Categories" : "Category*"}
             </Label>
 
             <Popover open={open} onOpenChange={setOpen}>

@@ -163,6 +163,7 @@ export const Other_Payments = ({
                       }}
                       size="icon"
                       className="text-destructive "
+                      type="button"
                     >
                       <MdDeleteOutline />
                     </Button>
@@ -177,6 +178,7 @@ export const Other_Payments = ({
               onClick={() => {
                 setOtherPayments([...otherPayments, { name: "", amount: 0 }]);
               }}
+              type="button"
             >
               Add
             </Button>

@@ -1,4 +1,5 @@
 import { IProductFetched, IVariant, IVariantFetched } from "@/types";
+import { toast } from "sonner";
 
 export const ec = async (res: Response) => {
   try {
@@ -87,3 +88,4 @@ export const pQty = (product: IProductFetched, variant?: IVariantFetched) => {
     return max;
   }
 };
+export const sonner = toast;

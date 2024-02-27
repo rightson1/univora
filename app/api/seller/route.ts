@@ -2,7 +2,7 @@ import Product from "@/models/Product";
 import Business from "@/models/Seller";
 import { conn } from "@/models/mongo_db_connection";
 import { ISeller, ISellerBase, ISellerFetched } from "@/types";
-import { verifyIdToken } from "@/utils/firebaseAdmin";
+import { auth_admin, verifyIdToken } from "@/utils/firebaseAdmin";
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
@@ -50,6 +50,30 @@ export async function PUT(req: NextRequest) {
     });
   } catch (e: any) {
     console.log(e.message);
+    return NextResponse.json({
+      message: e.message,
+      success: false,
+    });
+  }
+}
+//delete seller
+export async function DELETE(req: NextRequest) {
+  try {
+    await conn();
+    await verifyIdToken(req);
+    const { _id } = await req.json();
+    const seller = await Business.findById(_id);
+    const auth = await auth_admin();
+    await auth.deleteUser(seller?.uid);
+    const deleted = await Product.deleteMany({ business: _id });
+    if (deleted.deletedCount) {
+      const deletedSeller = await Business.findByIdAndDelete(_id);
+    }
+    return NextResponse.json({
+      message: "Seller deleted successfully",
+      success: true,
+    });
+  } catch (e: any) {
     return NextResponse.json({
       message: e.message,
       success: false,

@@ -28,8 +28,10 @@ export const Product_Category = ({
   useEffect(() => {
     if (product) {
       setLevel(3);
-      setCategory(product.category._id);
-      setCurrentCategories(product.category.children || []);
+      if (product.category) {
+        setCategory(product.category._id);
+        setCurrentCategories(product.category.children || []);
+      }
     }
   }, [product]);
 
@@ -67,7 +69,7 @@ export const Product_Category = ({
               " Select Category"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent className="w-80 max-h-[200px] overflow-y-auto">
           <Button
             variant={"ghost"}
             className="w-full cursor-pointer justify-start"

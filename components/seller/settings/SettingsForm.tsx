@@ -12,30 +12,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
-import { TOption } from "@/types/sellerTypes";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ImageInputWithView,
-  SingleImageInputWithView,
-} from "../utils/image-input";
+import { SingleImageInputWithView } from "../utils/image-input";
 import { Editor } from "../utils/Editor";
 import { ISellerFetched, ISocialLink, InputChangeEventTypes } from "@/types";
 import { useSellerAuth } from "@/utils/sellerAuth";
-import { useUpdateSeller } from "@/utils/hooks/useSeller";
+import { useDeleteSeller, useUpdateSeller } from "@/utils/hooks/useSeller";
 import {
   deleteFile,
+  getLink,
   toSlug,
   uploadFile,
   useCustomToast,
 } from "@/components/helpers/functions";
-
+import { toast as sonner } from "sonner";
+import { useRouter } from "next/navigation";
 export const SettingsForm = () => {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const { seller, fetchSeller } = useSellerAuth();
+  const { seller, fetchSeller, s_link } = useSellerAuth();
   const [values, setValues] = useState<ISellerFetched>(seller);
   const { mutateAsync: editSeller } = useUpdateSeller();
   const { loading, customToast } = useCustomToast();
+  const { mutateAsync: deleteSeller } = useDeleteSeller();
+  const router = useRouter();
   const handleChanges = (e: ChangeEvent<InputChangeEventTypes>) => {
     setValues((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
@@ -76,6 +75,15 @@ export const SettingsForm = () => {
         thumbnail && (await deleteFile(old_profile));
         setThumbnail(null);
         setCoverImage(null);
+        sonner(`Preview Changes`, {
+          description: `Images might take a few seconds to update`,
+          action: {
+            label: "Preview",
+            onClick: () => {
+              window.open(`${s_link}/sellers/${seller.slug}`, "_blank");
+            },
+          },
+        });
       },
       efunc: async () => {
         coverImage && (await deleteFile(cUrl));
@@ -83,8 +91,22 @@ export const SettingsForm = () => {
       },
     });
   };
+  const deleteBusiness = async () => {
+    if (window.confirm("Are you sure you want to delete your business?")) {
+      customToast({
+        func: async () => {
+          seller.coverImage && (await deleteFile(seller.coverImage));
+          seller.profileImage && (await deleteFile(seller.profileImage));
+          await deleteSeller({ _id: seller._id });
+          router.push("/login");
+        },
+        suc: "Your business has been deleted",
+        err: "An error occurred",
+      });
+    }
+  };
   return (
-    <form className="w-full rounded-lg " onSubmit={submit}>
+    <form className="w-full rounded-lg pb-20 " onSubmit={submit}>
       <div className="fb">
         <h2 className="h3">Settings</h2>
         <Button disabled={loading} type="submit" size={"sm"}>
@@ -101,6 +123,18 @@ export const SettingsForm = () => {
         <ContactInformation values={values} setValue={setValues} />
         <ThumbNail {...{ thumbnail, setThumbnail, seller }} />
         <CoverImage {...{ coverImage, setCoverImage, seller }} />
+      </div>
+      <div className="flex justify-end">
+        <Button
+          disabled={loading}
+          type="button"
+          size={"sm"}
+          variant="outline"
+          className="text-destructive border-destructive"
+          onClick={deleteBusiness}
+        >
+          Delete Your Business
+        </Button>
       </div>
     </form>
   );
@@ -164,6 +198,7 @@ const GeneralInformation = ({
               <Textarea
                 id="description"
                 value={values.description}
+                className="min-h-[100px]"
                 onChange={handleChanges}
                 placeholder="Please enter the products or services offered by your business."
               />

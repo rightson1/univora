@@ -26,9 +26,13 @@ export const useGetSubcategories = (
         .get("/api/client/categories", {
           params: { category_slug },
         })
-        .then(eCheck),
-    initialData,
+        .then(eCheck)
+        .then((data) => {
+          console.log(data);
+          return data;
+        }),
     ...sTime(10),
+    initialData,
   });
 };
 //get single category

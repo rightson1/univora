@@ -20,7 +20,7 @@ const Page = async ({
       <Item_not_found ptxt="Category not found" link="/" btxt="Go back home" />
     );
   return (
-    <section className="pad-x pt-10">
+    <section className="pad-x pt-5">
       <h1 className="h2-size text-indigo-500">{`Home >${category?.name} `}</h1>
       <Sub_Categories categories={categories} parent_slug={category_slug} />
     </section>

@@ -14,6 +14,7 @@ import { Product_Card } from "../products_card";
 import { vArr } from "@/app/api/utils/funcs";
 import { T_Input } from "../search/trasparent_input";
 import Fuse from "fuse.js";
+import Item_not_found from "@/components/shared/item_not_found";
 
 export const Seller_Comp = ({
   seller_raw,
@@ -51,7 +52,11 @@ export const Seller_Comp = ({
       setProducts(products_fetched);
     }
   }, [search, products_fetched]);
-
+  if (!seller) {
+    return (
+      <Item_not_found ptxt="Seller not found" link="/" btxt="Go back home" />
+    );
+  }
   return (
     <div className="w-full md:px-[50px] ">
       <DesktopHero seller={seller} />

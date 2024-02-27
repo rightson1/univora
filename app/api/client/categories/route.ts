@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
       parent: parentCategory?._id,
       isActive: true,
     });
+    console.log(categories);
 
     return NextResponse.json(categories);
   }

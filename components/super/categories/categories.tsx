@@ -19,7 +19,7 @@ import {
 } from "@/utils/hooks/useCategories";
 import { EditCategory } from "./edit-category";
 import { MdDeleteOutline } from "react-icons/md";
-import { useCustomToast } from "@/components/helpers/functions";
+import { deleteFile, useCustomToast } from "@/components/helpers/functions";
 
 export const CategoryTable = () => {
   const { data: categories, isLoading } = useGetPopulatedCategories();
@@ -76,6 +76,7 @@ export const CategoryTable = () => {
               ) {
                 customToast({
                   func: async () => {
+                    category.image && (await deleteFile(category.image));
                     await deleteCategory(category._id);
                   },
                 });

@@ -7,17 +7,35 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
+import { sonner } from "../helpers";
+import { useSellerAuth } from "../sellerAuth";
 
 export const useAddProduct = () => {
+  const { s_link } = useSellerAuth();
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (productData: IProduct) => {
+    mutationFn: async (productData: IProduct): Promise<IProductFetched> => {
       return await axios.post("/api/seller/products", productData).then(eCheck);
+    },
+    onSuccess: (data) => {
+      sonner(`Preview Product`, {
+        description: `View your product as your customers would see it.`,
+        action: {
+          label: "Preview",
+          onClick: () => {
+            window.open(`${s_link}/products/${data.slug}`, "_blank");
+          },
+        },
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
 };
 export const useGetProducts = (sellerId: string) => {
   return useQuery<IProductFetched[]>({
-    queryKey: ["products", sellerId],
+    queryKey: ["products"],
     queryFn: async () => {
       return await axios
         .get("/api/seller/products", {
@@ -47,6 +65,7 @@ export const useGetSingleProduct = (_id: string) => {
 //update product
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
+  const { s_link } = useSellerAuth();
   return useMutation({
     mutationFn: async (
       productData: Partial<IProduct> & {
@@ -58,7 +77,15 @@ export const useUpdateProduct = () => {
         .then(eCheck);
     },
     onSuccess: (data) => {
-      console.log(data);
+      sonner(`Preview Changes`, {
+        description: `Images might take a few seconds to update`,
+        action: {
+          label: "Preview",
+          onClick: () => {
+            window.open(`${s_link}/products/${data.slug}`, "_blank");
+          },
+        },
+      });
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   await conn();
   const categories = await Category.find({
-    parent: { $exists: false },
+    parent: null,
   })
     .populate({
       path: "children",
@@ -85,6 +85,12 @@ export async function DELETE(req: NextRequest) {
     await conn();
     const _id = req.nextUrl.searchParams.get("_id");
     const category = await Category.findById(_id);
+
+    if (!category)
+      return NextResponse.json({
+        message: "Category not found",
+        success: false,
+      });
     if (category.children.length > 0) {
       return NextResponse.json({
         message: "Category has children, please delete them first",
@@ -94,19 +100,12 @@ export async function DELETE(req: NextRequest) {
 
     //remove category from parent
     if (category.parent) {
-      const parentCategory = await Category.findById(category.parent);
-      if (parentCategory) {
-        parentCategory.children.pull(category._id);
-        await parentCategory.save();
-      }
+      const parentCategory = await Category.findByIdAndUpdate(category.parent, {
+        $pull: { children: _id },
+      });
     }
-    if (category) {
-      await Category.deleteOne({ _id });
-    }
-
-    return NextResponse.json({
-      message: "Category deleted successfully",
-    });
+    const deleted = await Category.deleteOne({ _id });
+    return NextResponse.json(deleted);
   } catch (error) {
     console.error(error);
     return NextResponse.json({

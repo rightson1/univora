@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, use, useContext, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-hot-toast";
@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { IAuthUser, ISeller, ISellerFetched } from "@/types";
 import { eCheck } from "@/components/helpers/functions";
+import { protocal, root_domain } from "./data";
 const AuthContext = createContext({});
 
 export const SellerAuthProvider = ({
@@ -21,6 +22,13 @@ export const SellerAuthProvider = ({
   const [admin, setAdmin] = useState<IAuthUser | {} | null>({});
   const [seller, setSeller] = useState<ISellerFetched | null>(null);
   const router = useRouter();
+  const [s_link, setLink] = useState<string>("");
+  useEffect(() => {
+    if (seller) {
+      setLink(`${protocal}://${seller.school.subdomain}.${root_domain}`);
+    }
+  }, [seller]);
+
   const setCookie = (token: string) => {
     Cookies.set("token", token);
   };
@@ -112,6 +120,7 @@ export const SellerAuthProvider = ({
         fetchSeller,
         logout,
         admin,
+        s_link,
       }}
     >
       {children}
@@ -122,6 +131,7 @@ export const SellerAuthProvider = ({
 interface AuthContextProps {
   seller: ISellerFetched;
   admin: IAuthUser | {} | null;
+  s_link: string;
   signIn: ({
     email,
     password,

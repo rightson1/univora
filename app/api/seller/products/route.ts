@@ -20,11 +20,7 @@ export async function POST(req: NextRequest) {
     }
     // console.log(productData, "productData");
     const product = await Product.create(productData);
-    return NextResponse.json({
-      message: "Product created successfully",
-      success: true,
-      data: product,
-    });
+    return NextResponse.json(product);
   } catch (e: any) {
     console.log(e);
     return NextResponse.json({
@@ -41,7 +37,9 @@ export async function GET(req: NextRequest) {
     Category;
     const products = await Product.find({
       business: sellerId,
-    }).populate("category");
+    })
+      .populate("category")
+      .sort({ createdAt: -1 });
     return NextResponse.json(products);
   } catch (e) {
     return NextResponse.json({

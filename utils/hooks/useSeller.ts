@@ -23,3 +23,12 @@ export const useUpdateSeller = () => {
     ) => await axios.put("/api/seller", data).then(eCheck),
   });
 };
+//delete seller
+export const useDeleteSeller = () => {
+  return useMutation({
+    mutationFn: async (data: { _id: string }) =>
+      await axios.delete("/api/seller", {
+        data,
+      }),
+  });
+};

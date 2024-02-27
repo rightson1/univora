@@ -1,5 +1,6 @@
 "use client";
-import { ICategoryFetched } from "@/types";
+import { ICategoryFetched, ISellerFetched } from "@/types";
+import { protocal, root_domain } from "@/utils/data";
 import { storage } from "@/utils/firebase";
 import { AxiosResponse } from "axios";
 import {
@@ -133,4 +134,7 @@ export function fDate(dateString: string): string {
     minute: "numeric",
     hour12: true,
   });
+}
+export function getLink(seller: ISellerFetched, link: string) {
+  return `${protocal}://${seller.school.subdomain}.${root_domain}` + link;
 }
