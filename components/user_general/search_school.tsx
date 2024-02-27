@@ -28,10 +28,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Checkbox } from "../ui/checkbox";
 import { Add_School } from "../user/add_school";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { vArr } from "@/app/api/utils/funcs";
 export function SearchSchool() {
   const { data: schools, isLoading } = useGetSchoolsOpen();
   const [school, setSchool] = useState("");
+  const [open, setOpen] = useState(false);
   const router = useRouter();
+
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!school) {
@@ -67,7 +75,7 @@ export function SearchSchool() {
               <Add_School />
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          {/* <div className="grid gap-4 py-4">
             <Select
               required
               name="school "
@@ -89,7 +97,38 @@ export function SearchSchool() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button className="justify-start w-full border-primary my-3 blr text-primary hover:bg-background hover:text-primary">
+                {(vArr(schools) &&
+                  schools.find((c) => c.subdomain === school)?.name) ||
+                  " Select School"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto blr max-w-[500px] max-h-[200px] overflow-y-auto">
+              <Button
+                variant={"ghost"}
+                className="w-full cursor-pointer justify-start"
+              >
+                {vArr(schools) ? "Schools" : "Loading..."}
+              </Button>
+              {vArr(schools) &&
+                schools.map((school) => (
+                  <Button
+                    variant={"ghost"}
+                    key={school.subdomain}
+                    className="w-full justify-start  cursor-pointer"
+                    onClick={() => {
+                      setSchool(school.subdomain);
+                      setOpen(false);
+                    }}
+                  >
+                    {school.name}
+                  </Button>
+                ))}
+            </PopoverContent>
+          </Popover>
           <DialogFooter>
             <div className="fb w-full">
               <div className="flex gap-2  w-full">
