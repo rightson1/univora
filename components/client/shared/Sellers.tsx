@@ -64,7 +64,7 @@ export const Card = ({
   return (
     <Link
       href={`/sellers/${slug}`}
-      className="fc gap-5  blr  h-[150px] px-3 rounded-md md:rounded-lg cursor-pointer shadow-md card-hover"
+      className="fc gap-5  blr  max-h-[200px] px-3 rounded-md md:rounded-lg cursor-pointer shadow-md card-hover py-4"
     >
       <div className="flex  ">
         <Image

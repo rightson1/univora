@@ -54,6 +54,14 @@ export const Search_Page = ({ school_slug }: { school_slug: string }) => {
       setProducts(allProducts);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (query.length < 1 && data) {
+      const allProducts = data.pages.flatMap((page) => page);
+      setProducts(allProducts);
+    }
+  }, [query, data]);
+
   const { data: products_autocomplete, isInitialLoading } = useAutoComplete({
     search: query,
     school: school_slug,

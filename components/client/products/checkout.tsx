@@ -133,7 +133,7 @@ export const Checkout_Form = ({
             }
           }}
         >
-          Checkout
+          Order
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -308,7 +308,7 @@ export const Checkout_Form = ({
                   Close
                 </Button>
                 <Button type="submit" disabled={loading}>
-                  Save changes
+                  Complete Order
                 </Button>
               </div>
             </DialogFooter>

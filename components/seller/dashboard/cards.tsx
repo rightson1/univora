@@ -81,7 +81,7 @@ const Cards = () => {
           <p className="text-xs text-muted-foreground">
             {totalRevenueTotal > 0
               ? "You are doing great!"
-              : ` HAHA, you are broke`}
+              : `Dont worry, you will get there soon!`}
           </p>
         </CardContent>
       </Card>
@@ -102,7 +102,7 @@ const Cards = () => {
           <p className="text-xs text-muted-foreground">
             {completed_orders.length > 0
               ? `You have ${completed_orders.length} completed orders`
-              : "Look at you ,0 completed orders, shame!"}
+              : "No completed orders yet!"}
           </p>
         </CardContent>
       </Card>

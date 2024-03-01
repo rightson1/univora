@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     });
     //fetch new added 10 sellers
     const sellers = await Seller.find({ school: school?._id })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .limit(10);
     return NextResponse.json(sellers);
   } catch (e) {

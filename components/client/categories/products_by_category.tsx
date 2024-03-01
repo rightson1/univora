@@ -70,6 +70,13 @@ export const Products_By_Category = ({
       setSearch(query);
     }
   }, [open]);
+  useEffect(() => {
+    if (query.length < 1 && initial_Products) {
+      const allProducts = initial_Products.pages.flatMap((page) => page);
+      setProducts(allProducts);
+    }
+  }, [query, data]);
+
   return (
     <div className="py-5">
       <div className="fb w-full gap-2">

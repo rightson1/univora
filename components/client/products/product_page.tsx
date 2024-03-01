@@ -105,7 +105,7 @@ export const Product_Page = ({
               <h2 className="h4 font-bold mb-4 ">Select Variants</h2>
             )}
             <div className="text-h6 mb-2 ">
-              <strong>Stocks:</strong> {pQty(product, selectedVariant)}
+              <strong>Stock:</strong> {pQty(product, selectedVariant)}
             </div>
             {product.variants && (
               <div className="flex flex-wrap gap-2">
