@@ -102,15 +102,21 @@ export function SearchSchool() {
                 Select school
               </option>
               {!isLoading ? (
-                schools?.map((school) => (
-                  <option
-                    value={school.subdomain}
-                    key={school.subdomain}
-                    className="blr"
-                  >
-                    {school.name}{" "}
-                  </option>
-                ))
+                schools
+                  ?.sort((a, b) => {
+                    if (a.subdomain === "test") return -1;
+                    if (b.subdomain === "test") return 1;
+                    return a.name.localeCompare(b.name);
+                  })
+                  .map((school) => (
+                    <option
+                      value={school.subdomain}
+                      key={school.subdomain}
+                      className="blr"
+                    >
+                      {school.name}{" "}
+                    </option>
+                  ))
               ) : (
                 <option value="" disabled>
                   Loading...
