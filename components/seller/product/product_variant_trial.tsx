@@ -169,7 +169,7 @@ export const Product_Variants_Trial: React.FC<VariantsProps> = ({
                           {Object.values(option.options).join(", ")}
                         </Badge>
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 min-w-[200px]">
                         <Input
                           type="number"
                           id={`Price-${optionIndex}`}

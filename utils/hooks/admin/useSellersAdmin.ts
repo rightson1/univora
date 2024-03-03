@@ -59,3 +59,18 @@ export const useGetSellerAdmin = (id: string) => {
         .then(eCheck),
   });
 };
+
+export const useDeleteSellerAdmin = () => {
+  const quertClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { _id: string }) =>
+      await axios.delete("/api/s/sellers", {
+        data,
+      }),
+    onSuccess: () => {
+      quertClient.invalidateQueries({
+        queryKey: ["sellers"],
+      });
+    },
+  });
+};

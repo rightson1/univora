@@ -25,10 +25,16 @@ export const useUpdateSeller = () => {
 };
 //delete seller
 export const useDeleteSeller = () => {
+  const quertClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: { _id: string }) =>
       await axios.delete("/api/seller", {
         data,
       }),
+    onSuccess: () => {
+      quertClient.invalidateQueries({
+        queryKey: ["sellers"],
+      });
+    },
   });
 };

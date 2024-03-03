@@ -14,11 +14,12 @@ import {
 import { CustomTable } from "@/components/shared/table";
 import { useAdminAuth } from "@/utils/AdminAuth";
 import {
+  useDeleteSellerAdmin,
   useGetAdminSellers,
   useUpdateAdminSeller,
 } from "@/utils/hooks/admin/useSellersAdmin";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Delete, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -36,8 +37,8 @@ import { MdPublishedWithChanges, MdUnpublished } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { TBusiness } from "@/types/sellerTypes";
 import { ISellerFetched } from "@/types";
-import { useCustomToast } from "@/components/helpers/functions";
-import { useUpdateSeller } from "@/utils/hooks/useSeller";
+import { deleteFile, useCustomToast } from "@/components/helpers/functions";
+import { useDeleteSeller, useUpdateSeller } from "@/utils/hooks/useSeller";
 
 export default function Businesses({
   params: { school },
@@ -52,6 +53,8 @@ export default function Businesses({
   const [sellers, setSellers] = React.useState<ISellerFetched[]>([]);
   const { loading, customToast } = useCustomToast();
   const { mutateAsync } = useUpdateAdminSeller();
+  const { mutateAsync: deleteSeller } = useDeleteSellerAdmin();
+
   React.useEffect(() => {
     if (data) {
       setSellers(data);
@@ -61,27 +64,19 @@ export default function Businesses({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const changeStatus = async (seller: ISellerFetched) => {
-    const newStatus = seller.status === "active" ? "suspended" : "active";
-    //confirm
-    if (
-      !confirm(
-        `Are you sure you want to ${newStatus} ${seller.name}'s business?`
-      )
-    ) {
-      return;
+  const deleteBusiness = async ({ seller }: { seller: ISellerFetched }) => {
+    if (window.confirm("Are you sure you want to delete your business?")) {
+      customToast({
+        func: async () => {
+          seller.coverImage && (await deleteFile(seller.coverImage));
+          seller.profileImage && (await deleteFile(seller.profileImage));
+          await deleteSeller({ _id: seller._id });
+        },
+        suc: "Your business has been deleted",
+        err: "An error occurred",
+      });
     }
-
-    customToast({
-      func: async () => {
-        await mutateAsync({
-          _id: seller._id,
-          status: newStatus,
-        });
-      },
-    });
   };
-
   const seller_columns: ColumnDef<ISellerFetched>[] = [
     {
       accessorKey: "profileImage",
@@ -164,6 +159,17 @@ export default function Businesses({
                   <BiEdit />
                   <span>View Products</span>
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex items-center space-x-2"
+                onClick={() => {
+                  deleteBusiness({
+                    seller,
+                  });
+                }}
+              >
+                <Delete />
+                <span>Delete Seller</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
