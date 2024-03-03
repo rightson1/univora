@@ -197,7 +197,7 @@ export function MobileMenu() {
             </Link>
             {isInstallable && (
               <LinkButton
-                text="Download Me"
+                text="Install Me"
                 icon={Download}
                 onClick={handleClick}
               />

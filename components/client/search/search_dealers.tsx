@@ -44,7 +44,7 @@ export const Seller_Container = ({
       <div className="mt-10">
         <Sellers_Cards
           sellers={sellers}
-          notFoundText="What the hell did you just search?"
+          notFoundText="No sellers found, be first to sell"
         />
       </div>
     </div>
