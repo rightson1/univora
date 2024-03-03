@@ -135,6 +135,7 @@ const Socials = ({
             <a
               key={s.platform}
               href={`${platform!.link}/${s.link}`}
+              target="_blank"
               className="flex items-center justify-center gap-1"
             >
               {/* showcase icon */}
