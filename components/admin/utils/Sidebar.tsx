@@ -12,7 +12,7 @@ import { useAdminAuth } from "@/utils/AdminAuth";
 export const Sidebar = () => {
   const pathname = usePathname().split("/")[1];
   const { user, logout } = useAdminAuth();
-
+  console.log(user);
   return (
     <div
       className="w-[250px] border-color-border border-r 

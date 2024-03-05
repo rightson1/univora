@@ -1,4 +1,5 @@
 import Admin from "@/models/Admin";
+import School from "@/models/School";
 import { conn } from "@/models/mongo_db_connection";
 import { IAdmin, ISAdmin } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -40,7 +41,9 @@ export async function POST(req: NextRequest) {
 //get admin by uid
 export async function GET(req: NextRequest) {
   await conn();
+  School;
   const admin = req.nextUrl.searchParams.get("uid");
+
   if (!admin) {
     return NextResponse.json({
       message: "Who are you?",
@@ -49,6 +52,7 @@ export async function GET(req: NextRequest) {
   }
   try {
     const adminRaw = await Admin.findOne({ uid: admin }).populate("school");
+
     if (!adminRaw) {
       return NextResponse.json({
         message: "Who are you?",
