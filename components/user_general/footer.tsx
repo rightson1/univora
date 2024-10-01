@@ -32,7 +32,7 @@ export const User_Gen_Footer = () => {
           icon={<Mail size={20} className="text-[.6rem] text-red-400" />}
           text="Contact"
         />
-
+        {/* 
         <span className="text-center p-0">
           Made by{" "}
           <a
@@ -42,7 +42,7 @@ export const User_Gen_Footer = () => {
           >
             @chari designs
           </a>
-        </span>
+        </span> */}
       </div>
     </div>
   );

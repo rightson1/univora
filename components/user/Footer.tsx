@@ -38,7 +38,7 @@ const Footer = () => {
           icon={<School size={20} className="text-[.6rem] text-red-400" />}
           text="Schools"
         />
-
+        {/* 
         <span className="text-center p-0">
           Made by{" "}
           <a
@@ -48,7 +48,7 @@ const Footer = () => {
           >
             @chari designs
           </a>
-        </span>
+        </span> */}
       </div>
     </div>
   );
